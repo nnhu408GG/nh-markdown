@@ -1,0 +1,165 @@
+# 1.quote blockquote
+
+```html
+<blockquote mdtype="blockquote">
+  <p mdtype="paragraph">...</p>
+</blockquote>
+```
+
+# 2.unordered-list & task
+
+```html
+<ul mdtype="unordered-list">
+  <li>
+    <p mdtype="paragraph">...</p>
+  </li>
+
+  <li class="task">
+    <div class="checkbox" contenteditable="false">
+      <input type="checkbox" />
+    </div>
+    <p mdtype="paragraph">...</p>
+  </li>
+</ul>
+```
+
+# 3.ordered-list
+
+```html
+<ol mdtype="ordered-list">
+  <li>
+    <p mdtype="paragraph">...</p>
+  </li>
+</ol>
+```
+
+==============================================================================================
+
+# 5.hr
+
+```html
+<div mdtype="hr" contenteditable="false">
+  <hr />
+</div>
+```
+
+# 6.precode
+
+```html
+<pre mdtype="precode">
+    <code>
+        <p>...</p>
+    </code>
+    <div contenteditable="false" language>
+        <span contenteditable="true">js</span>
+    </div>
+</pre>
+```
+
+# 7.image
+
+```html
+<!-- <div mdtype="image" contenteditable="false">
+  <p contenteditable="true">![img_name](img_url)</p>
+  <img src="img_url" alt="img_name" title="img_name" />
+</div> -->
+<div mdtype="image">
+  <p>![img_name](img_url)</p>
+  <div contenteditable="false">
+    <img src="img_url" alt="img_name" title="img_name" />
+  </div>
+</div>
+```
+
+# 8.h1 head1 heading1
+
+```html
+<h1 mdtype="head">...</h1>
+<h2 mdtype="head">...</h2>
+<h3 mdtype="head">...</h3>
+<h4 mdtype="head">...</h4>
+<h5 mdtype="head">...</h5>
+<h6 mdtype="head">...</h6>
+```
+
+# 9.table
+
+> |head1|head2|...|
+
+```html
+<figure mdtype="table">
+  <div class="toolContainer" contenteditable="false">
+    <span>
+      <button aria-label="调整表格">::before</button>
+    </span>
+    <span>
+      <button aria-label="左对齐">::before</button>
+      <button aria-label="居中对齐">::before</button>
+      <button aria-label="右对齐">::before</button>
+    </span>
+    <span>
+      <button aria-label="删除表格">::before</button>
+    </span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>head1</th>
+        <th>head2</th>
+        <th>...</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th>contnet1</th>
+        <th>contnet2</th>
+        <th>...</th>
+      </tr>
+      <tr>
+        <th>...</th>
+      </tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+> 最外层有个 tooltip ：instant/shown 提示工具 tip
+
+# 10.paragraph
+
+```html
+<p mdtype="paragraph">...</p>
+```
+
+==============================================================================================
+
+# 1.code
+
+```html
+<span mdtype="code" class="md-pair-s">
+    <span class="meta">`</span>
+    <code>...<code>
+    <span class="meta">`</span>
+</span>
+```
+
+# 2.b bold strong
+
+```html
+<span mdtype="strong" class="md-pair-s">
+    <span class="meta">**</span>
+    <strong>...<strong>
+    <span class="meta">**</span>
+</span>
+```
+
+# 3.em
+
+```html
+<span mdtype="em" class="md-pair-s">
+    <span class="meta">*</span>
+    <em>...<em>
+    <span class="meta">*</span>
+</span>
+```
