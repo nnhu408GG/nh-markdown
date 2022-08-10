@@ -306,12 +306,17 @@ body {
     margin: 16px 0;
 
     .label {
-      display  : none;
-      font-size: 14px;
+      opacity        : 0;
+      height         : 0;
+      font-size      : 14px;
+      font-weight    : lighter;
+      color          : @primary-color;
+      text-decoration: underline;
     }
 
     &.focus .label {
-      display: block;
+      opacity: 1;
+      height : auto;
     }
 
     .container {

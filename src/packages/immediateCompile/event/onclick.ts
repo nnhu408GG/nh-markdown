@@ -13,10 +13,4 @@ export default function (this: immediateCompile, e: Event) {
             image.focusEvent(moduleELement)
         }
     }
-    // console.log("onClick:", moduleELement.childNodes);
-    // console.log("onClick:", e.target, window.getComputedStyle(e.target as Element).display);
-    // console.log(`className:'${moduleELement?.className}'`);
-    // console.log(moduleELement?.className === "");
-
-    // console.log("bindElement.onclick, moduleELement is ", moduleELement);
 }
