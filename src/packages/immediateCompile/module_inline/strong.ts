@@ -6,9 +6,10 @@ export default <Module>{
     mdtype: "strong",
     // keycodeSign: ["**", "__"],
 
-    focusEvent(el) {
-        console.log("strong focusEvent");
-    },
+    // focusEvent(el) {
+    //     console.log("strong focusEvent");
+    // },
+
     // 遍历所有的textNode，找出所有匹配的区间，并作处理
     // upgradeInKeyup() {
     //     let sel = document.getSelection()

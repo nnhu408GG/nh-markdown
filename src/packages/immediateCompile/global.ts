@@ -5,6 +5,7 @@ import hr from "./module_block/hr";
 import precode from "./module_block/precode";
 import image from "./module_block/image";
 import table from "./module_block/table";
+import blockquote from "./module_block/blockquote";
 
 /* =============== 全局参数 ========================================================================= */
 
@@ -49,31 +50,34 @@ export const state =
 
 /* =============== 通用操作 ======================================================================== */
 export function iteratorModule(basics: { moduleELement: HTMLElement, e?: any }, afterFunc?: keyof AfterHandle) {
-    for (let mod of state.MODULE) {
-        if (basics.moduleELement.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === mod.mdtype) {
-            mod[afterFunc!]?.(basics.moduleELement, basics.e)
-            break
+    let mdtype = basics.moduleELement.getAttribute(state.MODULE_ATTRIBUTE_SIGN)
+    if (mdtype) {
+        for (let mod of state.MODULE) {
+            if (mdtype === mod.mdtype) {
+                mod[afterFunc!]?.(basics.moduleELement, basics.e)
+                break
+            }
         }
     }
 }
 
-function _iterator(el: Node): HTMLElement {
+function getModuleELement_iterator(el: Node): HTMLElement {
     if (el instanceof HTMLElement && el.hasAttribute("mdtype")) {
         return el
     }
-    return _iterator(el.parentElement!)
+    return getModuleELement_iterator(el.parentElement!)
 }
 
 /** 获取最近含有mdtype属性的元素 */
 export function getModuleELement(el?: Node) {
     if (el && el !== state.BIND_ELEMENT) {
-        return _iterator(el)
+        return getModuleELement_iterator(el)
     } else {
         let sel = document.getSelection()
         if (sel?.anchorNode // 存在光标，且有对应的元素
             && sel.isCollapsed // 只支持非光标选区
             && sel.anchorNode !== state.BIND_ELEMENT) {
-            return _iterator(sel.anchorNode)
+            return getModuleELement_iterator(sel.anchorNode)
         }
     }
     return
@@ -156,19 +160,6 @@ export function classNameAddFocus(el?: HTMLElement): boolean {
              * url
              */
 
-            // if (hr.changeFocus_AtParagraph(tempLatelyFirstElement)) {
-            //     return true
-            // }
-            // else if (precode.changeFocus_AtParagraph(tempLatelyFirstElement)) {
-            //     return true
-            // }
-            // else if (image.changeFocus_AtParagraph(tempLatelyFirstElement)) {
-            //     return true
-            // }
-            // else if (table.changeFocus_AtParagraph(tempLatelyFirstElement)) {
-            //     return true
-            // }
-
             if (hr.changeFocus_AtParagraph(tempLatelyFirstElement)
                 || precode.changeFocus_AtParagraph(tempLatelyFirstElement)
                 || image.changeFocus_AtParagraph(tempLatelyFirstElement)
@@ -180,13 +171,6 @@ export function classNameAddFocus(el?: HTMLElement): boolean {
     }
     return false
 }
-
-
-
-/** className:mdfocus 移除 */
-// export function classNameRemoveFocus() {
-//     state.latelyFirstELement && state.latelyFirstELement.classList.remove(FIRSTELEMENT_FOCUSSIGN)
-// }
 
 /** 处理完毕后的光标位置
  * @param anchorOffset "0"为默认值
@@ -235,6 +219,70 @@ export function getFragementRangeToEnd(el: HTMLElement): DocumentFragment | unde
     return
 }
 
+export function getAttribute(el: HTMLElement) {
+    if (el instanceof HTMLElement && el.hasAttribute(state.MODULE_ATTRIBUTE_SIGN)) {
+        return el.getAttribute(state.MODULE_ATTRIBUTE_SIGN)
+    }
+}
+
+
+function getPreviousElementSibling_bubble_iterator(moduleElement: HTMLElement): HTMLElement | undefined {
+    let nextElement = moduleElement.previousElementSibling as HTMLElement
+    if (nextElement
+        && !nextElement.classList.contains("checkbox")
+    ) {
+        return getModuleELement(nextElement)
+    } else {
+        let parentElement = moduleElement.parentElement!
+        if (parentElement === state.BIND_ELEMENT) {
+            return
+        } else {
+            return getPreviousElementSibling_bubble_iterator(parentElement)
+        }
+    }
+}
+
+// export function getPreviousElementSibling(el?: Node) {
+//     if (!el) el = document.getSelection()?.anchorNode!
+//     let moduleElement = getModuleELement(el)!
+//     let nextElement = getPreviousElementSibling_bubble_iterator(moduleElement)
+//     if (nextElement) {
+//         console.log("nextElement", nextElement);
+//     } else {
+//         console.log("已经是最上面的了");
+//         return
+//     }
+//     // blockquote
+//     // table
+//     // hr
+//     // orderedList -> taskList
+//     // if (nextElement.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === "") { }
+//     if (getAttribute(nextElement) === hr.mdtype) {
+//         hr.focusEvent(nextElement)
+//     }
+//     else if (getAttribute(nextElement) === blockquote.mdtype) {
+//         blockquote.focusEvent(nextElement, "ArrowUp")
+//     }
+
+//     return
+// }
+
+
+// export function focusModule(el: HTMLElement) {
+//     let mdtype = el.getAttribute(state.MODULE_ATTRIBUTE_SIGN)
+//     for (let mod of state.MODULE) {
+//         if (mdtype === mod.mdtype) {
+//             if (mod.focusEvent) {
+//                 mod.focusEvent(el, "ArrowUp")
+//             } else {
+//                 document.getSelection()?.removeAllRanges()
+//                 setCursorPosition(el)
+//                 classNameAddFocus(el)
+//             }
+//             break
+//         }
+//     }
+// }
 
 // /** 元素位于第几个
 //  * @return "-1"表示错误

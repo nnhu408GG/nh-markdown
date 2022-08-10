@@ -13,7 +13,7 @@ export interface AfterHandle {
     // createBasicsElement(): HTMLElement
 
     /** 聚焦事件 */
-    focusEvent(el: HTMLElement): void,
+    focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void,
 
     /** 删除键事件，光标位于首位 */
     deleteEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
@@ -29,11 +29,8 @@ export interface AfterHandle {
 
     /** 匹配dom之后的任意 keydown 事件 */
     keydownEvent_Unlimited(el: HTMLElement, event: KeyboardEvent): void
-
     /** 上 方向键 */
-    arrowEvent_Up(el: HTMLElement): void
     /** 下 方向键 */
-    arrowEvent_Down(el: HTMLElement): void
 
     // matchSource(el: HTMLElement): void
 

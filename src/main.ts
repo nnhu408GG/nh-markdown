@@ -53,8 +53,6 @@ element.compareDocumentPosition(otherElement)
 /* ==================================== */
 
 
-
-
 let wys = new nhMrk.wys().bind(dom)
 
 btn.onclick = () => {

@@ -14,6 +14,10 @@ export default <Module>{
     enterEvent_Begin(el, event) {
         event.preventDefault()
 
+        if (el.childNodes.length === 1 && el.firstElementChild?.tagName === "BR") {
+            el.firstElementChild.remove()
+        }
+
         /* 兼容blockquote的嵌套 */
         if (el.parentElement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === blockquote.mdtype
             && blockquote.enterEvent_Begin(el, event)

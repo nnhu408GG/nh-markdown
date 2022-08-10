@@ -5,13 +5,14 @@ import * as global from "../global"
 // todo 支持行内特征
 export default <Module>{
     mdtype: "image",
-    focusEvent(el) {
+    focusEvent(el, from) {
+        global.classNameAddFocus(el)
         let label = el.firstElementChild!
         let data = label.firstChild?.textContent!
-        let mat = /^!\[(.+)\]\((.+)\)$/g.exec(data)
+        let mat = /^!\[(.+)\]\((.+)\)$/g.exec(data)!
         let range = new Range()
         range.setStart(label.firstChild!, 2)
-        range.setEnd(label.firstChild!, mat![1].length + 2)
+        range.setEnd(label.firstChild!, mat[1].length + 2)
         document.getSelection()?.removeAllRanges()
         document.getSelection()?.addRange(range)
     },
