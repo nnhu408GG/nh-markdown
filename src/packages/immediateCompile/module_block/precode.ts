@@ -3,6 +3,16 @@ import * as global from "../global"
 export default <Module>{
     mdtype: "precode",
 
+    focusEvent(el) {
+        global.classNameAddFocus(el)
+        let language = el.lastElementChild!
+        let language_node = language.firstElementChild?.firstChild
+        let range = new Range()
+        range.selectNode(language_node!)
+        document.getSelection()?.removeAllRanges()
+        document.getSelection()?.addRange(range)
+    },
+
     changeFocus_AtParagraph(el) {
         let mat = /^```(.*)$/g.exec(el.firstChild?.textContent!)!
         if (mat && el.childNodes.length === 1) {
@@ -31,45 +41,25 @@ export default <Module>{
     },
 
     keydownEvent_Unlimited(el, event) {
-        // if(event.code === "")
+        let focusPreElement = global.getChildNodeMatchCursor(el) as HTMLElement
+
+        if (event.code === "ArrowUp"
+            && focusPreElement === el.firstElementChild
+            && global.getChildNodeMatchCursor(focusPreElement) === focusPreElement.firstElementChild
+        ) {
+            if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+        }
+
+        else if (event.code === "ArrowDown") {
+            if (focusPreElement === el.firstElementChild
+                && global.getChildNodeMatchCursor(focusPreElement) === focusPreElement.lastElementChild
+            ) {
+                event.preventDefault()
+                this.focusEvent(el)
+            }
+            else if (focusPreElement === el.lastElementChild) {
+                if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+            }
+        }
     },
-
-    // deleteEvent_Begin(el, event) {
-    //     let codeContainer = global.getChildNodeMatchCursor(el)
-    //     let codeline = global.getChildNodeMatchCursor(codeContainer)
-    //     if (codeline === codeContainer.firstElementChild) {
-    //         event.preventDefault()
-    //         if (codeContainer.children.length === 1) {
-    //             el.replaceWith(codeline)
-    //             return
-    //         }
-    //     }
-    // },
-
-    // arrowEvent_Up(el) {
-    //     let codeContainer = global.getChildNodeMatchCursor(el)
-    //     let codeline = global.getChildNodeMatchCursor(codeContainer)
-    //     if (codeline === codeContainer.firstElementChild) {
-    //         if (!el.previousElementSibling
-    //             || el.previousElementSibling.tagName === "PRE") {
-    //             let p = document.createElement("p")
-    //             global.insertBefore(el, p)
-    //             global.setCursorPosition(p)
-    //         }
-    //     }
-    // },
-    // arrowEvent_Down(el) {
-    //     let language = global.getChildNodeMatchCursor(el)
-    //     if (language === el.lastElementChild) {
-    //         if (!el.nextElementSibling
-    //             || el.nextElementSibling.tagName === "PRE") {
-    //             let p = document.createElement("p")
-    //             global.insertAfter(el, p)
-    //             global.setCursorPosition(p)
-    //         } else if (el.nextElementSibling.className === "image") {
-    //             // el.nextElementSibling.firstElementChild
-    //         }
-    //     }
-    // },
-
 }

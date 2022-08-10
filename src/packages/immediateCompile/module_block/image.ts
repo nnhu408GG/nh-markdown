@@ -32,7 +32,6 @@ export default <Module>{
             let imgContainer = document.createElement("div")
             imgContainer.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, this.mdtype)
             imgContainer.classList.add("image")
-            imgContainer.classList.add("focus")
 
             // <p class="label">
             let label = document.createElement("p")
@@ -55,8 +54,8 @@ export default <Module>{
             container.append(img)
             imgContainer.append(container)
             el.replaceWith(imgContainer)
-            global.classNameAddFocus(imgContainer)
-            this.focusEvent(imgContainer)
+            // global.classNameAddFocus(imgContainer)
+            // this.focusEvent(imgContainer)
             return true
         }
         return false
@@ -108,33 +107,12 @@ export default <Module>{
         }
     },
 
-    // enterEvent_Begin(el, event) {
-    //     event.preventDefault()
-    //     let p = document.createElement("p")
-    //     global.insertBefore(el, p)
-    // },
-    // enterEvent_After(el, event) {
-    //     event.preventDefault()
-    //     let sel = document.getSelection()!
-    //     let range = new Range()
-    //     range.setStart(sel.anchorNode!, sel.anchorOffset)
-    //     let lastChild = sel.focusNode!.parentElement!.lastChild!
-    //     range.setEnd(lastChild, lastChild.textContent!.length!)
-    //     if (range.collapsed) {
-    //         let p = document.createElement("p")
-    //         global.insertAfter(el, p)
-    //         global.setCursorPosition(p)
-    //     } else {
-    //         let fragment = range.extractContents()
-    //         let _after = document.createElement("p")
-    //         _after.append(fragment)
-
-    //         global.insertAfter(el, _after)
-
-    //         let _before = document.createElement("p")
-    //         _before.append(el.firstElementChild?.firstChild!)
-    //         el.replaceWith(_before)
-    //         global.setCursorPosition(_after)
-    //     }
-    // },
+    keydownEvent_Unlimited(el, event) {
+        if (event.code === "ArrowUp") {
+            if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+        }
+        else if (event.code === "ArrowDown") {
+            if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+        }
+    },
 }

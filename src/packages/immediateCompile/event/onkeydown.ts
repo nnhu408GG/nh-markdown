@@ -27,15 +27,11 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
         }
     }
 
-    /* hr 的特殊嵌入 */
-    if (global.state.latelyFirstELement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === hr.mdtype) {
-        hr.keydownEvent_Unlimited(global.state.latelyFirstELement, e)
-        return
-    }
-
-    else if (global.getAttribute(global.state.latelyFirstELement!) === table.mdtype) {
-        table.keydownEvent_Unlimited(global.state.latelyFirstELement!, e)
-        return
+    for (let mod of global.state.MODULE) {
+        if (mod.mdtype === global.state.latelyFirstELement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)) {
+            mod.keydownEvent_Unlimited?.(global.state.latelyFirstELement, e)
+            break
+        }
     }
 
     /* ====== 以下为 isCollapsed=true 的处理 ====== */
@@ -89,75 +85,4 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
         }
     }
 
-    // todo 挤出空行放到 oninput 中处理
-    // todo "ArrowLeft", "ArrowRight" 的处理设计
-    /* 上下光标移动的元素预判 */
-    // console.log(e.key);
-
-    if (["ArrowUp", "ArrowDown"].includes(e.key)) {
-        // if (global.getAttribute(moduleELement) === precode.mdtype) {
-        //     precode.keydownEvent_Unlimited(moduleELement, e)
-        //     return
-        // }
-
-        /* 
-            todo 创建一个 global 函数处理预判 previousElementSibling 和 nextElementSibling
-            返回null表示到顶了
-         */
-
-        // 判断当前是否处在对应的预判元素中？hr?
-        /* hr 的光标移动思路，先移到反方向的元素上再执行 */
-
-        // 需要预测的 module
-        // let predictModule = [image]
-
-        // let nextModuleElement
-        // if (e.key === "ArrowUp") {
-        //     nextModuleElement = moduleELement.previousElementSibling as HTMLElement
-        // } else if (e.key === "ArrowDown") {
-        //     nextModuleElement = moduleELement.nextElementSibling as HTMLElement
-        // }
-
-        // if (nextModuleElement) {
-        //     for (let i = 0; i < predictModule.length; i++) {
-        //         if (nextModuleElement.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === predictModule[i].mdtype) {
-        //             // e.preventDefault()
-        //             // console.log("nextModuleElement:", nextModuleElement);
-        //             global.classNameAddFocus(nextModuleElement)
-        //             predictModule[i].focusEvent(nextModuleElement)
-        //             break
-        //         }
-        //     }
-        // }
-
-    }
 }
-
-// // todo 不一定存在，可能到頂部或底部
-// function getPreviousElement(): HTMLElement | null {
-//     let sel = document.getSelection()!
-//     let node = sel.anchorNode!
-
-//     function iteratorElement(node: Node): HTMLElement {
-//         if (node instanceof HTMLElement) {
-//             return node
-//         } else {
-//             return iteratorElement(node.parentElement!)
-//         }
-//     }
-//     let sub = iteratorElement(node)
-
-//     function iteratorPreviousElement(el: HTMLElement): Element | null {
-//         let _parent = el.parentElement
-//         if (el?.className === "nh-mrkEdit") {
-//             return null
-//         } else if (_parent?.firstElementChild === el) {
-//             return iteratorPreviousElement(_parent)
-//         } else {
-//             return el.previousElementSibling
-//         }
-//     }
-
-
-//     return iteratorPreviousElement(sub) as HTMLElement
-// }

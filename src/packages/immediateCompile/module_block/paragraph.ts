@@ -4,6 +4,9 @@ import blockquote from "./blockquote"
 import unorderedList from "./unorderedList"
 import orderedList from "./orderedList"
 import precode from "./precode"
+import hr from "./hr"
+import image from "./image"
+import table from "./table"
 
 // import module_PreCode from "./precode"
 // import module_Image from "./image"
@@ -104,12 +107,73 @@ export default <Module>{
             && orderedList.deleteEvent_Begin(el, event)
         ) return
 
-        if (el.previousElementSibling?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === this.mdtype
-            && el.previousElementSibling.childNodes.length === 0
-        ) {
-            event.preventDefault()
-            el.previousElementSibling.remove()
+        let previousElementSibling = el.previousElementSibling as HTMLEmbedElement
+        if (previousElementSibling) {
+            // todo paragraph 内容不一定全都是有的
+            let mdtype = global.getAttribute(previousElementSibling)
+
+            if (mdtype === hr.mdtype) {
+                event.preventDefault()
+                previousElementSibling.remove()
+            }
+            else if (mdtype === image.mdtype) {
+                event.preventDefault()
+                if (el.childNodes.length === 0) {
+                    el.remove()
+                    image.focusEvent(previousElementSibling)
+                } else {
+                    let range = new Range()
+                    range.selectNode(previousElementSibling.firstElementChild?.firstChild!)
+                    let fragment = range.extractContents()
+                    if (fragment) {
+                        global.insertBefore(el.firstChild!, fragment)
+                    }
+                    el.normalize()
+                    previousElementSibling.remove()
+                }
+            }
+            else if (mdtype === precode.mdtype) {
+                event.preventDefault()
+                if (el.childNodes.length === 0) {
+                    el.remove()
+                }
+                precode.focusEvent(previousElementSibling)
+            }
+            else if (mdtype === table.mdtype) {
+                event.preventDefault()
+                let table = previousElementSibling.lastElementChild!
+                let tbody = table.lastElementChild
+                let lastTbody_TR = tbody?.lastElementChild
+                let targetTH = lastTbody_TR?.lastElementChild!
+
+                let range = new Range()
+                if (targetTH.childNodes.length === 0) {
+                    range.setStart(targetTH, 0)
+                } else {
+                    range.setStartAfter(targetTH.lastChild!)
+                }
+
+                if (el.childNodes.length !== 0) {
+                    let fragment = global.getFragementRangeToEnd(el)!
+                    range.insertNode(fragment)
+                    range.collapse(true)
+                }
+
+                document.getSelection()?.removeAllRanges()
+                document.getSelection()?.addRange(range)
+                targetTH.normalize()
+                el.remove()
+            }
         }
+
+        // if (el.previousElementSibling?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === this.mdtype
+        //     && el.previousElementSibling.childNodes.length === 0
+        // ) {
+        //     console.log(11123231);
+
+        //     event.preventDefault()
+        //     el.previousElementSibling.remove()
+        // }
 
         // if (el.parentElement?.children.length === 1) {
         //     let br = document.createElement("br")

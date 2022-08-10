@@ -108,13 +108,14 @@ export default <Module>{
 
         else if (event.code === "ArrowUp") {
             if (focusElement === table.firstElementChild) {
-                if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+                event.preventDefault()
+                if (!global.createTempParagraph(el, "ArrowUp")) {
+                    global.setCursorPosition(el.previousElementSibling!)
+                }
             } else if (focusElement === table.lastElementChild) {
                 event.preventDefault()
                 let row_dom = global.getChildNodeMatchCursor(tbody) as HTMLElement
                 let col_dom = global.getChildNodeMatchCursor(row_dom) as HTMLElement
-                console.log(row_dom, col_dom);
-
                 let row = indexOfELement(row_dom)
                 let col = indexOfELement(col_dom)
                 console.log("row:", row, "   col:", col);
@@ -135,7 +136,10 @@ export default <Module>{
             } else if (focusElement === table.lastElementChild) {
                 let row_dom = global.getChildNodeMatchCursor(tbody) as HTMLElement
                 if (row_dom === tbody.lastElementChild) {
-                    if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+                    event.preventDefault()
+                    if (!global.createTempParagraph(el, "ArrowDown")) {
+                        global.setCursorPosition(el.nextElementSibling!)
+                    }
                 } else {
                     event.preventDefault()
                     let row = indexOfELement(row_dom)

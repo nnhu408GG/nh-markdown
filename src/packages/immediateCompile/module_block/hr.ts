@@ -19,20 +19,27 @@ export default <Module>{
     },
 
     keydownEvent_Unlimited(el, event) {
-        // console.log(event.code);
-        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) {
-            if (event.code === "ArrowLeft") {
-                let range = new Range()
-                range.setStart(el, 0)
-                document.getSelection()?.removeAllRanges()
-                document.getSelection()?.addRange(range)
-            } else if (event.code === "ArrowRight") {
-                let range = new Range()
-                range.setStart(el, 1)
-                document.getSelection()?.removeAllRanges()
-                document.getSelection()?.addRange(range)
-            }
-        } else if (["Backspace", "Enter"].includes(event.code)) {
+        if (event.code === "ArrowUp") {
+            if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+        }
+        else if (event.code === "ArrowDown") {
+            if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+        }
+        else if (event.code === "ArrowLeft") {
+            let range = new Range()
+            range.setStart(el, 0)
+            document.getSelection()?.removeAllRanges()
+            document.getSelection()?.addRange(range)
+            if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+        }
+        else if (event.code === "ArrowRight") {
+            let range = new Range()
+            range.setStart(el, 1)
+            document.getSelection()?.removeAllRanges()
+            document.getSelection()?.addRange(range)
+            if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+        }
+        else if (event.code === "Backspace" || event.code === "Enter") {
             event.preventDefault()
             let p = global.createElement("p", paragraph.mdtype)
             el.replaceWith(p)

@@ -14,10 +14,13 @@ export default function (this: immediateCompile, e: Event) {
         }
     }
 
-    if (global.state.tempParagraph
-        && global.state.tempParagraph !== global.state.latelyFirstELement
-        && global.state.tempParagraph.childNodes.length === 0) {
-        global.state.tempParagraph.remove()
-        global.state.tempParagraph = undefined
+    if (global.state.tempParagraph) {
+        if (global.state.tempParagraph.childNodes.length !== 0) {
+            global.state.tempParagraph = undefined
+        }
+        else if (global.state.tempParagraph !== global.state.latelyFirstELement) {
+            global.state.tempParagraph.remove()
+            global.state.tempParagraph = undefined
+        }
     }
 }
