@@ -1,5 +1,9 @@
 import type { Module } from "../types"
 import * as global from "../global"
+import paragraph from "./paragraph"
+import hr from "./hr"
+import image from "./image"
+import precode from "./precode"
 export default <Module>{
     mdtype: "table",
     // todo 支持行内特征
@@ -77,5 +81,80 @@ export default <Module>{
         return false
     },
 
+    keydownEvent_Unlimited(el, event) {
+        let table = el.lastElementChild!
+        let thead = table.firstElementChild!
+        let tbody = table.lastElementChild!
 
+        let col = thead.firstElementChild?.childElementCount!
+
+        let focusElement = global.getChildNodeMatchCursor(table)!
+
+        /* command + Enter 新增行 */
+        if (global.state.ACTIVE_META && event.code === "Enter") {
+            let tr = document.createElement("tr")
+            for (let i = 0; i < col; i++) {
+                let th = document.createElement("th")
+                tr.append(th)
+            }
+            if (focusElement === table.firstElementChild) {
+                global.insertBefore(tbody.firstElementChild!, tr)
+            } else if (focusElement === table.lastElementChild) {
+                let focusElement_tbody_row = global.getChildNodeMatchCursor(tbody)!
+                global.insertAfter(focusElement_tbody_row, tr)
+            }
+            global.setCursorPosition(tr.firstElementChild!)
+        }
+
+        else if (event.code === "ArrowUp") {
+            if (focusElement === table.firstElementChild) {
+                if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
+            } else if (focusElement === table.lastElementChild) {
+                event.preventDefault()
+                let row_dom = global.getChildNodeMatchCursor(tbody) as HTMLElement
+                let col_dom = global.getChildNodeMatchCursor(row_dom) as HTMLElement
+                console.log(row_dom, col_dom);
+
+                let row = indexOfELement(row_dom)
+                let col = indexOfELement(col_dom)
+                console.log("row:", row, "   col:", col);
+                if (row === 0) {
+                    global.setCursorPosition(thead.firstElementChild!.children[col])
+                } else {
+                    global.setCursorPosition(tbody.children[row - 1].children[col])
+                }
+            }
+        }
+
+        else if (event.code === "ArrowDown") {
+            if (focusElement === table.firstElementChild) {
+                event.preventDefault()
+                let col_dom = global.getChildNodeMatchCursor(thead.firstElementChild!) as HTMLElement
+                let col = indexOfELement(col_dom)
+                global.setCursorPosition(tbody.firstElementChild!.children[col])
+            } else if (focusElement === table.lastElementChild) {
+                let row_dom = global.getChildNodeMatchCursor(tbody) as HTMLElement
+                if (row_dom === tbody.lastElementChild) {
+                    if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
+                } else {
+                    event.preventDefault()
+                    let row = indexOfELement(row_dom)
+                    let col_dom = global.getChildNodeMatchCursor(row_dom) as HTMLElement
+                    let col = indexOfELement(col_dom)
+                    global.setCursorPosition(tbody.children[row + 1].children[col])
+                }
+            }
+        }
+    },
+}
+
+
+function indexOfELement(el: HTMLElement): number {
+    let parentElement = el.parentElement!
+    for (let i = 0; i < parentElement.children.length; i++) {
+        if (parentElement.children[i] === el) {
+            return i
+        }
+    }
+    return -1
 }

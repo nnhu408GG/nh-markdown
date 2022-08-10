@@ -5,13 +5,13 @@ import hr from "../module_block/hr";
 import image from "../module_block/image";
 import paragraph from "../module_block/paragraph";
 import precode from "../module_block/precode";
+import table from "../module_block/table";
 
 
 // todo 快捷键配置
 
 export default function (this: immediateCompile, e: KeyboardEvent) {
     let sel = document.getSelection()!
-    console.log("keydown");
 
     /* 优先处理Meta */
     if (e.key === "Meta") {
@@ -27,11 +27,14 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
         }
     }
 
-
-
     /* hr 的特殊嵌入 */
     if (global.state.latelyFirstELement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === hr.mdtype) {
         hr.keydownEvent_Unlimited(global.state.latelyFirstELement, e)
+        return
+    }
+
+    else if (global.getAttribute(global.state.latelyFirstELement!) === table.mdtype) {
+        table.keydownEvent_Unlimited(global.state.latelyFirstELement!, e)
         return
     }
 

@@ -13,4 +13,11 @@ export default function (this: immediateCompile, e: Event) {
             image.focusEvent(moduleELement)
         }
     }
+
+    if (global.state.tempParagraph
+        && global.state.tempParagraph !== global.state.latelyFirstELement
+        && global.state.tempParagraph.childNodes.length === 0) {
+        global.state.tempParagraph.remove()
+        global.state.tempParagraph = undefined
+    }
 }

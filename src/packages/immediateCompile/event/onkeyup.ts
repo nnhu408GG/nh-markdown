@@ -9,6 +9,13 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
         global.state.ACTIVE_META = false
     }
 
+    if (global.state.tempParagraph
+        && global.state.tempParagraph !== global.state.latelyFirstELement
+        && global.state.tempParagraph.childNodes.length === 0) {
+        global.state.tempParagraph.remove()
+        global.state.tempParagraph = undefined
+    }
+
     // let mat = false
     // for (let mod in this.modules) {
     //     let _t = this.modules[mod].matchHTMLElement?.(moduleELement)

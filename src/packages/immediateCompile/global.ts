@@ -31,6 +31,10 @@ export const state =
         ACTIVE_META: boolean
         /** 最近一次记录的firstElement */
         latelyFirstELement?: HTMLElement
+
+        /** 特殊 moduleBlock 生成的临时空行 */
+        tempParagraph?: HTMLElement
+
         /** 记录selection的变化 */
         latelySelection: {
             anchorNode?: Node
@@ -42,6 +46,7 @@ export const state =
         MODULE: [] as Module[],
         ACTIVE_META: false,
         latelyFirstELement: undefined,
+        tempParagraph: undefined,
         latelySelection: {
             anchorNode: undefined,
             anchorOffset: undefined,
@@ -225,26 +230,50 @@ export function getFragementRangeToEnd(el: HTMLElement): DocumentFragment | unde
 
 export function getAttribute(el: HTMLElement) {
     if (el instanceof HTMLElement && el.hasAttribute(state.MODULE_ATTRIBUTE_SIGN)) {
-        return el.getAttribute(state.MODULE_ATTRIBUTE_SIGN)
+        return el.getAttribute(state.MODULE_ATTRIBUTE_SIGN)!
     }
+    return ""
 }
 
-
-function getPreviousElementSibling_bubble_iterator(moduleElement: HTMLElement): HTMLElement | undefined {
-    let nextElement = moduleElement.previousElementSibling as HTMLElement
-    if (nextElement
-        && !nextElement.classList.contains("checkbox")
+export function createTempParagraph(el: HTMLElement, from: "ArrowUp" | "ArrowDown"): boolean {
+    let nextElement = (from === "ArrowUp" ? el.previousElementSibling : el.nextElementSibling) as HTMLElement
+    if (!nextElement
+        || (nextElement
+            && [
+                hr.mdtype,
+                table.mdtype,
+                image.mdtype,
+                precode.mdtype
+            ].includes(getAttribute(nextElement)))
     ) {
-        return getModuleELement(nextElement)
-    } else {
-        let parentElement = moduleElement.parentElement!
-        if (parentElement === state.BIND_ELEMENT) {
-            return
+        let tempParagraph = createElement("p", paragraph.mdtype)
+        state.tempParagraph = tempParagraph
+        if (from === "ArrowUp") {
+            insertBefore(el, tempParagraph)
         } else {
-            return getPreviousElementSibling_bubble_iterator(parentElement)
+            insertAfter(el, tempParagraph)
         }
+        setCursorPosition(tempParagraph)
+        return true
     }
+    return false
 }
+
+// function getPreviousElementSibling_bubble_iterator(moduleElement: HTMLElement): HTMLElement | undefined {
+//     let nextElement = moduleElement.previousElementSibling as HTMLElement
+//     if (nextElement
+//         && !nextElement.classList.contains("checkbox")
+//     ) {
+//         return getModuleELement(nextElement)
+//     } else {
+//         let parentElement = moduleElement.parentElement!
+//         if (parentElement === state.BIND_ELEMENT) {
+//             return
+//         } else {
+//             return getPreviousElementSibling_bubble_iterator(parentElement)
+//         }
+//     }
+// }
 
 // export function getPreviousElementSibling(el?: Node) {
 //     if (!el) el = document.getSelection()?.anchorNode!
@@ -286,19 +315,6 @@ function getPreviousElementSibling_bubble_iterator(moduleElement: HTMLElement): 
 //             break
 //         }
 //     }
-// }
-
-// /** 元素位于第几个
-//  * @return "-1"表示错误
-//  */
-// export function indexOfELement(el: HTMLElement): number {
-//     let parentElement = el.parentElement!
-//     for (let i = 0; i < parentElement.children.length; i++) {
-//         if (parentElement.children[i] === el) {
-//             return i
-//         }
-//     }
-//     return -1
 // }
 
 // /** 输入父级元素
