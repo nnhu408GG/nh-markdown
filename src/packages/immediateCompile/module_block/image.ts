@@ -93,15 +93,18 @@ export default <Module>{
         let label = el.firstElementChild
         let data = el.firstChild?.textContent!
         let mat = /^!\[(.*)\]\((.+)\)$/g.test(data)
-        if (!(mat && label?.childNodes.length !== 1 && el.children.length === 2)) {
+        if (!(mat && label?.childNodes.length !== 1 && el.children.length === 2 && label?.childNodes.length === 1)) {
             let sel = document.getSelection()!
             let anchorOffset = sel.anchorOffset
-            // label?.setAttribute()
-            // el.replaceWith(p)
-            // let range = new Range()
-            // range.setStart(p.firstChild!, anchorOffset)
-            // sel.removeAllRanges()
-            // sel.addRange(range)
+
+            let p = global.createElement("p", paragraph.mdtype)
+            p.append(label?.firstChild!)
+            el.replaceWith(p)
+
+            let range = new Range()
+            range.setStart(p.firstChild!, anchorOffset)
+            document.getSelection()?.removeAllRanges()
+            document.getSelection()?.addRange(range)
         }
     },
 
