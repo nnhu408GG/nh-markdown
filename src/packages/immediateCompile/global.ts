@@ -151,6 +151,10 @@ export function classNameAddFocus(el?: HTMLElement): boolean {
         let tempLatelyFirstElement = state.latelyFirstELement
         state.latelyFirstELement = el
 
+        if (el.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === image.mdtype) {
+            image.focusEvent(el)
+        }
+
         if (tempLatelyFirstElement?.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === paragraph.mdtype) {
             /**
              * precode

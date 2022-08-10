@@ -1,5 +1,6 @@
 import type { Module } from "../types"
 import * as global from "../global"
+import paragraph from "./paragraph"
 
 // todo 支持图片的嵌入
 // todo 支持行内特征
@@ -9,7 +10,8 @@ export default <Module>{
         global.classNameAddFocus(el)
         let label = el.firstElementChild!
         let data = label.firstChild?.textContent!
-        let mat = /^!\[(.+)\]\((.+)\)$/g.exec(data)!
+        let mat = /^!\[(.*)\]\((.+)\)$/g.exec(data)!
+
         let range = new Range()
         range.setStart(label.firstChild!, 2)
         range.setEnd(label.firstChild!, mat[1].length + 2)
@@ -19,7 +21,9 @@ export default <Module>{
 
     changeFocus_AtParagraph(el) {
         let data = el.firstChild?.textContent!
-        let mat = /^!\[(.+)\]\((.+)\)$/g.exec(data)
+        let mat = /^!\[(.*)\]\((.+)\)$/g.exec(data)
+        console.log("mat:", mat);
+
         if (mat && el.childNodes.length === 1) {
             let labelName = mat[1]
             let url = mat[2]
@@ -58,20 +62,48 @@ export default <Module>{
         return false
     },
 
-    // inputEvent_Unlimited(el) {
-    //     let p = global.getChildNodeMatchCursor(el)!
-    //     let data = el.firstChild?.textContent!
-    //     let mat = /^!\[(.+)\]\((.+)\)$/g.test(data)
-    //     if (!mat) {
-    //         let sel = document.getSelection()!
-    //         let anchorOffset = sel.anchorOffset
-    //         el.replaceWith(p)
-    //         let range = new Range()
-    //         range.setStart(p.firstChild!, anchorOffset)
-    //         sel.removeAllRanges()
-    //         sel.addRange(range)
-    //     }
-    // },
+    enterEvent_Begin(el, event) {
+        event.preventDefault()
+        let p = global.createElement("p", paragraph.mdtype)
+        global.insertBefore(el, p)
+        global.setCursorPosition(p)
+    },
+
+    enterEvent_After(el, event) {
+        event.preventDefault()
+        let label = el.firstElementChild as HTMLElement
+        let fragment = global.getFragementRangeToEnd(label)
+        if (fragment) {
+            let beforeParagraph = global.createElement("p", paragraph.mdtype)
+            beforeParagraph.append(label.firstChild!)
+            let afterParagraph = global.createElement("p", paragraph.mdtype)
+            afterParagraph.append(fragment)
+            global.insertBefore(el, beforeParagraph)
+            global.insertAfter(el, afterParagraph)
+            el.remove()
+            global.setCursorPosition(afterParagraph)
+        } else {
+            let p = global.createElement("p", paragraph.mdtype)
+            global.insertAfter(el, p)
+            global.setCursorPosition(p)
+        }
+    },
+
+    inputEvent_Unlimited(el) {
+        let label = el.firstElementChild
+        let data = el.firstChild?.textContent!
+        let mat = /^!\[(.*)\]\((.+)\)$/g.test(data)
+        if (!(mat && label?.childNodes.length !== 1 && el.children.length === 2)) {
+            let sel = document.getSelection()!
+            let anchorOffset = sel.anchorOffset
+            // label?.setAttribute()
+            // el.replaceWith(p)
+            // let range = new Range()
+            // range.setStart(p.firstChild!, anchorOffset)
+            // sel.removeAllRanges()
+            // sel.addRange(range)
+        }
+    },
 
     // enterEvent_Begin(el, event) {
     //     event.preventDefault()
