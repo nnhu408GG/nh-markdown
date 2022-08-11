@@ -1,5 +1,6 @@
 import type { Module } from "../types"
 import * as global from "../global"
+import * as globalInline from "../module_inline"
 import blockquote from "./blockquote"
 import unorderedList from "./unorderedList"
 import orderedList from "./orderedList"
@@ -68,27 +69,6 @@ export default <Module>{
         }
         global.insertAfter(el, p)
         global.setCursorPosition(p)
-
-
-        /** todo upgradeInParagraphAfterEnter(el)
-         * - image
-         * - table
-         * - precode
-         * - unorderedList
-         * - orderedList
-         */
-
-        //     // console.log("p标签末尾");
-        //     if (/^```.*$/g.test(data)) {
-        //         // event.preventDefault()
-        //         module_PreCode.changeFocus_AtParagraph(el)
-        //         return
-        //     }
-        //     if (/^!\[(.+)\]\((.+)\)$/g.test(data)) {
-        //         // event.preventDefault()
-        //         module_Image.changeFocus_AtParagraph(el)
-        //         return
-        //     }
     },
 
     deleteEvent_Begin(el, event) {
@@ -109,9 +89,7 @@ export default <Module>{
 
         let previousElementSibling = el.previousElementSibling as HTMLEmbedElement
         if (previousElementSibling) {
-            // todo paragraph 内容不一定全都是有的
             let mdtype = global.getAttribute(previousElementSibling)
-
             if (mdtype === hr.mdtype) {
                 event.preventDefault()
                 previousElementSibling.remove()
@@ -165,41 +143,16 @@ export default <Module>{
                 el.remove()
             }
         }
-
-        // if (el.previousElementSibling?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === this.mdtype
-        //     && el.previousElementSibling.childNodes.length === 0
-        // ) {
-        //     console.log(11123231);
-
-        //     event.preventDefault()
-        //     el.previousElementSibling.remove()
-        // }
-
-        // if (el.parentElement?.children.length === 1) {
-        //     let br = document.createElement("br")
-        //     if (el.childNodes.length === 0) {
-        //         event.preventDefault()
-        //     } else if (el.children.length === 1 && el.firstElementChild?.isEqualNode(br)) {
-        //         event.preventDefault()
-        //     }
-        // } else if (el.previousElementSibling?.tagName === "PRE") {
-        //     event.preventDefault()
-        //     global.setCursorPosition(el.previousElementSibling.firstElementChild?.lastElementChild!, -1)
-        //     el.remove()
-        // } else if (el.previousElementSibling?.className === "hr") {
-        //     event.preventDefault()
-        //     el.previousElementSibling.remove()
-        // }
     },
 
-    // paragraph 的 inputEvent_Unlimited 事件会在 upgradeInParagraph 内执行
-    // inputEvent_Unlimited(el) { },
-
+    // belong inputEvent
     upgradeInParagraph(el) {
+        globalInline.getInlineStruct_textContent(el)
+
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === unorderedList.mdtype) {
             unorderedList.inputEvent_Unlimited(el)
-            // return true // 这里不要结束匹配
+            // return true // 这里不要结束匹配!!!!
         }
         return false
     },

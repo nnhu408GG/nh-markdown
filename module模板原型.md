@@ -137,7 +137,7 @@
 # 1.code
 
 ```html
-<span mdtype="code" class="md-pair-s">
+<span mdtype="code">
     <span class="meta">`</span>
     <code>...<code>
     <span class="meta">`</span>
@@ -147,7 +147,7 @@
 # 2.b bold strong
 
 ```html
-<span mdtype="strong" class="md-pair-s">
+<span mdtype="strong">
     <span class="meta">**</span>
     <strong>...<strong>
     <span class="meta">**</span>
@@ -157,9 +157,19 @@
 # 3.em
 
 ```html
-<span mdtype="em" class="md-pair-s">
+<span mdtype="em">
     <span class="meta">*</span>
     <em>...<em>
     <span class="meta">*</span>
 </span>
 ```
+
+# 4.link
+
+<a mdtype="link" href="urlxxxxxxx">
+    <span class="meta">[</span>
+    <span>label</span>
+    <span class="meta">](</span>
+    <span class="meta url">urlxxxxxxx</span>
+    <span class="meta">)</span>
+</a>

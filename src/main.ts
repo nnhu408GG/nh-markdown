@@ -1,7 +1,8 @@
 import './style.less'
 import nhMrk from './packages'
 import paragraph from './packages/immediateCompile/module_block/paragraph';
-
+import * as global from './packages/immediateCompile/global';
+import * as globalInline from './packages/immediateCompile/module_inline'
 
 /* ============= template ============= */
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -62,94 +63,68 @@ btn.onclick = () => {
     // let source = wys.getSource()
 }
 
-let temp = document.createElement("p")
-temp.setAttribute("mdtype", "paragraph")
-temp.innerText = "h3lo2_z!"
-// let nomalspan = document.createElement("span")
-// nomalspan.innerText = "nomalspan"
-// temp.append(nomalspan)
-dom.append(temp)
+let testElement = document.createElement("p")
+testElement.setAttribute("mdtype", "paragraph")
+dom.append(testElement)
+
+// let textA = document.createTextNode("TEXTA***TE`XTA**TE`XT`A")
+let textA = document.createTextNode("TE[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA")
+testElement.append(textA)
+
+
+let tempStrongA_TextNode = document.createTextNode("STRONGA")
+let tempStrongA = globalInline.createInlineElement({
+    tagName: "strong",
+    sign: "**",
+    fragment: tempStrongA_TextNode
+})
+testElement.append(tempStrongA)
+
+let tempStrongB_TextNode = document.createTextNode("STRONGB")
+let tempStrongB = globalInline.createInlineElement({
+    tagName: "strong",
+    sign: "**",
+    fragment: tempStrongB_TextNode
+})
+testElement.append(tempStrongB)
 
 
 
-let tempStrong = document.createElement("span")
-tempStrong.setAttribute("mdtype", "strong")
-let meta1 = document.createElement("span")
-meta1.classList.add("meta")
-meta1.innerText = "**"
-let meta2 = meta1.cloneNode(true)
-let _strong = document.createElement("strong")
-_strong.innerText = "strongDemo"
-tempStrong.append(meta1)
-tempStrong.append(_strong)
-tempStrong.append(meta2)
-temp.append(tempStrong)
+let textB = document.createTextNode("TEXTB")
+testElement.append(textB)
 
-// paragraph.enterEvent_After(dom, null)
-
-
-let tempSpan1 = document.createElement("em")
-tempSpan1.innerText = "tempSpan1"
-temp.append(tempSpan1)
-
-
-// console.log(temp.compareDocumentPosition(tempSpan1));
-// console.log(tempSpan1.compareDocumentPosition(temp));
-
-
-// let tempnode = document.createTextNode("ffsdf")
-// console.log(tempnode instanceof HTMLElement);
-// let tempel = document.createElement("span")
-// console.log(tempel instanceof HTMLElement);
-
-
-// let data = "+ jkj"
-// let mat = /^(-|\*|\+|\d+\.)\s.*$/g.exec(data)
-// console.log(mat);
-
-// let str = "12345."
-// console.log(parseInt(str.slice(0, -1)));
-
-// import lessStatus from "./className.module.less"
-// console.log(lessStatus.res);
-// console.log(lessStatus);
+let containerA_fragment = document.createDocumentFragment()
+testElement.append(containerA_fragment)
+let containerA_textA = document.createTextNode("containerA_textA")
+containerA_fragment.append(containerA_textA)
+let containerA_emA_textNode = document.createTextNode("containerA_emA")
+let containerA_emA = globalInline.createInlineElement({
+    tagName: "em",
+    sign: "*",
+    fragment: containerA_emA_textNode
+})
+containerA_fragment.append(containerA_emA)
+let containerA_textB = document.createTextNode("containerA_textB")
+containerA_fragment.append(containerA_textB)
+let containerA_codeA_textNode = document.createTextNode("containerA_codeA")
+let containerA_codeA = globalInline.createInlineElement({
+    tagName: "code",
+    sign: "`",
+    fragment: containerA_codeA_textNode
+})
+containerA_fragment.append(containerA_codeA)
+let containerA_textC = document.createTextNode("containerA_textC")
+containerA_fragment.append(containerA_textC)
 
 
 
-// function FontMetrics(family: string, size: number | string) {
-//     this._family = family || (family = "Monaco, 'Courier New', Courier, monospace");
-//     this._size = parseInt(size) || (size = 12);
-
-//     // Preparing container
-//     var line = document.createElement('div'),
-//         body = document.body;
-//     line.style.position = 'absolute';
-//     line.style.whiteSpace = 'nowrap';
-//     line.style.font = size + 'px ' + family;
-//     body.appendChild(line);
-
-//     // Now we can measure width and height of the letter
-//     line.innerHTML = 'm'; // It doesn't matter what text goes here
-//     this._width = line.offsetWidth;
-//     this._height = line.offsetHeight;
-
-//     // Now creating 1px sized item that will be aligned to baseline
-//     // to calculate baseline shift
-//     var span = document.createElement('span');
-//     span.style.display = 'inline-block';
-//     span.style.overflow = 'hidden';
-//     span.style.width = '1px';
-//     span.style.height = '1px';
-//     line.appendChild(span);
-
-//     // Baseline is important for positioning text on canvas
-//     this._baseline = span.offsetTop + span.offsetHeight;
-
-//     document.body.removeChild(line);
-// };
-
-// FontMetrics.prototype.getSize = function () {
-//     return this._size;
-// };
+let containerA = globalInline.createInlineElement({
+    tagName: "strong",
+    sign: "**",
+    fragment: containerA_fragment
+})
+testElement.append(containerA)
 
 
+globalInline.getInlineStruct_textContent(testElement)
+// global.getInlineStruct(testElement)

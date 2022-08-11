@@ -11,14 +11,10 @@ import blockquote from "./module_block/blockquote";
 
 /** 聚焦元素的 className */
 const FIRSTELEMENT_FOCUSSIGN = "focus";
-/** 行内特殊元素的 className */
-const INLINESIGN = "md-pair-s"
 
 // 向内部函数暴露一些重要的参数
 export const state =
     <{
-        /** 识别该module是inline元素的标志，用以显示/隐藏特殊文本记号 */
-        MODULE_INLINE_SIGN: string
         /** 识别为module的标志 */
         MODULE_ATTRIBUTE_SIGN: string,
         /** 基于该dom来创建markdown的编辑功能 */
@@ -35,22 +31,17 @@ export const state =
         /** 特殊 moduleBlock 生成的临时空行 */
         tempParagraph?: HTMLElement
 
-        /** 记录selection的变化 */
-        latelySelection: {
-            anchorNode?: Node
-            anchorOffset?: number
-        }
+        /** inline的数据结构对象 */
+        inlineStruct: []
+
     }>{
-        MODULE_INLINE_SIGN: "md-pair-s",
         MODULE_ATTRIBUTE_SIGN: "mdtype",
         MODULE: [] as Module[],
         ACTIVE_META: false,
         latelyFirstELement: undefined,
         tempParagraph: undefined,
-        latelySelection: {
-            anchorNode: undefined,
-            anchorOffset: undefined,
-        }
+        inlineStruct: []
+
     };
 
 /* =============== 通用操作 ======================================================================== */
@@ -126,29 +117,11 @@ export function createElement(tagName: keyof HTMLElementTagNameMap, mdtype: stri
     return dom
 }
 
-/** 创建inline的模板 */
-export function createInlineElement(opt: { tagName: keyof HTMLElementTagNameMap, mdtype: string, sign: string, fragment: DocumentFragment }) {
-    let container = document.createElement("span")
-    container.setAttribute(state.MODULE_ATTRIBUTE_SIGN, opt.mdtype)
-    container.classList.add(state.MODULE_INLINE_SIGN)
-
-    let pairBefore = document.createElement("span")
-    pairBefore.classList.add("meta")
-    pairBefore.innerText = opt.sign
-    let pairAfter = pairBefore.cloneNode()
-    let strong = document.createElement(opt.tagName)
-    strong.append(opt.fragment)
-
-    container.append(pairBefore)
-    container.append(strong)
-    container.append(pairAfter)
-    return container
-}
-
-
 /** 转移聚焦的元素，设置class标志 */
 export function classNameAddFocus(el?: HTMLElement): boolean {
     if (el && el !== state.latelyFirstELement) {
+        console.log("changeNameAddFoucs");
+
         // todo focus 切换执行
         el.classList.add(FIRSTELEMENT_FOCUSSIGN)
         state.latelyFirstELement?.classList.remove(FIRSTELEMENT_FOCUSSIGN)
@@ -258,3 +231,4 @@ export function createTempParagraph(el: HTMLElement, from: "ArrowUp" | "ArrowDow
     }
     return false
 }
+
