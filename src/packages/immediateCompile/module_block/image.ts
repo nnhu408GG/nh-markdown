@@ -54,8 +54,6 @@ export default <Module>{
             container.append(img)
             imgContainer.append(container)
             el.replaceWith(imgContainer)
-            // global.classNameAddFocus(imgContainer)
-            // this.focusEvent(imgContainer)
             return true
         }
         return false

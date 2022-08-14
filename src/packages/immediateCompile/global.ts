@@ -1,5 +1,6 @@
 import { Module } from "./types";
 import type { BeforeMatch, AfterHandle } from "./types"
+import * as globalInline from "./module_inline"
 import paragraph from "./module_block/paragraph";
 import hr from "./module_block/hr";
 import precode from "./module_block/precode";
@@ -117,10 +118,15 @@ export function createElement(tagName: keyof HTMLElementTagNameMap, mdtype: stri
     return dom
 }
 
-/** 转移聚焦的元素，设置class标志 */
-export function classNameAddFocus(el?: HTMLElement): boolean {
+/** @desc 转移聚焦的元素，设置class标志
+ * @param el 操作的dom对象
+ * @param opt inline的操作参数
+ */
+export function classNameAddFocus(el: HTMLElement, opt?: string) {
     if (el && el !== state.latelyFirstELement) {
         console.log("changeNameAddFoucs");
+
+        // todo inline 的左右函数执行条件
 
         // todo focus 切换执行
         el.classList.add(FIRSTELEMENT_FOCUSSIGN)
@@ -132,6 +138,14 @@ export function classNameAddFocus(el?: HTMLElement): boolean {
         if (el.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === image.mdtype) {
             image.focusEvent(el)
         }
+
+        if (state.latelyFirstELement.hasAttribute("inline")) {
+            if (opt === "ArrowLeft" || opt === "ArrowRight") {
+                globalInline.arrowHorizontal(state.latelyFirstELement, opt)
+                return
+            }
+        }
+
 
         if (tempLatelyFirstElement?.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === paragraph.mdtype) {
             /**
@@ -147,11 +161,10 @@ export function classNameAddFocus(el?: HTMLElement): boolean {
                 || image.changeFocus_AtParagraph(tempLatelyFirstElement)
                 || table.changeFocus_AtParagraph(tempLatelyFirstElement)
             ) {
-                return true
+                return
             }
         }
     }
-    return false
 }
 
 /** 处理完毕后的光标位置

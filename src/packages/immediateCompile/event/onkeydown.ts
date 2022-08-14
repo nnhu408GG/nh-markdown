@@ -39,6 +39,10 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
     if (!moduleELement) return
     let basics = { moduleELement, e }
 
+    if (moduleELement.hasAttribute("inline")) {
+        return
+    }
+
 
     /* TODO 处理单键 */
     // if (e.key === "Tab") {

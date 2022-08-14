@@ -1,22 +1,20 @@
 import type { Module } from "../types"
 import * as global from "../global"
-import paragraph from "./paragraph"
-import hr from "./hr"
-import image from "./image"
-import precode from "./precode"
+
 export default <Module>{
     mdtype: "table",
     // todo 支持行内特征
     // todo 上下键的处理
     // todo 图片的嵌入
     changeFocus_AtParagraph(el) {
-        let textContent = el.firstChild?.textContent || ""
-        let datalist = textContent.split("|")
-        if (datalist.length >= 4
-            && datalist.shift() === ""
-            && datalist.pop() === ""
-            && datalist.every(item => item !== "")
-        ) {
+        let data = el.firstChild?.textContent
+        if (!data) return
+        let mat = /^(?:(\|(?:(?!\|).)+))+?\|$/g.test(data)
+        if (mat) {
+            let datalist = data.split("|")
+            datalist.shift()
+            datalist.pop()
+
             let figure = global.createElement("figure", this.mdtype)
             figure.contentEditable = "false"
 
@@ -85,9 +83,7 @@ export default <Module>{
         let table = el.lastElementChild!
         let thead = table.firstElementChild!
         let tbody = table.lastElementChild!
-
         let col = thead.firstElementChild?.childElementCount!
-
         let focusElement = global.getChildNodeMatchCursor(table)!
 
         /* command + Enter 新增行 */

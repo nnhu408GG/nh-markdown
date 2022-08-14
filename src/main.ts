@@ -8,7 +8,7 @@ import * as globalInline from './packages/immediateCompile/module_inline'
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const btn = document.createElement("button")
 btn.innerText = "getSource"
-app.append(btn)
+// app.append(btn)
 const dom = document.createElement("div")
 app.append(dom)
 /* ==================================== */
@@ -68,8 +68,12 @@ testElement.setAttribute("mdtype", "paragraph")
 dom.append(testElement)
 
 // let textA = document.createTextNode("TEXTA***TE`XTA**TE`XT`A")
-let textA = document.createTextNode("TE[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA")
+let textA = document.createTextNode("T**E[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA有啥问题")
 testElement.append(textA)
+
+let linkA_label = document.createTextNode("点击此处")
+let linkA = globalInline.createLinkElement("https://www.baidu.com", linkA_label)
+testElement.append(linkA)
 
 
 let tempStrongA_TextNode = document.createTextNode("STRONGA")
@@ -126,5 +130,4 @@ let containerA = globalInline.createInlineElement({
 testElement.append(containerA)
 
 
-globalInline.getInlineStruct_textContent(testElement)
-// global.getInlineStruct(testElement)
+// globalInline.getInlineStruct_textContent(testElement)

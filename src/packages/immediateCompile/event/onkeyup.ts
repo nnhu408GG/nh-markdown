@@ -1,20 +1,18 @@
 import immediateCompile from "..";
 import * as global from "../global";
+import * as globalInline from "../module_inline";
 export default function (this: immediateCompile, e: KeyboardEvent) {
     let moduleELement = global.getModuleELement()
     if (!moduleELement) return
-    global.classNameAddFocus(moduleELement)
+    // let latelyFirstELement = global.state.latelyFirstELement?
+    // console.log("latelyFirstELement:", latelyFirstELement);
+
+    global.classNameAddFocus(moduleELement, e.code)
 
     if (e.key === "Meta") {
         global.state.ACTIVE_META = false
     }
 
-    // if (global.state.tempParagraph
-    //     && global.state.tempParagraph !== global.state.latelyFirstELement
-    //     && global.state.tempParagraph.childNodes.length === 0) {
-    //     global.state.tempParagraph.remove()
-    //     global.state.tempParagraph = undefined
-    // }
 
     if (global.state.tempParagraph) {
         if (global.state.tempParagraph.childNodes.length !== 0) {
@@ -25,6 +23,14 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
             global.state.tempParagraph = undefined
         }
     }
+
+    // console.log("latelyFirstELement:", latelyFirstELement);
+
+    // if (moduleELement.hasAttribute("inline")
+    //     && (e.code === "ArrowLeft" || e.code === "ArrowRight")) {
+    //     console.log("latelyFirstELement:", global.state.latelyFirstELement);
+    //     globalInline.arrowHorizontal(moduleELement, e.code)
+    // }
 
     // let mat = false
     // for (let mod in this.modules) {
