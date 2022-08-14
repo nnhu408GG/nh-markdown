@@ -6,6 +6,7 @@ import oninput from "./event/oninput"
 import onclick from "./event/onclick"
 
 import module_paragraph from "./module_block/paragraph"
+import onpaste from "./event/onpaste"
 
 const CLASS_NAME = "nh-mrkEdit"
 // class 只负责管理对外暴露的接口，以及初始化处理
@@ -40,6 +41,7 @@ class immediateCompile {
         bindElement.onkeydown = onkeydown.bind(this)
         bindElement.onkeyup = onkeyup.bind(this)
         bindElement.oninput = oninput.bind(this)
+        bindElement.onpaste = onpaste.bind(this) // 粘贴
 
         // bindElement. = (e) => {
         //     console.log("onselectionchange:", e);

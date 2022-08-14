@@ -11,6 +11,8 @@ import table from "../module_block/table";
 // todo 快捷键配置
 
 export default function (this: immediateCompile, e: KeyboardEvent) {
+    console.log("IS_KEYDOWNEVENT");
+    
     let sel = document.getSelection()!
 
     /* 优先处理Meta */
