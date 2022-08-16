@@ -5,18 +5,21 @@ type InlineOptionItem = {
     sign: string
     inlineType: string
     tagName: keyof HTMLElementTagNameMap
+    double: boolean
 };
 
 const inlineModuleOption: InlineOptionItem[] = [
     {
         sign: "*",
         inlineType: "em",
-        tagName: "em"
+        tagName: "em",
+        double: true
     },
     {
         sign: "**",
         inlineType: "strong",
-        tagName: "strong"
+        tagName: "strong",
+        double: true
     },
     // {
     //     sign: "***",
@@ -24,38 +27,58 @@ const inlineModuleOption: InlineOptionItem[] = [
     //     tagName: "strong"
     // },
     {
+        sign: "~~",
+        inlineType: "del",
+        tagName: "del",
+        double: true
+    },
+    {
         sign: "__",
         inlineType: "strong",
-        tagName: "strong"
+        tagName: "strong",
+        double: true
     },
     {
         sign: "`",
         inlineType: "code",
-        tagName: "code"
+        tagName: "code",
+        double: true
     },
+
+
+    // 单边元素暂无支持
     // {
-    //     sign: "\\[",
+    //     sign: "\[",
     //     inlineType: "code",
-    //     tagName: "code"
+    //     tagName: "code",
+    //     double: false
     // }
 ];
 
 /** 创建inline的模板 */
-export function createInlineElement(opt: { tagName: keyof HTMLElementTagNameMap, sign: string, fragment: DocumentFragment | Node }) {
+export function createInlineElement(sign: string, fragment: DocumentFragment | Node) {
+
+    let opt = inlineModuleOption.find(item => item.sign === sign)!
+    console.log("sign:", sign, opt);
+
     let container = document.createElement("span")
     container.setAttribute(global.SIGN.MODULE_ATTRIBUTE, opt.tagName)
     container.setAttribute("inline", "")
 
     let pairBefore = document.createElement("span")
     pairBefore.classList.add("meta")
-    pairBefore.innerText = opt.sign
-    let pairAfter = pairBefore.cloneNode(true)
+    pairBefore.innerText = sign
+
+
     let strong = document.createElement(opt.tagName)
-    strong.append(opt.fragment)
+    strong.append(fragment)
 
     container.append(pairBefore)
     container.append(strong)
-    container.append(pairAfter)
+    if (opt.double) {
+        let pairAfter = pairBefore.cloneNode(true)
+        container.append(pairAfter)
+    }
     return container
 }
 
@@ -147,10 +170,10 @@ export function arrowHorizontal(el: HTMLElement, arrow: "ArrowLeft" | "ArrowRigh
 /** 获取父级元素 */
 // todo 对 table 的 TH 父级元素的支持
 function iterator_getModuleElement(el: HTMLElement): HTMLElement {
-    if (el.hasAttribute(global.SIGN.MODULE_ATTRIBUTE) && !el.hasAttribute("inline")) {
-        if (el.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === table.mdtype) {
-            return table.getCursorHR(el)
-        }
+    if (global.getAttribute(el) === table.mdtype) {
+        el = document.getSelection()?.anchorNode?.parentElement!
+    }
+    if (el.hasAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE)) {
         return el
     }
     return iterator_getModuleElement(el.parentElement!)
@@ -160,7 +183,7 @@ function iterator_getModuleElement(el: HTMLElement): HTMLElement {
 export function handleInline(el: HTMLElement) {
     // console.log("handleInline.el:", el);
     let baseElement = iterator_getModuleElement(el)
-    // console.log("baseElement:", baseElement);
+    console.log("baseElement:", baseElement);
 
     // 记录 光标位置
     let sel = document.getSelection()!
@@ -171,7 +194,7 @@ export function handleInline(el: HTMLElement) {
     // console.log("indexCursor:", indexCursor);
 
 
-    let SIGNLIST = inlineModuleOption.reduce((res, obj) => {
+    let SIGNLIST = inlineModuleOption.filter(item => item.double).reduce((res, obj) => {
         res.push(obj.sign.replaceAll("*", "\\*"))
         return res
     }, <string[]>[]).join("|")
@@ -264,9 +287,9 @@ function iterator_createInlineElement(struct: InlineStructSub[]) {
             let textNode = document.createTextNode(item.content!)
             fragment.append(textNode)
         } else {
-            let tagName = inlineModuleOption.find(sub => sub.sign === item.sign)?.tagName!
+            // let tagName = inlineModuleOption.find(sub => sub.sign === item.sign)?.tagName!
             let fragment_dom = iterator_createInlineElement(item.children!)
-            let dom = createInlineElement({ tagName, sign: item.sign!, fragment: fragment_dom })
+            let dom = createInlineElement(item.sign!, fragment_dom)
             fragment.append(dom)
         }
     }

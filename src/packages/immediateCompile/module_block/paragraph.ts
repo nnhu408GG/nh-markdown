@@ -13,12 +13,13 @@ import table from "./table"
 // import module_Image from "./image"
 
 interface Plugin {
-    createBasics(): HTMLParagraphElement
+    createBasics(fragment?: DocumentFragment | Node): HTMLParagraphElement
 }
 
 export default <Module & Plugin>{
     mdtype: "paragraph",
-    createBasics(fragment?: DocumentFragment | Node): HTMLParagraphElement {
+
+    createBasics(fragment) {
         let dom = document.createElement("p")
         dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
         dom.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
@@ -49,7 +50,7 @@ export default <Module & Plugin>{
             && orderedList.enterEvent_Begin(el, event)
         ) return
 
-        let p = global.createElement("p", this.mdtype)
+        let p = this.createBasics()
         global.insertBefore(el, p)
     },
 
@@ -66,7 +67,7 @@ export default <Module & Plugin>{
             && orderedList.enterEvent_After(el, event)
         ) return
 
-        let p = global.createElement("p", this.mdtype)
+        let p = this.createBasics()
         let fragment = global.getFragementRangeToEnd(el)
         if (fragment) {
             p.append(fragment)

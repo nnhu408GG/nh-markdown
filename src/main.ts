@@ -77,19 +77,11 @@ testElement.append(linkA)
 
 
 let tempStrongA_TextNode = document.createTextNode("STRONGA")
-let tempStrongA = globalInline.createInlineElement({
-    tagName: "strong",
-    sign: "**",
-    fragment: tempStrongA_TextNode
-})
+let tempStrongA = globalInline.createInlineElement("**", tempStrongA_TextNode)
 testElement.append(tempStrongA)
 
 let tempStrongB_TextNode = document.createTextNode("STRONGB")
-let tempStrongB = globalInline.createInlineElement({
-    tagName: "strong",
-    sign: "**",
-    fragment: tempStrongB_TextNode
-})
+let tempStrongB = globalInline.createInlineElement("**", tempStrongB_TextNode)
 testElement.append(tempStrongB)
 
 
@@ -102,29 +94,17 @@ testElement.append(containerA_fragment)
 let containerA_textA = document.createTextNode("containerA_textA")
 containerA_fragment.append(containerA_textA)
 let containerA_emA_textNode = document.createTextNode("containerA_emA")
-let containerA_emA = globalInline.createInlineElement({
-    tagName: "em",
-    sign: "*",
-    fragment: containerA_emA_textNode
-})
+let containerA_emA = globalInline.createInlineElement("*", containerA_emA_textNode)
 containerA_fragment.append(containerA_emA)
 let containerA_textB = document.createTextNode("containerA_textB")
 containerA_fragment.append(containerA_textB)
 let containerA_codeA_textNode = document.createTextNode("containerA_codeA")
-let containerA_codeA = globalInline.createInlineElement({
-    tagName: "code",
-    sign: "`",
-    fragment: containerA_codeA_textNode
-})
+let containerA_codeA = globalInline.createInlineElement("`", containerA_codeA_textNode)
 containerA_fragment.append(containerA_codeA)
 let containerA_textC = document.createTextNode("containerA_textC")
 containerA_fragment.append(containerA_textC)
 
-let containerA = globalInline.createInlineElement({
-    tagName: "strong",
-    sign: "**",
-    fragment: containerA_fragment
-})
+let containerA = globalInline.createInlineElement("**", containerA_fragment)
 testElement.append(containerA)
 
 console.log("compareDocumentPosition:", containerA.compareDocumentPosition(testElement));

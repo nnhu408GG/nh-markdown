@@ -410,16 +410,12 @@ body {
 
       &>tbody {
         // border: 1px @primary-color solid;
-
       }
     }
   }
 
   /* ===== strong ===== */
-  [mdtype="strong"],
-  [mdtype="em"],
-  [mdtype="code"],
-  [mdtype="link"] {
+  [inline] {
     .meta {
       margin        : 0 4px;
       display       : none;
@@ -454,11 +450,13 @@ body {
     color          : @focus-color;
     font-weight    : bold;
     text-decoration: none;
+
     &>span:nth-child(2) {
       text-decoration: underline 2px;
     }
+
     .url {
-      color: @focus-color;
+      color          : @focus-color;
       text-decoration: underline 2px;
     }
   }

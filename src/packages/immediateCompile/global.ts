@@ -118,12 +118,6 @@ export function isInlineBlock(el: HTMLElement) {
     return res === "inline"
 }
 
-export function createElement(tagName: keyof HTMLElementTagNameMap, mdtype: string) {
-    let dom = document.createElement(tagName)
-    dom.setAttribute(SIGN.MODULE_ATTRIBUTE, mdtype)
-    return dom
-}
-
 /** @desc 转移聚焦的元素，设置class标志
  * @param el 操作的dom对象
  * @param opt inline的操作参数
@@ -214,13 +208,15 @@ export function insertAfter(el: Node, add: Node) {
 export function getFragementRangeToEnd(el: HTMLElement): DocumentFragment | undefined {
     let sel = document.getSelection()
     if (sel) {
-        let _e = el.cloneNode(true)
-        let range = new Range()
-        range.setStart(sel.anchorNode!, sel.anchorOffset!)
-        range.setEndAfter(el.lastChild!)
-        let fragement = range.extractContents()
-        if (!el.isEqualNode(_e)) {
-            return fragement
+        if (el.childNodes.length !== 0) {
+            let _e = el.cloneNode(true)
+            let range = new Range()
+            range.setStart(sel.anchorNode!, sel.anchorOffset!)
+            range.setEndAfter(el.lastChild!)
+            let fragement = range.extractContents()
+            if (!el.isEqualNode(_e)) {
+                return fragement
+            }
         }
     }
     return
@@ -244,7 +240,7 @@ export function createTempParagraph(el: HTMLElement, from: "ArrowUp" | "ArrowDow
                 precode.mdtype
             ].includes(getAttribute(nextElement)))
     ) {
-        let tempParagraph = createElement("p", paragraph.mdtype)
+        let tempParagraph = paragraph.createBasics()
         state.tempParagraph = tempParagraph
         if (from === "ArrowUp") {
             insertBefore(el, tempParagraph)

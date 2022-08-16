@@ -1,22 +1,30 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
-// import strong from "../module_inline/strong"
-export default <Module>{
+
+interface Plugin {
+    createBasics(rank: number, fragment?: DocumentFragment): HTMLHeadElement
+}
+
+export default <Module & Plugin>{
     mdtype: "head",
+
+    createBasics(rank, fragment) {
+        let dom = document.createElement(`h${rank}`) as HTMLHeadElement
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        dom.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
+        fragment && dom.append(fragment)
+        return dom
+    },
+
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^(#{1,6})\s(.*)/g.exec(data)
         if (mat) {
-            let tagNameRank = mat[1].length
-            let h = global.createElement(`h${tagNameRank}` as keyof HTMLElementTagNameMap, this.mdtype)
-            if (el.childNodes.length !== 1 || mat[2] !== "") {
-                let range = new Range()
-                range.setStart(el.firstChild!, tagNameRank + 1)
-                range.setEndAfter(el.lastChild!)
-                let fragement = range.extractContents()
-                h.append(fragement)
-            }
+            let rank = mat[1].length
+
+            let fragment = global.getFragementRangeToEnd(el)
+            let h = this.createBasics(rank, fragment)
             el.replaceWith(h)
             global.setCursorPosition(h)
             return true
@@ -26,7 +34,7 @@ export default <Module>{
 
     enterEvent_Begin(el, event) {
         event.preventDefault()
-        let p = global.createElement("p", paragraph.mdtype)
+        let p = paragraph.createBasics()
         global.insertBefore(el, p)
     },
 
@@ -40,7 +48,7 @@ export default <Module>{
         range.setEndAfter(el.lastChild!)
         let fragement = range.extractContents()
 
-        let p = global.createElement("p", paragraph.mdtype)
+        let p = paragraph.createBasics()
         if (!el.isEqualNode(_el)) {
             p.append(fragement)
         }
@@ -50,12 +58,10 @@ export default <Module>{
 
     deleteEvent_Begin(el, event) {
         event.preventDefault()
-        let range = new Range()
-        range.setStartBefore(el.firstChild!)
-        range.setEndAfter(el.lastChild!)
-        let fragement = range.cloneContents()
-        let p = global.createElement("p", paragraph.mdtype)
-        p.append(fragement)
+        console.log("title delete begin");
+
+        let fragment = global.getFragementRangeToEnd(el)
+        let p = paragraph.createBasics(fragment)
         el.replaceWith(p)
         global.setCursorPosition(p)
     },

@@ -1,18 +1,26 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
-export default <Module>{
+
+interface Plugin {
+    createBasics(): HTMLDivElement
+}
+
+export default <Module & Plugin>{
     mdtype: "hr",
+
+    createBasics() {
+        let dom = document.createElement("div")
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        let hr = document.createElement("hr")
+        dom.append(hr)
+        return dom
+    },
 
     changeFocus_AtParagraph(el) {
         if (el.childNodes.length === 1 && el.firstChild?.textContent === "---") {
-            let container = document.createElement("div")
-            container.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-            container.classList.add("hr")
-            // container.contentEditable = "false"
-            let hr = document.createElement("hr")
-            container.append(hr)
-            el.replaceWith(container)
+            let dom = this.createBasics()
+            el.replaceWith(dom)
             return true
         }
         return false
@@ -41,7 +49,7 @@ export default <Module>{
         }
         else if (event.code === "Backspace" || event.code === "Enter") {
             event.preventDefault()
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             el.replaceWith(p)
             global.setCursorPosition(p)
         } else {

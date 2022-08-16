@@ -1,29 +1,34 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
-export default <Module>{
+
+interface Plugin {
+    createBasics(start: number, fragment: HTMLParagraphElement[]): HTMLOListElement
+}
+
+export default <Module & Plugin>{
     mdtype: "ordered-list",
+
+    createBasics(start, fragment) {
+        let ol = document.createElement("ol")
+        ol.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        ol.start = start
+        for (let i = 0; i < fragment!.length; i++) {
+            let li = document.createElement("li")
+            ol.append(li)
+            li.append(fragment[i])
+        }
+        return ol
+    },
 
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^(\d+)\.\s/g.exec(data)
         if (mat) {
-            let ol = global.createElement("ol", this.mdtype) as HTMLOListElement
-            ol.start = Number(mat[1])
-            let li = document.createElement("li")
-            ol.append(li)
-            let p = global.createElement("p", paragraph.mdtype)
-            li.append(p)
-            let _e = el.cloneNode(true)
-            console.log(_e, mat[1].length + 2);
-
-            let range = new Range()
-            range.setStart(el.firstChild!, mat[1].length + 2)
-            range.setEndAfter(el.lastChild!)
-            let fragment = range.extractContents()
-            if (!el.isEqualNode(_e)) {
-                p.append(fragment)
-            }
+            let start = parseInt(mat[1])
+            let fragment = global.getFragementRangeToEnd(el)
+            let p = paragraph.createBasics(fragment)
+            let ol = this.createBasics(start, [p])
             el.replaceWith(ol)
             global.setCursorPosition(p)
             return true
@@ -63,7 +68,9 @@ export default <Module>{
                     global.insertAfter(parentElement_ol, el)
                     parentElement_li.remove()
 
-                    let ol = global.createElement("ol", this.mdtype) as HTMLOListElement
+
+                    let ol = document.createElement("ol")
+                    ol.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
                     ol.start = parentElement_ol.children.length + parentElement_ol.start
                     ol.append(fragement)
                     global.insertAfter(el, ol)
@@ -73,7 +80,7 @@ export default <Module>{
             }
 
             let li = document.createElement("li")
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             li.append(p)
             global.insertBefore(parentElement_li, li)
             return true
@@ -86,7 +93,7 @@ export default <Module>{
         if (parentElement_li.children.length === 1) {
             event.preventDefault()
             let li = document.createElement("li")
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             li.append(p)
             let fragment = global.getFragementRangeToEnd(el)
             if (fragment) {

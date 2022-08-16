@@ -2,8 +2,20 @@ import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
 
-export default <Module>{
+interface Plugin {
+    createBasics(fragment?: DocumentFragment | Node): HTMLQuoteElement
+}
+
+export default <Module & Plugin>{
     mdtype: "blockquote",
+
+    createBasics(fragment) {
+        let dom = document.createElement("blockquote")
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        fragment && dom.append(fragment)
+        return dom
+    },
+
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^>\s.*$/g.test(data)
@@ -17,9 +29,8 @@ export default <Module>{
             range.setEndAfter(el.lastChild!)
             let fragement = range.extractContents()
 
-            let blockquote = document.createElement("blockquote")
-            blockquote.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
+            let blockquote = this.createBasics(p)
 
             if (!el.isEqualNode(_e)) {
                 p.append(fragement)
@@ -36,7 +47,7 @@ export default <Module>{
         console.log('success use this');
         // todo 需解决br生成
         if (el.childNodes.length === 0) {
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             let parentElement_blockquote = el.parentElement!
             if (parentElement_blockquote.children.length === 1) {
                 global.insertBefore(parentElement_blockquote, p)
@@ -52,8 +63,7 @@ export default <Module>{
                     range.setStartBefore(el.nextElementSibling!)
                     range.setEndAfter(parentElement_blockquote.lastElementChild!)
                     let fragement = range.extractContents()
-                    let tempBlockquote = global.createElement("blockquote", this.mdtype)
-                    tempBlockquote.append(fragement)
+                    let tempBlockquote = this.createBasics(fragement)
                     global.insertAfter(parentElement_blockquote, tempBlockquote)
                     global.insertAfter(parentElement_blockquote, p)
                 }

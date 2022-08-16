@@ -1,21 +1,36 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
-export default <Module>{
+
+interface Plugin {
+    createBasics(fragment: HTMLParagraphElement[] | DocumentFragment): HTMLOListElement
+}
+
+export default <Module & Plugin>{
     mdtype: "unordered-list",
+
+    createBasics(fragment) {
+        let ul = document.createElement("ul")
+        ul.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        if (fragment instanceof DocumentFragment) {
+            ul.append(fragment)
+        } else {
+            for (let i = 0; i < fragment!.length; i++) {
+                let li = document.createElement("li")
+                ul.append(li)
+                li.append(fragment[i])
+            }
+        }
+        return ul
+    },
+
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^(-|\*|\+|\d+\.)\s/g.exec(data)
         if (mat) {
-            let ul = global.createElement("ul", this.mdtype)
-            let li = document.createElement("li")
-            ul.append(li)
-            let p = global.createElement("p", paragraph.mdtype)
-            li.append(p)
             let fragment = global.getFragementRangeToEnd(el)
-            if (fragment) {
-                p.append(fragment)
-            }
+            let p = paragraph.createBasics(fragment)
+            let ul = this.createBasics([p])
             el.replaceWith(ul)
             global.setCursorPosition(p)
             return true
@@ -52,8 +67,7 @@ export default <Module>{
                     range.setStartBefore(parentElement_li.nextElementSibling!)
                     range.setEndAfter(parentElement_ul.lastElementChild!)
                     let fragement = range.extractContents()
-                    let ul = global.createElement("ul", this.mdtype)
-                    ul.append(fragement)
+                    let ul = this.createBasics(fragement)
                     global.insertAfter(parentElement_ul, ul)
                     global.insertAfter(parentElement_ul, el)
                     parentElement_li.remove()
@@ -73,7 +87,7 @@ export default <Module>{
                 checkbox.type = "checkbox"
                 checkboxContainer.append(checkbox)
             }
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             li.append(p)
             global.insertBefore(parentElement_li, li)
             return true
@@ -101,7 +115,7 @@ export default <Module>{
             checkbox.type = "checkbox"
             checkboxContainer.append(checkbox)
 
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             li.append(p)
 
             global.insertAfter(parentElement_li, li)
@@ -117,7 +131,7 @@ export default <Module>{
         else if (parentElement_li.children.length === 1) {
             event.preventDefault()
             let li = document.createElement("li")
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             li.append(p)
             let fragment = global.getFragementRangeToEnd(el)
             if (fragment) {

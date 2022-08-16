@@ -2,10 +2,43 @@ import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
 
-// todo 支持图片的嵌入
-// todo 支持行内特征
-export default <Module>{
+
+interface Plugin {
+    createBasics(label: string, url: string): HTMLDivElement
+}
+
+export default <Module & Plugin>{
     mdtype: "image",
+
+    createBasics(label, url) {
+        // <div mdtype="image">
+        let dom = document.createElement("div")
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        dom.classList.add("image")
+
+        // <p class="label">
+        let labeldom = document.createElement("p")
+        labeldom.innerText = `![${label}](${url})`
+        labeldom.className = "label"
+        dom.append(labeldom)
+
+        // <div class="container"><img src=""></div>
+        let container = document.createElement("div")
+        container.classList.add("container")
+        container.contentEditable = "false"
+
+        let img = document.createElement("img")
+        // img.src = url
+        // img.src = "./src/assets/4d15253eaad892bbb9dd5e13779ad271d97fc786.jpg"
+        img.src = "./src/assets/99267638_p0.png"
+        img.alt = label
+        img.title = label
+        container.append(img)
+
+        dom.append(container)
+        return dom
+    },
+
     focusEvent(el, from) {
         global.classNameAddFocus(el)
         let label = el.firstElementChild!
@@ -25,34 +58,9 @@ export default <Module>{
         console.log("mat:", mat);
 
         if (mat && el.childNodes.length === 1) {
-            let labelName = mat[1]
-            let url = mat[2]
 
             // <div class="image">
-            let imgContainer = document.createElement("div")
-            imgContainer.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-            imgContainer.classList.add("image")
-
-            // <p class="label">
-            let label = document.createElement("p")
-            label.innerText = data
-            label.className = "label"
-            imgContainer.append(label)
-
-            // <div class="container"><img src=""></div>
-            let container = document.createElement("div")
-            container.classList.add("container")
-            container.contentEditable = "false"
-
-            let img = document.createElement("img")
-            img.src = url
-            // img.src = "./src/assets/4d15253eaad892bbb9dd5e13779ad271d97fc786.jpg"
-            // img.src = "./src/assets/99267638_p0.png"
-
-            img.alt = labelName
-            img.title = labelName
-            container.append(img)
-            imgContainer.append(container)
+            let imgContainer = this.createBasics(mat[1], mat[2])
             el.replaceWith(imgContainer)
             return true
         }
@@ -61,7 +69,7 @@ export default <Module>{
 
     enterEvent_Begin(el, event) {
         event.preventDefault()
-        let p = global.createElement("p", paragraph.mdtype)
+        let p = paragraph.createBasics()
         global.insertBefore(el, p)
         global.setCursorPosition(p)
     },
@@ -71,16 +79,14 @@ export default <Module>{
         let label = el.firstElementChild as HTMLElement
         let fragment = global.getFragementRangeToEnd(label)
         if (fragment) {
-            let beforeParagraph = global.createElement("p", paragraph.mdtype)
-            beforeParagraph.append(label.firstChild!)
-            let afterParagraph = global.createElement("p", paragraph.mdtype)
-            afterParagraph.append(fragment)
+            let beforeParagraph = paragraph.createBasics(label.firstChild!)
+            let afterParagraph = paragraph.createBasics(fragment)
             global.insertBefore(el, beforeParagraph)
             global.insertAfter(el, afterParagraph)
             el.remove()
             global.setCursorPosition(afterParagraph)
         } else {
-            let p = global.createElement("p", paragraph.mdtype)
+            let p = paragraph.createBasics()
             global.insertAfter(el, p)
             global.setCursorPosition(p)
         }
@@ -94,8 +100,7 @@ export default <Module>{
             let sel = document.getSelection()!
             let anchorOffset = sel.anchorOffset
 
-            let p = global.createElement("p", paragraph.mdtype)
-            p.append(label?.firstChild!)
+            let p = paragraph.createBasics(label?.firstChild!)
             el.replaceWith(p)
 
             let range = new Range()
