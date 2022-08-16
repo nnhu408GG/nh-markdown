@@ -32,7 +32,12 @@ const inlineModuleOption: InlineOptionItem[] = [
         sign: "`",
         inlineType: "code",
         tagName: "code"
-    }
+    },
+    // {
+    //     sign: "\\[",
+    //     inlineType: "code",
+    //     tagName: "code"
+    // }
 ];
 
 /** 创建inline的模板 */

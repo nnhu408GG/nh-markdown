@@ -65,7 +65,7 @@ btn.onclick = () => {
 
 let testElement = document.createElement("p")
 testElement.setAttribute("mdtype", "paragraph")
-dom.append(testElement)
+// dom.append(testElement)
 
 // let textA = document.createTextNode("TEXTA***TE`XTA**TE`XT`A")
 let textA = document.createTextNode("T**E[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA有啥问题")
