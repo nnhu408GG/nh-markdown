@@ -7,6 +7,7 @@ import onclick from "./event/onclick"
 
 import module_paragraph from "./module_block/paragraph"
 import onpaste from "./event/onpaste"
+import paragraph from "./module_block/paragraph"
 
 const CLASS_NAME = "nh-mrkEdit"
 // class 只负责管理对外暴露的接口，以及初始化处理
@@ -18,8 +19,7 @@ class immediateCompile {
         bindElement.spellcheck = false
 
         if (!sourceData) {
-            let p = document.createElement("p")
-            p.setAttribute("mdtype", module_paragraph.mdtype)
+            let p = paragraph.createBasics()
             bindElement.append(p)
         }
 

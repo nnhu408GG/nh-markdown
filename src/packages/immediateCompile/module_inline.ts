@@ -43,7 +43,7 @@ const inlineModuleOption: InlineOptionItem[] = [
 /** 创建inline的模板 */
 export function createInlineElement(opt: { tagName: keyof HTMLElementTagNameMap, sign: string, fragment: DocumentFragment | Node }) {
     let container = document.createElement("span")
-    container.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, opt.tagName)
+    container.setAttribute(global.SIGN.MODULE_ATTRIBUTE, opt.tagName)
     container.setAttribute("inline", "")
 
     let pairBefore = document.createElement("span")
@@ -62,7 +62,7 @@ export function createInlineElement(opt: { tagName: keyof HTMLElementTagNameMap,
 
 export function createLinkElement(url: string, labelFragment: DocumentFragment | Node) {
     let container = document.createElement("a")
-    container.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, "link")
+    container.setAttribute(global.SIGN.MODULE_ATTRIBUTE, "link")
     container.setAttribute("inline", "")
     container.href = url
 
@@ -147,8 +147,8 @@ export function arrowHorizontal(el: HTMLElement, arrow: "ArrowLeft" | "ArrowRigh
 /** 获取父级元素 */
 // todo 对 table 的 TH 父级元素的支持
 function iterator_getModuleElement(el: HTMLElement): HTMLElement {
-    if (el.hasAttribute(global.state.MODULE_ATTRIBUTE_SIGN) && !el.hasAttribute("inline")) {
-        if (el.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === table.mdtype) {
+    if (el.hasAttribute(global.SIGN.MODULE_ATTRIBUTE) && !el.hasAttribute("inline")) {
+        if (el.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === table.mdtype) {
             return table.getCursorHR(el)
         }
         return el
@@ -336,7 +336,7 @@ function getInlineStruct(el: HTMLElement) {
             })
         } else if (item instanceof HTMLElement) {
             let sub: InlineStructSub = { length: item.textContent?.length }
-            let mdtype = item.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)!
+            let mdtype = item.getAttribute(global.SIGN.MODULE_ATTRIBUTE)!
 
             if (mdtype === "link") {
                 sub.sign = "link"

@@ -11,13 +11,21 @@ import blockquote from "./module_block/blockquote";
 /* =============== 全局参数 ========================================================================= */
 
 /** 聚焦元素的 className */
-const FIRSTELEMENT_FOCUSSIGN = "focus";
+
+/** 元素标志名称 */
+export const SIGN = {
+    /** 聚焦的元素记号 */
+    MODULE_FOCUS: "focus",
+    /** 识别为module的标志 */
+    MODULE_ATTRIBUTE: "mdtype",
+    /** 能支持inline的元素标志 */
+    INLINECONTAINER_ATTRIBUTE: "inline-container",
+}
+
 
 // 向内部函数暴露一些重要的参数
 export const state =
     <{
-        /** 识别为module的标志 */
-        MODULE_ATTRIBUTE_SIGN: string,
         /** 基于该dom来创建markdown的编辑功能 */
         BIND_ELEMENT: HTMLElement
         /** 初始化参数 */
@@ -36,18 +44,16 @@ export const state =
         inlineStruct: []
 
     }>{
-        MODULE_ATTRIBUTE_SIGN: "mdtype",
         MODULE: [] as Module[],
         ACTIVE_META: false,
         latelyFirstELement: undefined,
         tempParagraph: undefined,
         inlineStruct: []
-
     };
 
 /* =============== 通用操作 ======================================================================== */
 export function iteratorModule(basics: { moduleELement: HTMLElement, e?: any }, afterFunc?: keyof AfterHandle) {
-    let mdtype = basics.moduleELement.getAttribute(state.MODULE_ATTRIBUTE_SIGN)
+    let mdtype = basics.moduleELement.getAttribute(SIGN.MODULE_ATTRIBUTE)
     if (mdtype) {
         for (let mod of state.MODULE) {
             if (mdtype === mod.mdtype) {
@@ -114,7 +120,7 @@ export function isInlineBlock(el: HTMLElement) {
 
 export function createElement(tagName: keyof HTMLElementTagNameMap, mdtype: string) {
     let dom = document.createElement(tagName)
-    dom.setAttribute(state.MODULE_ATTRIBUTE_SIGN, mdtype)
+    dom.setAttribute(SIGN.MODULE_ATTRIBUTE, mdtype)
     return dom
 }
 
@@ -129,13 +135,13 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
         // todo inline 的左右函数执行条件
 
         // todo focus 切换执行
-        el.classList.add(FIRSTELEMENT_FOCUSSIGN)
-        state.latelyFirstELement?.classList.remove(FIRSTELEMENT_FOCUSSIGN)
+        el.classList.add(SIGN.MODULE_FOCUS)
+        state.latelyFirstELement?.classList.remove(SIGN.MODULE_FOCUS)
 
         let tempLatelyFirstElement = state.latelyFirstELement
         state.latelyFirstELement = el
 
-        if (el.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === image.mdtype) {
+        if (el.getAttribute(SIGN.MODULE_ATTRIBUTE) === image.mdtype) {
             image.focusEvent(el)
         }
 
@@ -153,7 +159,7 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
         }
 
 
-        if (tempLatelyFirstElement?.getAttribute(state.MODULE_ATTRIBUTE_SIGN) === paragraph.mdtype) {
+        if (tempLatelyFirstElement?.getAttribute(SIGN.MODULE_ATTRIBUTE) === paragraph.mdtype) {
             /**
              * precode
              * image
@@ -221,8 +227,8 @@ export function getFragementRangeToEnd(el: HTMLElement): DocumentFragment | unde
 }
 
 export function getAttribute(el: HTMLElement) {
-    if (el instanceof HTMLElement && el.hasAttribute(state.MODULE_ATTRIBUTE_SIGN)) {
-        return el.getAttribute(state.MODULE_ATTRIBUTE_SIGN)!
+    if (el instanceof HTMLElement && el.hasAttribute(SIGN.MODULE_ATTRIBUTE)) {
+        return el.getAttribute(SIGN.MODULE_ATTRIBUTE)!
     }
     return ""
 }

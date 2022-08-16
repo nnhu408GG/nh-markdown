@@ -18,7 +18,7 @@ export default <Module>{
             let fragement = range.extractContents()
 
             let blockquote = document.createElement("blockquote")
-            blockquote.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, this.mdtype)
+            blockquote.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
             let p = global.createElement("p", paragraph.mdtype)
 
             if (!el.isEqualNode(_e)) {

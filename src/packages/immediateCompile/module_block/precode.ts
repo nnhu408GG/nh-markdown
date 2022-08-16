@@ -17,7 +17,7 @@ export default <Module>{
         let mat = /^```(.*)$/g.exec(el.firstChild?.textContent!)!
         if (mat && el.childNodes.length === 1) {
             let pre = document.createElement("pre")
-            pre.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, this.mdtype)
+            pre.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
             let code = document.createElement("code")
             pre.append(code)
             let p = document.createElement("p")

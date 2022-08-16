@@ -19,7 +19,7 @@ export default function (this: immediateCompile, e: Event) {
     global.classNameAddFocus(moduleELement)
 
     let basics = { moduleELement, e }
-    let mdtype = moduleELement.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)!
+    let mdtype = moduleELement.getAttribute(global.SIGN.MODULE_ATTRIBUTE)!
 
     for (let mod of global.state.MODULE) {
         if (mdtype === module_paragraph.mdtype) {

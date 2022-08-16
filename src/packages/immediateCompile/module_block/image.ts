@@ -30,7 +30,7 @@ export default <Module>{
 
             // <div class="image">
             let imgContainer = document.createElement("div")
-            imgContainer.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, this.mdtype)
+            imgContainer.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
             imgContainer.classList.add("image")
 
             // <p class="label">

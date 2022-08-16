@@ -7,7 +7,7 @@ export default <Module>{
     changeFocus_AtParagraph(el) {
         if (el.childNodes.length === 1 && el.firstChild?.textContent === "---") {
             let container = document.createElement("div")
-            container.setAttribute(global.state.MODULE_ATTRIBUTE_SIGN, this.mdtype)
+            container.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
             container.classList.add("hr")
             // container.contentEditable = "false"
             let hr = document.createElement("hr")

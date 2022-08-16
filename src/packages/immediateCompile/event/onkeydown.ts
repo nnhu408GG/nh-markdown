@@ -30,7 +30,7 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
     }
 
     for (let mod of global.state.MODULE) {
-        if (mod.mdtype === global.state.latelyFirstELement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)) {
+        if (mod.mdtype === global.state.latelyFirstELement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE)) {
             mod.keydownEvent_Unlimited?.(global.state.latelyFirstELement, e)
             break
         }
