@@ -12,8 +12,11 @@ import table from "./table"
 // import module_PreCode from "./precode"
 // import module_Image from "./image"
 
+interface Plugin {
+    createBasics(): HTMLParagraphElement
+}
 
-export default <Module>{
+export default <Module & Plugin>{
     mdtype: "paragraph",
     createBasics(): HTMLParagraphElement {
         let dom = document.createElement("p")

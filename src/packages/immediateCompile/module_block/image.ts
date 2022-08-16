@@ -45,9 +45,9 @@ export default <Module>{
             container.contentEditable = "false"
 
             let img = document.createElement("img")
-            // img.src = url
+            img.src = url
             // img.src = "./src/assets/4d15253eaad892bbb9dd5e13779ad271d97fc786.jpg"
-            img.src = "./src/assets/WechatIMG3181.jpeg"
+            // img.src = "./src/assets/99267638_p0.png"
 
             img.alt = labelName
             img.title = labelName

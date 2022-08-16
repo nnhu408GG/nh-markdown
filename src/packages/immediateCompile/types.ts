@@ -10,27 +10,18 @@ export interface BeforeMatch {
 // shortcutKey(el: HTMLElement, event: MouseEvent): void
 
 export interface AfterHandle {
-    createBasics(): unknown
-
-    /** 聚焦事件 */
-    focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void
-
     /** 删除键事件，光标位于首位 */
     deleteEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
     /** 回车键事件，光标位于首位 */
     enterEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
     /** 回车键事件，光标位于中间及末尾 */
     enterEvent_After(el: HTMLElement, event: KeyboardEvent): boolean
+    /** 匹配dom之后的任意 keydown 事件 */
+    keydownEvent_Unlimited(el: HTMLElement, event: KeyboardEvent): void
 
 
     /** 匹配了dom之后的任意 input 事件 */
     inputEvent_Unlimited(el: HTMLElement): void
-
-
-    /** 匹配dom之后的任意 keydown 事件 */
-    keydownEvent_Unlimited(el: HTMLElement, event: KeyboardEvent): void
-    /** 上 方向键 */
-    /** 下 方向键 */
 
     // matchSource(el: HTMLElement): void
 
@@ -38,11 +29,11 @@ export interface AfterHandle {
     /** focus设置了之后的操作 */
     // focusThen(el: HTMLElement): void
 
+    /** 聚焦事件 */
+    focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void
 
     /** 【独立配置】paragraph末尾回车才会转换 */
     changeFocus_AtParagraph(el: HTMLElement): boolean
-
-    blurEvent(el: HTMLElement): void
 
     /** moduleELement -> source */
     getSource(el: HTMLElement): void
