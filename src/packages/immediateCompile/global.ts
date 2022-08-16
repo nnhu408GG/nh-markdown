@@ -141,8 +141,14 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
 
         if (state.latelyFirstELement.hasAttribute("inline")) {
             if (opt === "ArrowLeft" || opt === "ArrowRight") {
-                globalInline.arrowHorizontal(state.latelyFirstELement, opt)
-                return
+                // todo 光标的移动还是有问题，内部光标移到外部发生错误跳转，需添加内部到外部的移动条件
+                if (tempLatelyFirstElement && tempLatelyFirstElement.compareDocumentPosition(state.latelyFirstELement) !== 10) {
+                    globalInline.arrowHorizontal(state.latelyFirstELement, opt)
+                    return
+                } else {
+                    console.log("compareDocumentPosition === 10!!!");
+
+                }
             }
         }
 

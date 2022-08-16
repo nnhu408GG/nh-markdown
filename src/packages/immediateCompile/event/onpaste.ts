@@ -29,6 +29,6 @@ export default function (this: immediateCompile, e: ClipboardEvent) {
     //     let range = document.getSelection()?.getRangeAt(0)
     //     range?.insertNode(textNode)
     //     range?.collapse()
-    //     moduleElement && globalInline.getInlineStruct_textContent(moduleElement)
+    //     moduleElement && globalInline.handleInline(moduleElement)
     // })
 }

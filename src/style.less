@@ -92,8 +92,15 @@ body {
   outline                : none;
   box-sizing             : border-box;
   font-size              : 16px;
-  overflow               : auto;
-  word-break             : break-all; // 超出部分按字母来换行
+  font-family            :"Segoe UI Web (West European)",
+  "Segoe UI",
+  -apple-system,
+  "system-ui",
+  Roboto,
+  "Helvetica Neue",
+  sans-serif;
+  overflow   : auto;
+  word-break : break-all; // 超出部分按字母来换行
 
   [contentEditable="true"] {
     outline: none;
@@ -446,10 +453,13 @@ body {
   [mdtype="link"] {
     color          : @focus-color;
     font-weight    : bold;
-    text-decoration: underline;
-
+    text-decoration: none;
+    &>span:nth-child(2) {
+      text-decoration: underline 2px;
+    }
     .url {
       color: @focus-color;
+      text-decoration: underline 2px;
     }
   }
 

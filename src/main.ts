@@ -120,8 +120,6 @@ containerA_fragment.append(containerA_codeA)
 let containerA_textC = document.createTextNode("containerA_textC")
 containerA_fragment.append(containerA_textC)
 
-
-
 let containerA = globalInline.createInlineElement({
     tagName: "strong",
     sign: "**",
@@ -129,5 +127,4 @@ let containerA = globalInline.createInlineElement({
 })
 testElement.append(containerA)
 
-
-// globalInline.getInlineStruct_textContent(testElement)
+console.log("compareDocumentPosition:", containerA.compareDocumentPosition(testElement));

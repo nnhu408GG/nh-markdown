@@ -1,4 +1,5 @@
 import * as global from "./global"
+import table from "./module_block/table";
 
 type InlineOptionItem = {
     sign: string
@@ -8,19 +9,24 @@ type InlineOptionItem = {
 
 const inlineModuleOption: InlineOptionItem[] = [
     {
-        sign: "\*\*",
+        sign: "*",
+        inlineType: "em",
+        tagName: "em"
+    },
+    {
+        sign: "**",
         inlineType: "strong",
         tagName: "strong"
     },
+    // {
+    //     sign: "***",
+    //     inlineType: "strong",
+    //     tagName: "strong"
+    // },
     {
         sign: "__",
         inlineType: "strong",
         tagName: "strong"
-    },
-    {
-        sign: "\*",
-        inlineType: "em",
-        tagName: "em"
     },
     {
         sign: "`",
@@ -28,28 +34,6 @@ const inlineModuleOption: InlineOptionItem[] = [
         tagName: "code"
     }
 ];
-
-
-
-
-/**
- * 1. 内部有多个匹配的
- * 2. 多个单类不同需要匹配的
- * 从左到右匹配
- */
-
-/**
- *    `code`
- *    *em*
- *    **strong**
- *    __strong__
- */
-
-/**
- * blockqute/orderedList/unorderedList -> paragraph
- * table
- * title
- */
 
 /** 创建inline的模板 */
 export function createInlineElement(opt: { tagName: keyof HTMLElementTagNameMap, sign: string, fragment: DocumentFragment | Node }) {
@@ -89,11 +73,8 @@ export function createLinkElement(url: string, labelFragment: DocumentFragment |
     metaC.innerText = ")"
     link.innerText = url
 
-
     let label = document.createElement("span")
     label.appendChild(labelFragment)
-
-
 
     container.append(metaA)
     container.append(label)
@@ -114,17 +95,13 @@ type InlineStructSub = {
 }
 
 
-/** 获取父级元素 */
-// todo 对 table 的 TH 父级元素的支持
-function iterator_getModuleElement(el: HTMLElement): HTMLElement {
-    if (el.hasAttribute(global.state.MODULE_ATTRIBUTE_SIGN) && !el.hasAttribute("inline")) {
-        return el
-    }
-    return iterator_getModuleElement(el.parentElement!)
-}
+
 
 
 /** 重新设置 inline 的光标的位置 */
+// todo 改为在onkeydown内执行？
+// 因为光标修改不够及时
+// 两端的删除有错误
 function setCursorPosition(el: HTMLElement, indexPosition: number) {
     let indexCount = 0
     for (let i = 0; i < el.childNodes.length; i++) {
@@ -162,8 +139,21 @@ export function arrowHorizontal(el: HTMLElement, arrow: "ArrowLeft" | "ArrowRigh
     document.getSelection()?.addRange(range)
 }
 
+/** 获取父级元素 */
+// todo 对 table 的 TH 父级元素的支持
+function iterator_getModuleElement(el: HTMLElement): HTMLElement {
+    if (el.hasAttribute(global.state.MODULE_ATTRIBUTE_SIGN) && !el.hasAttribute("inline")) {
+        if (el.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === table.mdtype) {
+            return table.getCursorHR(el)
+        }
+        return el
+    }
+    return iterator_getModuleElement(el.parentElement!)
+}
+
 /** 执行函数的主入口 */
-export function getInlineStruct_textContent(el: HTMLElement) {
+export function handleInline(el: HTMLElement) {
+    // console.log("handleInline.el:", el);
     let baseElement = iterator_getModuleElement(el)
     // console.log("baseElement:", baseElement);
 
@@ -207,9 +197,7 @@ export function getInlineStruct_textContent(el: HTMLElement) {
     console.log("JSON.stringify(newStructChildren) === JSON.stringify(structTextContent):", JSON.stringify(newStructChildren) === JSON.stringify(structTextContent));
 
     // 重设光标位置
-    // setTimeout(() => {
     setCursorPosition(baseElement, indexCursor)
-    // }, 1000);
 }
 
 function matchStructDiff(el: HTMLElement, struct: { childNode: InlineStructSub[], textContent: InlineStructSub[] }) {

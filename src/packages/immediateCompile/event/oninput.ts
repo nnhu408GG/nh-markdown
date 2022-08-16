@@ -3,6 +3,9 @@ import * as global from "../global";
 import * as globalInline from "../module_inline";
 
 import module_paragraph from "../module_block/paragraph";
+import table from "../module_block/table";
+import paragraph from "../module_block/paragraph";
+import title from "../module_block/title";
 export default function (this: immediateCompile, e: Event) {
     // console.log("INPUT_EVENT");
 
@@ -16,7 +19,7 @@ export default function (this: immediateCompile, e: Event) {
     global.classNameAddFocus(moduleELement)
 
     let basics = { moduleELement, e }
-    let mdtype = moduleELement.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)
+    let mdtype = moduleELement.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN)!
 
     for (let mod of global.state.MODULE) {
         if (mdtype === module_paragraph.mdtype) {
@@ -27,7 +30,9 @@ export default function (this: immediateCompile, e: Event) {
         }
     }
 
-    globalInline.getInlineStruct_textContent(moduleELement)
+    if ([table.mdtype, paragraph.mdtype, title.mdtype].includes(mdtype) || moduleELement.hasAttribute("inline")) {
+        globalInline.handleInline(moduleELement)
+    }
 
     // let event = e as InputEvent
     // console.log(event);

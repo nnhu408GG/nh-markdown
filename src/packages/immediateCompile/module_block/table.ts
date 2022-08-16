@@ -1,10 +1,12 @@
 import type { Module } from "../types"
 import * as global from "../global"
 
-export default <Module>{
+interface etc {
+    getCursorHR(el: HTMLElement): HTMLElement
+}
+
+export default <Module & etc>{
     mdtype: "table",
-    // todo 支持行内特征
-    // todo 上下键的处理
     // todo 图片的嵌入
     changeFocus_AtParagraph(el) {
         let data = el.firstChild?.textContent
@@ -145,6 +147,13 @@ export default <Module>{
                 }
             }
         }
+    },
+
+    getCursorHR(el: HTMLElement) {
+        let focusElement = global.getChildNodeMatchCursor(el.lastElementChild!)!
+        let tr = global.getChildNodeMatchCursor(focusElement)!
+        let th = global.getChildNodeMatchCursor(tr)
+        return th as HTMLElement
     },
 }
 

@@ -12,11 +12,17 @@ import table from "./table"
 // import module_PreCode from "./precode"
 // import module_Image from "./image"
 
+
 export default <Module>{
     mdtype: "paragraph",
+    createBasics(): HTMLParagraphElement {
+        let dom = document.createElement("p")
+        return dom
+    },
 
     enterEvent_Begin(el, event) {
         event.preventDefault()
+        let res = this.createBasics()
 
         if (el.childNodes.length === 1 && el.firstElementChild?.tagName === "BR") {
             el.firstElementChild.remove()
@@ -147,7 +153,7 @@ export default <Module>{
 
     // belong inputEvent
     upgradeInParagraph(el) {
-        globalInline.getInlineStruct_textContent(el)
+        globalInline.handleInline(el)
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.state.MODULE_ATTRIBUTE_SIGN) === unorderedList.mdtype) {

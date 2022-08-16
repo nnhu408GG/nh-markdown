@@ -10,10 +10,10 @@ export interface BeforeMatch {
 // shortcutKey(el: HTMLElement, event: MouseEvent): void
 
 export interface AfterHandle {
-    // createBasicsElement(): HTMLElement
+    createBasics(): unknown
 
     /** 聚焦事件 */
-    focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void,
+    focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void
 
     /** 删除键事件，光标位于首位 */
     deleteEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
