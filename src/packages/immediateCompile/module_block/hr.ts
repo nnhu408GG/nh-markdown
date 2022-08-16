@@ -17,7 +17,7 @@ export default <Module & Plugin>{
         return dom
     },
 
-    changeFocus_AtParagraph(el) {
+    changeFocusAtParagraph(el) {
         if (el.childNodes.length === 1 && el.firstChild?.textContent === "---") {
             let dom = this.createBasics()
             el.replaceWith(dom)
@@ -26,7 +26,7 @@ export default <Module & Plugin>{
         return false
     },
 
-    keydownEvent_Unlimited(el, event) {
+    keydownEventUnlimited(el, event) {
         if (event.code === "ArrowUp") {
             if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
         }
@@ -55,5 +55,9 @@ export default <Module & Plugin>{
         } else {
             event.preventDefault()
         }
+    },
+
+    getSource(el) {
+        return ["---"]
     },
 }

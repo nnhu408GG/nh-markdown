@@ -13,7 +13,7 @@ export default <Module>{
         document.getSelection()?.addRange(range)
     },
 
-    changeFocus_AtParagraph(el) {
+    changeFocusAtParagraph(el) {
         let mat = /^```(.*)$/g.exec(el.firstChild?.textContent!)!
         if (mat && el.childNodes.length === 1) {
             let pre = document.createElement("pre")
@@ -40,7 +40,7 @@ export default <Module>{
         return false
     },
 
-    keydownEvent_Unlimited(el, event) {
+    keydownEventUnlimited(el, event) {
         let focusPreElement = global.getChildNodeMatchCursor(el) as HTMLElement
 
         if (event.code === "ArrowUp"

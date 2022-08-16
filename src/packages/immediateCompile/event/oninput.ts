@@ -23,9 +23,9 @@ export default function (this: immediateCompile, e: Event) {
 
     for (let mod of global.state.MODULE) {
         if (mdtype === module_paragraph.mdtype) {
-            if (mod.upgradeInParagraph?.(moduleELement)) break
+            if (mod.upgradeInParagraph?.(moduleELement)) return
         } else if (mdtype === mod.mdtype) {
-            global.iteratorModule(basics, "inputEvent_Unlimited")
+            global.iteratorModule(basics, "inputEventUnlimited")
             break
         }
     }

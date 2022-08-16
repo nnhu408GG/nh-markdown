@@ -49,11 +49,22 @@ class immediateCompile {
     }
 
     getSource() {
-        // let children = state.BIND_ELEMENT
-        // for (let i = 0; i < children.length; i++) {
-        //     this.iteratorModule({ moduleELement: children[i] as HTMLElement }, "matchHTMLElement", "getSource")
-        // }
-        return "immediateCompile.prototype.getSource is undefined"
+        let source = ""
+        let children = global.state.BIND_ELEMENT.children
+        for (let i = 0; i < children.length; i++) {
+            let el = children[i] as HTMLElement
+            for (let modIndex = 0; modIndex < global.state.MODULE.length; modIndex++) {
+                let mod = global.state.MODULE[modIndex]
+                if (global.getAttribute(el) === mod.mdtype) {
+                    mod.getSource?.(el).forEach(str => {
+                        source += `${str}\n\n`
+                    })
+                    break
+                }
+            }
+        }
+        // return "immediateCompile.prototype.getSource is undefined"
+        return source
     }
 }
 

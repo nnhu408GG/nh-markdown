@@ -64,23 +64,23 @@ export function iteratorModule(basics: { moduleELement: HTMLElement, e?: any }, 
     }
 }
 
-function getModuleELement_iterator(el: Node): HTMLElement {
+function getModuleELementIterator(el: Node): HTMLElement {
     if (el instanceof HTMLElement && el.hasAttribute("mdtype")) {
         return el
     }
-    return getModuleELement_iterator(el.parentElement!)
+    return getModuleELementIterator(el.parentElement!)
 }
 
 /** 获取最近含有mdtype属性的元素 */
 export function getModuleELement(el?: Node) {
     if (el && el !== state.BIND_ELEMENT) {
-        return getModuleELement_iterator(el)
+        return getModuleELementIterator(el)
     } else {
         let sel = document.getSelection()
         if (sel?.anchorNode // 存在光标，且有对应的元素
             && sel.isCollapsed // 只支持非光标选区
             && sel.anchorNode !== state.BIND_ELEMENT) {
-            return getModuleELement_iterator(sel.anchorNode)
+            return getModuleELementIterator(sel.anchorNode)
         }
     }
     return
@@ -162,10 +162,10 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
              * url
              */
 
-            if (hr.changeFocus_AtParagraph(tempLatelyFirstElement)
-                || precode.changeFocus_AtParagraph(tempLatelyFirstElement)
-                || image.changeFocus_AtParagraph(tempLatelyFirstElement)
-                || table.changeFocus_AtParagraph(tempLatelyFirstElement)
+            if (hr.changeFocusAtParagraph(tempLatelyFirstElement)
+                || precode.changeFocusAtParagraph(tempLatelyFirstElement)
+                || image.changeFocusAtParagraph(tempLatelyFirstElement)
+                || table.changeFocusAtParagraph(tempLatelyFirstElement)
             ) {
                 return
             }

@@ -31,7 +31,7 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
 
     for (let mod of global.state.MODULE) {
         if (mod.mdtype === global.state.latelyFirstELement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE)) {
-            mod.keydownEvent_Unlimited?.(global.state.latelyFirstELement, e)
+            mod.keydownEventUnlimited?.(global.state.latelyFirstELement, e)
             break
         }
     }
@@ -70,9 +70,9 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
     if (e.code === "Enter") {
         console.log("enter event anchorOffset:", sel.anchorOffset);
         if (sel.anchorOffset === 0) {
-            global.iteratorModule(basics, "enterEvent_Begin")
+            global.iteratorModule(basics, "enterEventBegin")
         } else {
-            global.iteratorModule(basics, "enterEvent_After")
+            global.iteratorModule(basics, "enterEventAfter")
         }
     }
 
@@ -81,7 +81,7 @@ export default function (this: immediateCompile, e: KeyboardEvent) {
     if (e.key === "Backspace") {
         // console.log("isCollapsed:", sel.isCollapsed);
         if (sel.anchorOffset === 0) {
-            global.iteratorModule(basics, "deleteEvent_Begin")
+            global.iteratorModule(basics, "deleteEventBegin")
         } else {
             // 防止<br>的生成
             if (sel.anchorNode?.textContent?.length === 1) {

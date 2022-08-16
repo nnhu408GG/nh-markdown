@@ -11,17 +11,17 @@ export interface BeforeMatch {
 
 export interface AfterHandle {
     /** 删除键事件，光标位于首位 */
-    deleteEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
+    deleteEventBegin(el: HTMLElement, event: KeyboardEvent): boolean
     /** 回车键事件，光标位于首位 */
-    enterEvent_Begin(el: HTMLElement, event: KeyboardEvent): boolean
+    enterEventBegin(el: HTMLElement, event: KeyboardEvent): boolean
     /** 回车键事件，光标位于中间及末尾 */
-    enterEvent_After(el: HTMLElement, event: KeyboardEvent): boolean
+    enterEventAfter(el: HTMLElement, event: KeyboardEvent): boolean
     /** 匹配dom之后的任意 keydown 事件 */
-    keydownEvent_Unlimited(el: HTMLElement, event: KeyboardEvent): void
+    keydownEventUnlimited(el: HTMLElement, event: KeyboardEvent): void
 
 
     /** 匹配了dom之后的任意 input 事件 */
-    inputEvent_Unlimited(el: HTMLElement): void
+    inputEventUnlimited(el: HTMLElement): void
 
     // matchSource(el: HTMLElement): void
 
@@ -32,11 +32,11 @@ export interface AfterHandle {
     /** 聚焦事件 */
     focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void
 
-    /** 【独立配置】paragraph末尾回车才会转换 */
-    changeFocus_AtParagraph(el: HTMLElement): boolean
+    /** 【独立配置】paragraph的焦点转移时执行 */
+    changeFocusAtParagraph(el: HTMLElement): boolean
 
     /** moduleELement -> source */
-    getSource(el: HTMLElement): void
+    getSource(el: HTMLElement): string[]
 
     /** todo
      * 焦点元素：

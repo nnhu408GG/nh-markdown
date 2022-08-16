@@ -43,29 +43,29 @@ export default <Module & Plugin>{
         return false
     },
     /** 因无法直接触发，需要从外部引用 */
-    enterEvent_Begin(el, event) {
+    enterEventBegin(el, event) {
         console.log('success use this');
         // todo 需解决br生成
         if (el.childNodes.length === 0) {
             let p = paragraph.createBasics()
-            let parentElement_blockquote = el.parentElement!
-            if (parentElement_blockquote.children.length === 1) {
-                global.insertBefore(parentElement_blockquote, p)
-                parentElement_blockquote.remove()
+            let parentElementBlockquote = el.parentElement!
+            if (parentElementBlockquote.children.length === 1) {
+                global.insertBefore(parentElementBlockquote, p)
+                parentElementBlockquote.remove()
                 global.setCursorPosition(p)
             } else {
-                if (el === parentElement_blockquote.firstElementChild) {
-                    global.insertBefore(parentElement_blockquote, p)
-                } else if (el === parentElement_blockquote.lastElementChild) {
-                    global.insertAfter(parentElement_blockquote, p)
+                if (el === parentElementBlockquote.firstElementChild) {
+                    global.insertBefore(parentElementBlockquote, p)
+                } else if (el === parentElementBlockquote.lastElementChild) {
+                    global.insertAfter(parentElementBlockquote, p)
                 } else {
                     let range = new Range()
                     range.setStartBefore(el.nextElementSibling!)
-                    range.setEndAfter(parentElement_blockquote.lastElementChild!)
+                    range.setEndAfter(parentElementBlockquote.lastElementChild!)
                     let fragement = range.extractContents()
                     let tempBlockquote = this.createBasics(fragement)
-                    global.insertAfter(parentElement_blockquote, tempBlockquote)
-                    global.insertAfter(parentElement_blockquote, p)
+                    global.insertAfter(parentElementBlockquote, tempBlockquote)
+                    global.insertAfter(parentElementBlockquote, p)
                 }
                 el.remove()
                 global.setCursorPosition(p)
@@ -74,13 +74,13 @@ export default <Module & Plugin>{
         }
     },
 
-    deleteEvent_Begin(el, event) {
-        let parentElement_blockquote = el.parentElement!
-        if (el === parentElement_blockquote.firstElementChild) {
+    deleteEventBegin(el, event) {
+        let parentElementBlockquote = el.parentElement!
+        if (el === parentElementBlockquote.firstElementChild) {
             event.preventDefault()
-            global.insertBefore(parentElement_blockquote, el)
-            if (parentElement_blockquote.children.length === 0) {
-                parentElement_blockquote.remove()
+            global.insertBefore(parentElementBlockquote, el)
+            if (parentElementBlockquote.children.length === 0) {
+                parentElementBlockquote.remove()
             }
             global.setCursorPosition(el)
             return true

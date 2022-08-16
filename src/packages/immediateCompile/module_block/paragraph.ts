@@ -27,7 +27,7 @@ export default <Module & Plugin>{
         return dom
     },
 
-    enterEvent_Begin(el, event) {
+    enterEventBegin(el, event) {
         event.preventDefault()
 
         if (el.childNodes.length === 1 && el.firstElementChild?.tagName === "BR") {
@@ -36,35 +36,35 @@ export default <Module & Plugin>{
 
         /* 兼容blockquote的嵌套 */
         if (el.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === blockquote.mdtype
-            && blockquote.enterEvent_Begin(el, event)
+            && blockquote.enterEventBegin(el, event)
         ) return
 
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === unorderedList.mdtype
-            && unorderedList.enterEvent_Begin(el, event)
+            && unorderedList.enterEventBegin(el, event)
         ) return
 
         /* todo 兼容 orderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === orderedList.mdtype
-            && orderedList.enterEvent_Begin(el, event)
+            && orderedList.enterEventBegin(el, event)
         ) return
 
         let p = this.createBasics()
         global.insertBefore(el, p)
     },
 
-    enterEvent_After(el, event) {
+    enterEventAfter(el, event) {
         event.preventDefault()
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === unorderedList.mdtype
-            && unorderedList.enterEvent_After(el, event)
+            && unorderedList.enterEventAfter(el, event)
         ) return
 
         /* 兼容 orderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === orderedList.mdtype
-            && orderedList.enterEvent_After(el, event)
+            && orderedList.enterEventAfter(el, event)
         ) return
 
         let p = this.createBasics()
@@ -75,7 +75,7 @@ export default <Module & Plugin>{
             // todo 在末尾的回车处理
             // todo 转移到focus切换时候触发！
             // if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === precode.mdtype) {
-            //     precode.changeFocus_AtParagraph(el, event)
+            //     precode.changeFocusAtParagraph(el, event)
             //     return
             // }
         }
@@ -83,20 +83,20 @@ export default <Module & Plugin>{
         global.setCursorPosition(p)
     },
 
-    deleteEvent_Begin(el, event) {
+    deleteEventBegin(el, event) {
         /* 兼容blockquote的嵌套 */
         if (el.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === blockquote.mdtype
-            && blockquote.deleteEvent_Begin(el, event)
+            && blockquote.deleteEventBegin(el, event)
         ) return
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === unorderedList.mdtype
-            && unorderedList.deleteEvent_Begin(el, event)
+            && unorderedList.deleteEventBegin(el, event)
         ) return
 
         /* 兼容 orderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === orderedList.mdtype
-            && orderedList.deleteEvent_Begin(el, event)
+            && orderedList.deleteEventBegin(el, event)
         ) return
 
         let previousElementSibling = el.previousElementSibling as HTMLEmbedElement
@@ -163,9 +163,14 @@ export default <Module & Plugin>{
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === unorderedList.mdtype) {
-            unorderedList.inputEvent_Unlimited(el)
+            unorderedList.inputEventUnlimited(el)
             // return true // 这里不要结束匹配!!!!
         }
         return false
+    },
+
+    getSource(el) {
+        let source = el.textContent!
+        return [source]
     },
 }

@@ -18,22 +18,22 @@ export default <Module & Plugin>{
         tableTool.classList.add("toolContainer")
         figure.append(tableTool)
 
-        let toolSpan_A = document.createElement("span")
-        let toolSpan_B = document.createElement("span")
-        let toolSpan_C = document.createElement("span")
-        tableTool.append(toolSpan_A)
-        tableTool.append(toolSpan_B)
-        tableTool.append(toolSpan_C)
+        let toolSpanA = document.createElement("span")
+        let toolSpanB = document.createElement("span")
+        let toolSpanC = document.createElement("span")
+        tableTool.append(toolSpanA)
+        tableTool.append(toolSpanB)
+        tableTool.append(toolSpanC)
         let toolButton1 = document.createElement("button")
         let toolButton2 = document.createElement("button")
         let toolButton3 = document.createElement("button")
         let toolButton4 = document.createElement("button")
         let toolButton5 = document.createElement("button")
-        toolSpan_A.append(toolButton1)
-        toolSpan_B.append(toolButton2)
-        toolSpan_B.append(toolButton3)
-        toolSpan_B.append(toolButton4)
-        toolSpan_C.append(toolButton5)
+        toolSpanA.append(toolButton1)
+        toolSpanB.append(toolButton2)
+        toolSpanB.append(toolButton3)
+        toolSpanB.append(toolButton4)
+        toolSpanC.append(toolButton5)
         toolButton1.ariaLabel = "调整表格"
         toolButton2.ariaLabel = "左对齐"
         toolButton3.ariaLabel = "居中对齐"
@@ -55,26 +55,27 @@ export default <Module & Plugin>{
         table.append(thead)
         table.append(tbody)
 
-        let TR_head = document.createElement("tr")
-        let TR_body = document.createElement("tr")
-        thead.append(TR_head)
-        tbody.append(TR_body)
+        let TRhead = document.createElement("tr")
+        let TRbody = document.createElement("tr")
+        thead.append(TRhead)
+        tbody.append(TRbody)
 
         for (let i = 0; i < heads.length; i++) {
             let th_head = document.createElement("th")
             let th_body = document.createElement("th")
             th_head.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
             th_body.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
-            TR_head.append(th_head)
-            TR_body.append(th_body)
+            TRhead.append(th_head)
+            TRbody.append(th_body)
             th_head.innerText = heads[i].trim()
         }
 
         return figure
     },
 
+    // todo paragraph 末尾回车才触发
     // todo 图片的嵌入
-    changeFocus_AtParagraph(el) {
+    changeFocusAtParagraph(el) {
         let data = el.firstChild?.textContent
         if (!data) return
         let mat = /^(?:(\|(?:(?!\|).)+))+?\|$/g.test(data)
@@ -94,7 +95,7 @@ export default <Module & Plugin>{
         return false
     },
 
-    keydownEvent_Unlimited(el, event) {
+    keydownEventUnlimited(el, event) {
         let table = el.lastElementChild!
         let thead = table.firstElementChild!
         let tbody = table.lastElementChild!

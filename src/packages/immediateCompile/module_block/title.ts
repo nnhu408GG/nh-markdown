@@ -32,13 +32,13 @@ export default <Module & Plugin>{
         return false
     },
 
-    enterEvent_Begin(el, event) {
+    enterEventBegin(el, event) {
         event.preventDefault()
         let p = paragraph.createBasics()
         global.insertBefore(el, p)
     },
 
-    enterEvent_After(el, event) {
+    enterEventAfter(el, event) {
         event.preventDefault()
         let _el = el.cloneNode(true)
 
@@ -56,7 +56,7 @@ export default <Module & Plugin>{
         global.setCursorPosition(p)
     },
 
-    deleteEvent_Begin(el, event) {
+    deleteEventBegin(el, event) {
         event.preventDefault()
         console.log("title delete begin");
 
@@ -66,11 +66,9 @@ export default <Module & Plugin>{
         global.setCursorPosition(p)
     },
 
-    /* inline module support */
-    // inputEvent_Unlimited(el, event) {
-    //     strong.upgradeInKeyup()
-    //     // if (global.state.ACTIVE_META
-    //     //     && [""].includes(event.code)) {
-    //     // }
-    // },
+    getSource(el) {
+        let rank = parseInt(el.tagName[1])
+        let source = `${"#".repeat(rank)} ${el.textContent!}`
+        return [source]
+    },
 }

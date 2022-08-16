@@ -8,7 +8,7 @@ import * as globalInline from './packages/immediateCompile/module_inline'
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const btn = document.createElement("button")
 btn.innerText = "getSource"
-// app.append(btn)
+app.append(btn)
 const dom = document.createElement("div")
 app.append(dom)
 /* ==================================== */
@@ -60,7 +60,6 @@ btn.onclick = () => {
     console.log(wys.getSource());
     // wys.initSourceData = "fxxxxx"
     // wys.setViewMode = "Preview"
-    // let source = wys.getSource()
 }
 
 let testElement = document.createElement("p")

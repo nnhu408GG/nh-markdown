@@ -52,14 +52,10 @@ export default <Module & Plugin>{
         document.getSelection()?.addRange(range)
     },
 
-    changeFocus_AtParagraph(el) {
+    changeFocusAtParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^!\[(.*)\]\((.+)\)$/g.exec(data)
-        console.log("mat:", mat);
-
         if (mat && el.childNodes.length === 1) {
-
-            // <div class="image">
             let imgContainer = this.createBasics(mat[1], mat[2])
             el.replaceWith(imgContainer)
             return true
@@ -67,14 +63,14 @@ export default <Module & Plugin>{
         return false
     },
 
-    enterEvent_Begin(el, event) {
+    enterEventBegin(el, event) {
         event.preventDefault()
         let p = paragraph.createBasics()
         global.insertBefore(el, p)
         global.setCursorPosition(p)
     },
 
-    enterEvent_After(el, event) {
+    enterEventAfter(el, event) {
         event.preventDefault()
         let label = el.firstElementChild as HTMLElement
         let fragment = global.getFragementRangeToEnd(label)
@@ -92,7 +88,7 @@ export default <Module & Plugin>{
         }
     },
 
-    inputEvent_Unlimited(el) {
+    inputEventUnlimited(el) {
         let label = el.firstElementChild
         let data = el.firstChild?.textContent!
         let mat = /^!\[(.*)\]\((.+)\)$/g.test(data)
@@ -110,12 +106,17 @@ export default <Module & Plugin>{
         }
     },
 
-    keydownEvent_Unlimited(el, event) {
+    keydownEventUnlimited(el, event) {
         if (event.code === "ArrowUp") {
             if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
         }
         else if (event.code === "ArrowDown") {
             if (global.createTempParagraph(el, "ArrowDown")) event.preventDefault()
         }
+    },
+
+    getSource(el) {
+        let source = el.firstElementChild?.textContent!
+        return [source]
     },
 }

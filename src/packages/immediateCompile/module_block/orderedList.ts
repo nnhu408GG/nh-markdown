@@ -36,42 +36,42 @@ export default <Module & Plugin>{
         return false
     },
 
-    enterEvent_Begin(el, event) {
-        let parentElement_li = el.parentElement!
-        if (el === parentElement_li.firstElementChild) {
+    enterEventBegin(el, event) {
+        let parentElementLI = el.parentElement!
+        if (el === parentElementLI.firstElementChild) {
             // 三类分割
             if (el.childNodes.length === 0
-                && parentElement_li.children.length === 1
+                && parentElementLI.children.length === 1
             ) {
-                let parentElement_ol = parentElement_li.parentElement! as HTMLOListElement
-                if (parentElement_li === parentElement_ol.firstElementChild) {
-                    global.insertBefore(parentElement_ol, el);
-                    if (parentElement_ol.children.length === 1) {
-                        parentElement_ol.remove()
+                let parentElementOL = parentElementLI.parentElement! as HTMLOListElement
+                if (parentElementLI === parentElementOL.firstElementChild) {
+                    global.insertBefore(parentElementOL, el);
+                    if (parentElementOL.children.length === 1) {
+                        parentElementOL.remove()
                     } else {
-                        parentElement_li.remove()
+                        parentElementLI.remove()
                     }
                     global.setCursorPosition(el)
-                } else if (parentElement_li === parentElement_ol.lastElementChild) {
-                    global.insertAfter(parentElement_ol, el)
-                    if (parentElement_ol.children.length === 1) {
-                        parentElement_ol.remove()
+                } else if (parentElementLI === parentElementOL.lastElementChild) {
+                    global.insertAfter(parentElementOL, el)
+                    if (parentElementOL.children.length === 1) {
+                        parentElementOL.remove()
                     } else {
-                        parentElement_li.remove()
+                        parentElementLI.remove()
                     }
                     global.setCursorPosition(el)
                 } else {
                     let range = new Range()
-                    range.setStartBefore(parentElement_li.nextElementSibling!)
-                    range.setEndAfter(parentElement_ol.lastElementChild!)
+                    range.setStartBefore(parentElementLI.nextElementSibling!)
+                    range.setEndAfter(parentElementOL.lastElementChild!)
                     let fragement = range.extractContents()
-                    global.insertAfter(parentElement_ol, el)
-                    parentElement_li.remove()
+                    global.insertAfter(parentElementOL, el)
+                    parentElementLI.remove()
 
 
                     let ol = document.createElement("ol")
                     ol.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-                    ol.start = parentElement_ol.children.length + parentElement_ol.start
+                    ol.start = parentElementOL.children.length + parentElementOL.start
                     ol.append(fragement)
                     global.insertAfter(el, ol)
                     global.setCursorPosition(el)
@@ -82,15 +82,15 @@ export default <Module & Plugin>{
             let li = document.createElement("li")
             let p = paragraph.createBasics()
             li.append(p)
-            global.insertBefore(parentElement_li, li)
+            global.insertBefore(parentElementLI, li)
             return true
         }
         return false
     },
 
-    enterEvent_After(el, event) {
-        let parentElement_li = el.parentElement!
-        if (parentElement_li.children.length === 1) {
+    enterEventAfter(el, event) {
+        let parentElementLI = el.parentElement!
+        if (parentElementLI.children.length === 1) {
             event.preventDefault()
             let li = document.createElement("li")
             let p = paragraph.createBasics()
@@ -106,26 +106,26 @@ export default <Module & Plugin>{
         return false
     },
 
-    deleteEvent_Begin(el, event) {
-        let parentElement_li = el.parentElement!
-        let parentElement_ol = parentElement_li.parentElement!
-        if (el === parentElement_li.firstElementChild) {
+    deleteEventBegin(el, event) {
+        let parentElementLI = el.parentElement!
+        let parentElementOL = parentElementLI.parentElement!
+        if (el === parentElementLI.firstElementChild) {
             event.preventDefault()
-            let posElement = parentElement_li.firstElementChild!
+            let posElement = parentElementLI.firstElementChild!
             let range = new Range()
-            range.setStartBefore(parentElement_li.firstElementChild!)
-            range.setEndAfter(parentElement_li.lastElementChild!)
+            range.setStartBefore(parentElementLI.firstElementChild!)
+            range.setEndAfter(parentElementLI.lastElementChild!)
             let fragement = range.extractContents()
-            if (parentElement_li === parentElement_ol.firstElementChild) {
-                global.insertBefore(parentElement_ol, fragement)
-                if (parentElement_ol.children.length === 1) {
-                    parentElement_ol.remove()
+            if (parentElementLI === parentElementOL.firstElementChild) {
+                global.insertBefore(parentElementOL, fragement)
+                if (parentElementOL.children.length === 1) {
+                    parentElementOL.remove()
                 } else {
-                    parentElement_li.remove()
+                    parentElementLI.remove()
                 }
             } else {
-                parentElement_li.previousElementSibling!.append(fragement)
-                parentElement_li.remove()
+                parentElementLI.previousElementSibling!.append(fragement)
+                parentElementLI.remove()
             }
             global.setCursorPosition(posElement)
             return true

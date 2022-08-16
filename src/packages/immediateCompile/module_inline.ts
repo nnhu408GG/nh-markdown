@@ -168,22 +168,24 @@ export function arrowHorizontal(el: HTMLElement, arrow: "ArrowLeft" | "ArrowRigh
 }
 
 /** 获取父级元素 */
-// todo 对 table 的 TH 父级元素的支持
-function iterator_getModuleElement(el: HTMLElement): HTMLElement {
+function getInlineContainer(el: HTMLElement): HTMLElement {
     if (global.getAttribute(el) === table.mdtype) {
         el = document.getSelection()?.anchorNode?.parentElement!
     }
     if (el.hasAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE)) {
         return el
     }
-    return iterator_getModuleElement(el.parentElement!)
+    return getInlineContainer(el.parentElement!)
 }
 
 /** 执行函数的主入口 */
 export function handleInline(el: HTMLElement) {
     // console.log("handleInline.el:", el);
-    let baseElement = iterator_getModuleElement(el)
+    let baseElement = getInlineContainer(el)
     console.log("baseElement:", baseElement);
+
+    // 临时处理了image与link的冲突
+    if (baseElement.firstChild?.textContent?.startsWith("!")) return
 
     // 记录 光标位置
     let sel = document.getSelection()!

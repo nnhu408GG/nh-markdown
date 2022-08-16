@@ -38,46 +38,46 @@ export default <Module & Plugin>{
         return false
     },
 
-    enterEvent_Begin(el, event) {
-        let parentElement_li = el.parentElement!
-        if (el === parentElement_li.firstElementChild || el.previousElementSibling?.classList.contains("checkbox")) {
+    enterEventBegin(el, event) {
+        let parentElementLI = el.parentElement!
+        if (el === parentElementLI.firstElementChild || el.previousElementSibling?.classList.contains("checkbox")) {
             // 三类分割
             if (el.childNodes.length === 0
-                && (parentElement_li.children.length === 1 || (el.previousElementSibling?.classList.contains("checkbox") && parentElement_li.children.length === 2))
+                && (parentElementLI.children.length === 1 || (el.previousElementSibling?.classList.contains("checkbox") && parentElementLI.children.length === 2))
             ) {
-                let parentElement_ul = parentElement_li.parentElement!
-                if (parentElement_li === parentElement_ul.firstElementChild) {
-                    global.insertBefore(parentElement_ul, el);
-                    if (parentElement_ul.children.length === 1) {
-                        parentElement_ul.remove()
+                let parentElementUL = parentElementLI.parentElement!
+                if (parentElementLI === parentElementUL.firstElementChild) {
+                    global.insertBefore(parentElementUL, el);
+                    if (parentElementUL.children.length === 1) {
+                        parentElementUL.remove()
                     } else {
-                        parentElement_li.remove()
+                        parentElementLI.remove()
                     }
                     global.setCursorPosition(el)
-                } else if (parentElement_li === parentElement_ul.lastElementChild) {
-                    global.insertAfter(parentElement_ul, el)
-                    if (parentElement_ul.children.length === 1) {
-                        parentElement_ul.remove()
+                } else if (parentElementLI === parentElementUL.lastElementChild) {
+                    global.insertAfter(parentElementUL, el)
+                    if (parentElementUL.children.length === 1) {
+                        parentElementUL.remove()
                     } else {
-                        parentElement_li.remove()
+                        parentElementLI.remove()
                     }
                     global.setCursorPosition(el)
                 } else {
                     let range = new Range()
-                    range.setStartBefore(parentElement_li.nextElementSibling!)
-                    range.setEndAfter(parentElement_ul.lastElementChild!)
+                    range.setStartBefore(parentElementLI.nextElementSibling!)
+                    range.setEndAfter(parentElementUL.lastElementChild!)
                     let fragement = range.extractContents()
                     let ul = this.createBasics(fragement)
-                    global.insertAfter(parentElement_ul, ul)
-                    global.insertAfter(parentElement_ul, el)
-                    parentElement_li.remove()
+                    global.insertAfter(parentElementUL, ul)
+                    global.insertAfter(parentElementUL, el)
+                    parentElementLI.remove()
                     global.setCursorPosition(el)
                 }
                 return true
             }
 
             let li = document.createElement("li")
-            if (parentElement_li.classList.contains("task")) {
+            if (parentElementLI.classList.contains("task")) {
                 li.classList.add("task")
                 let checkboxContainer = document.createElement("div")
                 checkboxContainer.classList.add("checkbox")
@@ -89,17 +89,17 @@ export default <Module & Plugin>{
             }
             let p = paragraph.createBasics()
             li.append(p)
-            global.insertBefore(parentElement_li, li)
+            global.insertBefore(parentElementLI, li)
             return true
         }
         return false
     },
 
-    enterEvent_After(el, event) {
-        let parentElement_li = el.parentElement!
+    enterEventAfter(el, event) {
+        let parentElementLI = el.parentElement!
         /* 兼容task */
-        if (parentElement_li.classList.contains("task")
-            && parentElement_li.children.length === 2
+        if (parentElementLI.classList.contains("task")
+            && parentElementLI.children.length === 2
         ) {
             event.preventDefault()
 
@@ -118,7 +118,7 @@ export default <Module & Plugin>{
             let p = paragraph.createBasics()
             li.append(p)
 
-            global.insertAfter(parentElement_li, li)
+            global.insertAfter(parentElementLI, li)
 
             let fragement = global.getFragementRangeToEnd(el)
             if (fragement) {
@@ -128,7 +128,7 @@ export default <Module & Plugin>{
             return true
         }
 
-        else if (parentElement_li.children.length === 1) {
+        else if (parentElementLI.children.length === 1) {
             event.preventDefault()
             let li = document.createElement("li")
             let p = paragraph.createBasics()
@@ -144,35 +144,35 @@ export default <Module & Plugin>{
         return false
     },
 
-    deleteEvent_Begin(el, event) {
-        let parentElement_li = el.parentElement!
-        let parentElement_ul = parentElement_li.parentElement!
+    deleteEventBegin(el, event) {
+        let parentElementLI = el.parentElement!
+        let parentElementUL = parentElementLI.parentElement!
 
         /* task 降级处理 */
         if (el.previousElementSibling?.classList.contains("checkbox")) {
             event.preventDefault()
-            parentElement_li.classList.remove("task")
-            parentElement_li.firstElementChild?.remove()
+            parentElementLI.classList.remove("task")
+            parentElementLI.firstElementChild?.remove()
             return true
         }
 
-        else if (el === parentElement_li.firstElementChild) {
+        else if (el === parentElementLI.firstElementChild) {
             event.preventDefault()
-            let posElement = parentElement_li.firstElementChild!
+            let posElement = parentElementLI.firstElementChild!
             let range = new Range()
-            range.setStartBefore(parentElement_li.firstElementChild!)
-            range.setEndAfter(parentElement_li.lastElementChild!)
+            range.setStartBefore(parentElementLI.firstElementChild!)
+            range.setEndAfter(parentElementLI.lastElementChild!)
             let fragement = range.extractContents()
-            if (parentElement_li === parentElement_ul.firstElementChild) {
-                global.insertBefore(parentElement_ul, fragement)
-                if (parentElement_ul.children.length === 1) {
-                    parentElement_ul.remove()
+            if (parentElementLI === parentElementUL.firstElementChild) {
+                global.insertBefore(parentElementUL, fragement)
+                if (parentElementUL.children.length === 1) {
+                    parentElementUL.remove()
                 } else {
-                    parentElement_li.remove()
+                    parentElementLI.remove()
                 }
             } else {
-                parentElement_li.previousElementSibling!.append(fragement)
-                parentElement_li.remove()
+                parentElementLI.previousElementSibling!.append(fragement)
+                parentElementLI.remove()
             }
             global.setCursorPosition(posElement)
             return true
@@ -180,14 +180,14 @@ export default <Module & Plugin>{
         return false
     },
 
-    inputEvent_Unlimited(el) {
-        // console.log("inputEvent_Unlimited");
-        let parentElement_li = el.parentElement!
-        if (!parentElement_li.classList.contains("task")) {
+    inputEventUnlimited(el) {
+        // console.log("inputEventUnlimited");
+        let parentElementLI = el.parentElement!
+        if (!parentElementLI.classList.contains("task")) {
             let data = el.firstChild?.textContent!
             let mat = /^\[([x|\s])\]\s.*$/.exec(data)
             if (mat) {
-                parentElement_li.classList.add("task")
+                parentElementLI.classList.add("task")
                 let checkboxContainer = document.createElement("div")
                 checkboxContainer.classList.add("checkbox")
                 checkboxContainer.contentEditable = "false"
