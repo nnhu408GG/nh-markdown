@@ -58,6 +58,6 @@ export default <Module & Plugin>{
     },
 
     getSource(el) {
-        return ["---"]
+        return "---"
     },
 }

@@ -182,7 +182,7 @@ function getInlineContainer(el: HTMLElement): HTMLElement {
 export function handleInline(el: HTMLElement) {
     // console.log("handleInline.el:", el);
     let baseElement = getInlineContainer(el)
-    console.log("baseElement:", baseElement);
+    // console.log("baseElement:", baseElement);
 
     // 临时处理了image与link的冲突
     if (baseElement.firstChild?.textContent?.startsWith("!")) return

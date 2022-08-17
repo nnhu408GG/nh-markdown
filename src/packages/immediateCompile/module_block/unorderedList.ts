@@ -207,4 +207,18 @@ export default <Module & Plugin>{
             }
         }
     },
+
+    getSource(el) {
+        let source = <string[]>[]
+        for (let i = 0; i < el.children.length; i++) {
+            let sub = global.prefixGetSource({
+                fragment: el.children[i].children,
+                blankLine: false,
+                prefix: "  ",
+            })
+            sub = sub.replace(/^.{1}/g, `-`)
+            source.push(sub)
+        }
+        return source.join("\n")
+    },
 }

@@ -49,20 +49,10 @@ class immediateCompile {
     }
 
     getSource() {
-        let source = ""
-        let children = global.state.BIND_ELEMENT.children
-        for (let i = 0; i < children.length; i++) {
-            let el = children[i] as HTMLElement
-            for (let modIndex = 0; modIndex < global.state.MODULE.length; modIndex++) {
-                let mod = global.state.MODULE[modIndex]
-                if (global.getAttribute(el) === mod.mdtype) {
-                    mod.getSource?.(el).forEach(str => {
-                        source += `${str}\n\n`
-                    })
-                    break
-                }
-            }
-        }
+        let source = global.prefixGetSource({
+            fragment: global.state.BIND_ELEMENT.children,
+            blankLine:true
+        })
         // return "immediateCompile.prototype.getSource is undefined"
         return source
     }

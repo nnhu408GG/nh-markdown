@@ -117,6 +117,6 @@ export default <Module & Plugin>{
 
     getSource(el) {
         let source = el.firstElementChild?.textContent!
-        return [source]
+        return source
     },
 }

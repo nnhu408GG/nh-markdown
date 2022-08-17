@@ -36,7 +36,7 @@ export interface AfterHandle {
     changeFocusAtParagraph(el: HTMLElement): boolean
 
     /** moduleELement -> source */
-    getSource(el: HTMLElement): string[]
+    getSource(el: HTMLElement): string
 
     /** todo
      * 焦点元素：

@@ -62,4 +62,18 @@ export default <Module>{
             }
         }
     },
+
+    getSource(el) {
+        let source = `\`\`\`${el.lastElementChild?.textContent}\n`
+
+        let children = el.firstElementChild?.children!
+        for (let i = 0; i < children.length; i++) {
+            let item = children[i]
+            source += `${item.textContent}\n`
+        }
+
+        source += "```"
+
+        return source
+    },
 }

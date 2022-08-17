@@ -72,12 +72,8 @@ export default <Module & Plugin>{
         if (fragment) {
             p.append(fragment)
         } else {
-            // todo 在末尾的回车处理
-            // todo 转移到focus切换时候触发！
-            // if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === precode.mdtype) {
-            //     precode.changeFocusAtParagraph(el, event)
-            //     return
-            // }
+            // 在末尾的回车处理
+            if (table.enterEventAtLastParagraph(el, event)) return
         }
         global.insertAfter(el, p)
         global.setCursorPosition(p)
@@ -171,6 +167,6 @@ export default <Module & Plugin>{
 
     getSource(el) {
         let source = el.textContent!
-        return [source]
+        return source
     },
 }

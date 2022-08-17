@@ -1,8 +1,10 @@
 import type { Module } from "../types"
 import * as global from "../global"
+import paragraph from "./paragraph"
 
 interface Plugin {
     createBasics(heads: string[]): HTMLElement
+    enterEventAtLastParagraph(el: HTMLElement, event: KeyboardEvent): boolean
 }
 
 export default <Module & Plugin>{
@@ -75,11 +77,13 @@ export default <Module & Plugin>{
 
     // todo paragraph 末尾回车才触发
     // todo 图片的嵌入
-    changeFocusAtParagraph(el) {
+    // changeFocusAtParagraph(el) {
+    enterEventAtLastParagraph(el, event) {
         let data = el.firstChild?.textContent
         if (!data) return
         let mat = /^(?:(\|(?:(?!\|).)+))+?\|$/g.test(data)
         if (mat) {
+            event.preventDefault()
             let datalist = data.split("|")
             datalist.shift()
             datalist.pop()
@@ -103,19 +107,32 @@ export default <Module & Plugin>{
         let focusElement = global.getChildNodeMatchCursor(table)!
 
         /* command + Enter 新增行 */
-        if (global.state.ACTIVE_META && event.code === "Enter") {
-            let tr = document.createElement("tr")
-            for (let i = 0; i < col; i++) {
-                let th = document.createElement("th")
-                tr.append(th)
+        if (event.code === "Enter") {
+            if (global.state.ACTIVE_META) {
+                let tr = document.createElement("tr")
+                for (let i = 0; i < col; i++) {
+                    let th = document.createElement("th")
+                    th.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
+                    tr.append(th)
+                }
+                if (focusElement === table.firstElementChild) {
+                    global.insertBefore(tbody.firstElementChild!, tr)
+                } else if (focusElement === table.lastElementChild) {
+                    let focusElement_tbody_row = global.getChildNodeMatchCursor(tbody)!
+                    global.insertAfter(focusElement_tbody_row, tr)
+                }
+                global.setCursorPosition(tr.firstElementChild!)
+            } else {
+                event.preventDefault()
+                // todo 光标移位
+                if (el.nextElementSibling) {
+                    global.setCursorPosition(el.nextElementSibling)
+                } else {
+                    let p = paragraph.createBasics()
+                    global.insertAfter(el, p)
+                    global.setCursorPosition(p)
+                }
             }
-            if (focusElement === table.firstElementChild) {
-                global.insertBefore(tbody.firstElementChild!, tr)
-            } else if (focusElement === table.lastElementChild) {
-                let focusElement_tbody_row = global.getChildNodeMatchCursor(tbody)!
-                global.insertAfter(focusElement_tbody_row, tr)
-            }
-            global.setCursorPosition(tr.firstElementChild!)
         }
 
         else if (event.code === "ArrowUp") {
@@ -162,8 +179,87 @@ export default <Module & Plugin>{
             }
         }
     },
-}
 
+    getSource(el) {
+        let table = el.lastElementChild!
+        let thead = table.firstElementChild!
+        let tbody = table.lastElementChild!
+
+        let length = thead.firstElementChild!.children.length
+
+        let sourceTheadList = <string[]>[]
+        for (let i = 0; i < length; i++) {
+            sourceTheadList.push(thead.firstElementChild!.children[i].textContent || "")
+        }
+
+        let sourceTbodyList = <string[][]>[]
+        for (let i = 0; i < tbody.children.length; i++) {
+            let subSource = <string[]>[]
+            let itemTR = tbody.children[i]
+            for (let j = 0; j < length; j++) {
+                subSource.push(itemTR.children[j].textContent || "")
+            }
+            sourceTbodyList.push(subSource)
+        }
+
+        let tempMergeList = [sourceTheadList, ...sourceTbodyList]
+
+        let mapMaxColLeng = new Array(length).fill(0).reduce((res, _, index) => {
+            res[index] = 0
+            return res
+        }, {})
+
+        tempMergeList.forEach(itemTR => {
+            itemTR.forEach((itemTH, index) => {
+                let lenTH = itemTH.length
+                if (lenTH > mapMaxColLeng[index]) {
+                    mapMaxColLeng[index] = lenTH
+                }
+            })
+        })
+
+        console.log("mapMaxColLeng:", mapMaxColLeng);
+
+
+
+        for (let i = 0; i < length; i++) {
+            let item = sourceTheadList[i]
+            let supplement = (mapMaxColLeng[i] - item.length)
+            let beforeSpan = Math.floor(supplement / 2)
+            let afterSpan = supplement - beforeSpan
+            sourceTheadList[i] = ` ${" ".repeat(beforeSpan)}${item}${" ".repeat(afterSpan)} `
+        }
+
+        let formatline = <string[]>[]
+        for (let i = 0; i < length; i++) {
+            formatline.push(` ${"-".repeat(mapMaxColLeng[i])} `)
+        }
+
+
+
+        for (let i = 0; i < sourceTbodyList.length; i++) {
+            for (let j = 0; j < length; j++) {
+                // let item = sourceTbodyList[i][j]
+                // let supplement = (mapMaxColLeng[j] - item.length)
+                // let beforeSpan = Math.floor(supplement / 2)
+                // let afterSpan = supplement - beforeSpan
+                // sourceTbodyList[i][j] = " ".repeat(beforeSpan) + item + " ".repeat(afterSpan)
+                let item = sourceTbodyList[i][j]
+                sourceTbodyList[i][j] = ` ${item}${" ".repeat(mapMaxColLeng[j] - item.length)} `
+            }
+        }
+
+
+        let source = [sourceTheadList, formatline, ...sourceTbodyList].reduce((res, row) => {
+            let str = row.join("|")
+            console.log("STR:", str);
+            res.push(`|${str}|`)
+            return res
+        }, [])
+
+        return source.join("\n")
+    },
+}
 
 function indexOfELement(el: HTMLElement): number {
     let parentElement = el.parentElement!

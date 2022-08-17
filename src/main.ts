@@ -7,11 +7,21 @@ import * as globalInline from './packages/immediateCompile/module_inline'
 /* ============= template ============= */
 const app = document.querySelector<HTMLDivElement>('#app')!;
 const btn = document.createElement("button")
+btn.setAttribute("tempbtn", "")
 btn.innerText = "getSource"
 app.append(btn)
 const dom = document.createElement("div")
 app.append(dom)
 /* ==================================== */
+
+// let res = Array(10).fill(2)
+
+let thleng = 20
+let maxleng = 20
+
+console.log(thleng, maxleng);
+console.log(Math.floor((maxleng - thleng) / 2));
+
 
 // let temp_p1 = document.createElement("li")
 // let node1 = document.createTextNode("pppnode")
@@ -54,6 +64,7 @@ element.compareDocumentPosition(otherElement)
 /* ==================================== */
 
 
+
 let wys = new nhMrk.wys().bind(dom)
 
 btn.onclick = () => {
@@ -62,7 +73,7 @@ btn.onclick = () => {
     // wys.setViewMode = "Preview"
 }
 
-let testElement = document.createElement("p")
+/* let testElement = document.createElement("p")
 testElement.setAttribute("mdtype", "paragraph")
 // dom.append(testElement)
 
@@ -107,3 +118,4 @@ let containerA = globalInline.createInlineElement("**", containerA_fragment)
 testElement.append(containerA)
 
 console.log("compareDocumentPosition:", containerA.compareDocumentPosition(testElement));
+ */

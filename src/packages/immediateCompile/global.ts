@@ -165,7 +165,6 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
             if (hr.changeFocusAtParagraph(tempLatelyFirstElement)
                 || precode.changeFocusAtParagraph(tempLatelyFirstElement)
                 || image.changeFocusAtParagraph(tempLatelyFirstElement)
-                || table.changeFocusAtParagraph(tempLatelyFirstElement)
             ) {
                 return
             }
@@ -253,3 +252,36 @@ export function createTempParagraph(el: HTMLElement, from: "ArrowUp" | "ArrowDow
     return false
 }
 
+
+export function prefixGetSource(param: {
+    fragment: HTMLCollection,
+    prefix?: string,
+    /* 开启空行 */
+    blankLine: boolean,
+}) {
+
+    let source = <string[]>[]
+
+    if (param.prefix === undefined) {
+        param.prefix = ""
+    }
+
+    for (let i = 0; i < param.fragment.length; i++) {
+        let itemEL = param.fragment[i] as HTMLElement
+        for (let modIndex = 0; modIndex < state.MODULE.length; modIndex++) {
+            let mod = state.MODULE[modIndex]
+            if (getAttribute(itemEL) === mod.mdtype && mod.getSource) {
+                let modSourceList = <string[]>[]
+                mod.getSource(itemEL).split("\n").forEach(res => modSourceList.push(`${param.prefix}${res}`))
+                source.push(modSourceList.join("\n"))
+                break
+            }
+        }
+    }
+
+    if (param.blankLine) {
+        return source.join(`\n${param.prefix}\n`)
+    } else {
+        return source.join(`\n`)
+    }
+}

@@ -69,6 +69,6 @@ export default <Module & Plugin>{
     getSource(el) {
         let rank = parseInt(el.tagName[1])
         let source = `${"#".repeat(rank)} ${el.textContent!}`
-        return [source]
+        return source
     },
 }

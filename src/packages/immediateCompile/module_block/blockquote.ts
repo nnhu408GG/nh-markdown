@@ -86,4 +86,12 @@ export default <Module & Plugin>{
             return true
         }
     },
+
+    getSource(el) {
+        return global.prefixGetSource({
+            fragment: el.children,
+            blankLine: true,
+            prefix: "> "
+        })
+    },
 }

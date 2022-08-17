@@ -132,4 +132,22 @@ export default <Module & Plugin>{
         }
         return false
     },
+
+    getSource(el) {
+        let prefixIndex = (el as HTMLOListElement).start
+        let source = <string[]>[]
+        for (let i = 0; i < el.children.length; i++) {
+            let prefix = " ".repeat(prefixIndex.toString().length + 2)
+            let sub = global.prefixGetSource({
+                fragment: el.children[i].children,
+                blankLine: false,
+                prefix,
+            })
+            let regexp = new RegExp(`^${prefix}`)
+            sub = sub.replace(regexp, `${prefixIndex}. `)
+            source.push(sub)
+            prefixIndex++
+        }
+        return source.join("\n")
+    },
 }
