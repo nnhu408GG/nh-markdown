@@ -7,6 +7,7 @@ export default function (this: immediateCompile, e: Event) {
     if (!moduleELement) return
     global.classNameAddFocus(moduleELement)
     console.log("onClick:", moduleELement);
+    console.log("onClick.textContent:", moduleELement.textContent);
 
     if (moduleELement.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === image.mdtype) {
         if (!(e.target as HTMLElement).classList.contains("label")) {

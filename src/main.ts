@@ -16,11 +16,14 @@ app.append(dom)
 
 // let res = Array(10).fill(2)
 
-let thleng = 20
-let maxleng = 20
+// let thleng = 20
+// let maxleng = 20
 
-console.log(thleng, maxleng);
-console.log(Math.floor((maxleng - thleng) / 2));
+// console.log(thleng, maxleng);
+// console.log(Math.floor((maxleng - thleng) / 2));
+
+let str = "fsfdAAA"
+console.log(str.slice(0, str.length-1));
 
 
 // let temp_p1 = document.createElement("li")

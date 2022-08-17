@@ -41,7 +41,7 @@ class immediateCompile {
         bindElement.onkeydown = onkeydown.bind(this)
         bindElement.onkeyup = onkeyup.bind(this)
         bindElement.oninput = oninput.bind(this)
-        // bindElement.onpaste = onpaste.bind(this) // 粘贴
+        bindElement.onpaste = onpaste.bind(this) // 粘贴
 
         // bindElement. = (e) => {
         //     console.log("onselectionchange:", e);
