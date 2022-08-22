@@ -1,7 +1,30 @@
 import type { Module } from "../types"
 import * as global from "../global"
-export default <Module>{
+
+interface Plugin {
+    createBasics(fragment: DocumentFragment, language: string): HTMLPreElement
+}
+
+export default <Module & Plugin>{
     mdtype: "precode",
+
+    createBasics(fragment, language) {
+        let pre = document.createElement("pre")
+        pre.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        let code = document.createElement("code")
+        pre.append(code)
+        code.append(fragment)
+
+        let lang = document.createElement("div")
+        lang.contentEditable = "false"
+        lang.className = "language"
+        let input = document.createElement("span")
+        input.contentEditable = "true"
+        lang.append(input)
+        input.innerText = language
+        pre.append(lang)
+        return pre
+    },
 
     focusEvent(el) {
         global.classNameAddFocus(el)
@@ -16,21 +39,12 @@ export default <Module>{
     changeFocusAtParagraph(el) {
         let mat = /^```(.*)$/g.exec(el.firstChild?.textContent!)!
         if (mat && el.childNodes.length === 1) {
-            let pre = document.createElement("pre")
-            pre.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-            let code = document.createElement("code")
-            pre.append(code)
+            let fragment = document.createDocumentFragment()
             let p = document.createElement("p")
-            code.append(p)
+            fragment.append(p)
+            let language = mat[1].trim()
 
-            let lang = document.createElement("div")
-            lang.contentEditable = "false"
-            lang.className = "language"
-            let input = document.createElement("span")
-            input.contentEditable = "true"
-            lang.append(input)
-            input.innerText = mat[1].trim()
-            pre.append(lang)
+            let pre = this.createBasics(fragment, language)
 
             el.replaceWith(pre)
             global.setCursorPosition(p)
@@ -42,11 +56,11 @@ export default <Module>{
 
     keydownEventUnlimited(el, event) {
         let focusPreElement = global.getChildNodeMatchCursor(el) as HTMLElement
-
         if (event.code === "ArrowUp"
             && focusPreElement === el.firstElementChild
             && global.getChildNodeMatchCursor(focusPreElement) === focusPreElement.firstElementChild
         ) {
+            console.log("precode.keydownEventUnlimited.ArrowUp");
             if (global.createTempParagraph(el, "ArrowUp")) event.preventDefault()
         }
 

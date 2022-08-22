@@ -13,7 +13,8 @@ import table from "./table"
 // import module_Image from "./image"
 
 interface Plugin {
-    createBasics(fragment?: DocumentFragment | Node): HTMLParagraphElement
+    createBasics(fragment?: DocumentFragment | Node | string): HTMLParagraphElement
+    createByStruct(children: string): HTMLDivElement
 }
 
 export default <Module & Plugin>{
@@ -23,8 +24,16 @@ export default <Module & Plugin>{
         let dom = document.createElement("p")
         dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
         dom.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
+        if (typeof fragment === "string") {
+            fragment = fragment.replaceAll(/\s/g, "\u00A0")
+        }
         fragment && dom.append(fragment)
         return dom
+    },
+
+    createByStruct(data) {
+        let fragment = document.createTextNode(data)
+        return this.createBasics(fragment)
     },
 
     enterEventBegin(el, event) {
@@ -168,5 +177,5 @@ export default <Module & Plugin>{
     getSource(el) {
         let source = el.textContent!
         return source
-    },
+    }
 }

@@ -7,6 +7,9 @@ import precode from "./module_block/precode";
 import image from "./module_block/image";
 import table from "./module_block/table";
 import blockquote from "./module_block/blockquote";
+import title from "./module_block/title";
+import unorderedList from "./module_block/unorderedList";
+import orderedList from "./module_block/orderedList";
 
 /* =============== 全局参数 ========================================================================= */
 
@@ -284,4 +287,175 @@ export function prefixGetSource(param: {
     } else {
         return source.join(`\n`)
     }
+}
+
+interface ItemStruct {
+    type?: string
+    children?: unknown
+    opt?: unknown
+}
+
+export function createByStruct(datalist: ItemStruct[]) {
+    let fragment = document.createDocumentFragment()
+
+    for (let i = 0; i < datalist.length; i++) {
+        let item = datalist[i]
+        // hr
+        if (item.type === "hr") {
+            let dom = hr.createBasics()
+            fragment.append(dom)
+        }
+
+        // image
+        else if (item.type === "image") {
+            let opt = item.opt as { label: string, url: string }
+            let dom = image.createBasics(opt.label, opt.url)
+            fragment.append(dom)
+        }
+
+        // header
+        else if (item.type === "header") {
+            let opt = item.opt as { rank: number }
+            let dom = title.createBasics(opt.rank, item.children as string)
+            fragment.append(dom)
+        }
+
+        // paragraph
+        else if (item.type === "paragraph") {
+            let dom = paragraph.createBasics(item.children as string)
+            fragment.append(dom)
+        }
+
+        // unorderedList1
+        // unorderedList2
+        else if (item.type === "unorderedList1" || item.type === "unorderedList2") {
+            let LiFragment = document.createDocumentFragment()
+
+
+            let children = item.children as ItemStruct[][]
+            for (let i = 0; i < children.length; i++) {
+                let item = children[i]
+                let li = document.createElement("li")
+
+                // todo 需要优化这坨东西
+                if (item[0].type === "paragraph") {
+                    if ((item[0].children as string).startsWith("[x] ")) {
+                        item[0].children = (item[0].children as string).slice(4)
+                        li.classList.add("task")
+
+                        let checkboxContainer = document.createElement("div")
+                        checkboxContainer.classList.add("checkbox")
+                        checkboxContainer.contentEditable = "false"
+                        let taskCheck = document.createElement("input")
+                        taskCheck.type = "checkbox"
+                        checkboxContainer.append(taskCheck)
+                        taskCheck.checked = true
+
+                        li.insertAdjacentElement("afterbegin", checkboxContainer)
+
+                    } else if ((item[0].children as string).startsWith("[ ] ")) {
+                        item[0].children = (item[0].children as string).slice(4)
+                        li.classList.add("task")
+
+                        let checkboxContainer = document.createElement("div")
+                        checkboxContainer.classList.add("checkbox")
+                        checkboxContainer.contentEditable = "false"
+                        let taskCheck = document.createElement("input")
+                        taskCheck.type = "checkbox"
+                        checkboxContainer.append(taskCheck)
+
+                        li.insertAdjacentElement("afterbegin", checkboxContainer)
+                    }
+                }
+
+                let _fragment = createByStruct(item)
+                li.append(_fragment)
+                LiFragment.append(li)
+            }
+
+            let dom = unorderedList.createBasics(LiFragment)
+            fragment.append(dom)
+        }
+
+        // orderedList
+        else if (item.type === "orderedList") {
+            let opt = item.opt as { start: number }
+            let LiFragment = document.createDocumentFragment()
+
+            let children = item.children as ItemStruct[][]
+            for (let i = 0; i < children.length; i++) {
+                let item = children[i]
+                let li = document.createElement("li")
+
+                let _fragment = createByStruct(item)
+                li.append(_fragment)
+                LiFragment.append(li)
+            }
+
+            let dom = document.createElement("ol")
+            dom.setAttribute(SIGN.MODULE_ATTRIBUTE, orderedList.mdtype)
+            dom.start = opt.start
+            dom.append(LiFragment)
+
+            fragment.append(dom)
+        }
+
+        // quote
+        else if (item.type === "quote") {
+            let children = item.children as ItemStruct[]
+            let quotefragment = createByStruct(children)
+            let dom = blockquote.createBasics(quotefragment)
+            fragment.append(dom)
+        }
+
+        // table
+        else if (item.type === "table") {
+            let children = item.children as string[][]
+
+            let headerList = children[0]
+            let dom = table.createBasics(headerList)
+
+            let tbody = dom.lastElementChild?.lastElementChild!
+
+            let _trFragment = document.createDocumentFragment()
+
+            for (let i = 2; i < children.length; i++) {
+                let tr = tbody.firstElementChild!.cloneNode(true) as HTMLTableRowElement
+                for (let j = 0; j < children[i].length; j++) {
+                    tr.children[j].append(children[i][j])
+                }
+                _trFragment.append(tr)
+            }
+
+            let range = new Range()
+            range.selectNodeContents(tbody)
+            range.deleteContents()
+
+            tbody.append(_trFragment)
+
+            fragment.append(dom)
+        }
+
+        // precode
+        else if (item.type === "precode") {
+            let children = item.children as string[]
+            let opt = item.opt as { language: string }
+            let codeFragment = document.createDocumentFragment()
+            for (let i = 0; i < children.length; i++) {
+                let p = document.createElement("p")
+                if (children[i] === "") {
+                    let br = document.createElement("br")
+                    p.append(br)
+                } else {
+                    p.append(children[i])
+                }
+                codeFragment.append(p)
+            }
+
+            let dom = precode.createBasics(codeFragment, opt.language)
+            fragment.append(dom)
+        }
+    }
+
+    return fragment
 }

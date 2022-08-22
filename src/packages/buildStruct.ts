@@ -70,11 +70,11 @@ function run(datalist: string[]) {
     while (state.index < datalist.length) {
         let [type, mat] = getModuleType(datalist[state.index])
         if (type === "header") {
-            res.push({ type, children: mat![2] })
+            res.push({ type, children: mat[2], opt: { rank: mat[1].length } })
         } else if (type === "hr") {
             res.push({ type })
         } else if (type === "image") {
-            res.push({ type, opt: { label: mat![1], url: mat![2] } })
+            res.push({ type, opt: { label: mat[1], url: mat[2] } })
         }
         else if (type === "quote") {
             res.push(handleQuote(datalist, state))

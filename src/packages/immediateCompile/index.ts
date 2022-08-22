@@ -50,9 +50,16 @@ class immediateCompile {
     }
 
     set source(data: string) {
-        console.log("immediateCompile.setSource");
         let res = buildStruct(data)
-        console.log(res);
+        res.forEach(item => console.log(item))
+        let fragment = global.createByStruct(res)
+
+        // 清空 bindElement 的所有子元素
+        let range = new Range()
+        range.selectNodeContents(global.state.BIND_ELEMENT)
+        range.deleteContents()
+
+        global.state.BIND_ELEMENT.append(fragment)
     }
 
     get source() {

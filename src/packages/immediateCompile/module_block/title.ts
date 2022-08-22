@@ -3,7 +3,7 @@ import * as global from "../global"
 import paragraph from "./paragraph"
 
 interface Plugin {
-    createBasics(rank: number, fragment?: DocumentFragment): HTMLHeadElement
+    createBasics(rank: number, fragment?: DocumentFragment | Node | string): HTMLHeadElement
 }
 
 export default <Module & Plugin>{
@@ -13,6 +13,9 @@ export default <Module & Plugin>{
         let dom = document.createElement(`h${rank}`) as HTMLHeadElement
         dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
         dom.setAttribute(global.SIGN.INLINECONTAINER_ATTRIBUTE, "")
+        if (typeof fragment === "string") {
+            fragment = fragment.replaceAll(/\s/g, "\u00A0")
+        }
         fragment && dom.append(fragment)
         return dom
     },

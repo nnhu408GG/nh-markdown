@@ -4,6 +4,7 @@ import paragraph from "./paragraph"
 
 interface Plugin {
     createBasics(fragment?: DocumentFragment | Node): HTMLQuoteElement
+    // createByStruct(children:)
 }
 
 export default <Module & Plugin>{

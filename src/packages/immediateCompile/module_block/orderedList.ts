@@ -3,7 +3,8 @@ import * as global from "../global"
 import paragraph from "./paragraph"
 
 interface Plugin {
-    createBasics(start: number, fragment: HTMLParagraphElement[]): HTMLOListElement
+    // createBasics(start: number, fragment: HTMLParagraphElement[]): HTMLOListElement
+    createBasics(start: number, fragment: DocumentFragment[]): HTMLOListElement
 }
 
 export default <Module & Plugin>{
@@ -27,8 +28,10 @@ export default <Module & Plugin>{
         if (mat) {
             let start = parseInt(mat[1])
             let fragment = global.getFragementRangeToEnd(el)
+            let lifragment = document.createDocumentFragment()
             let p = paragraph.createBasics(fragment)
-            let ol = this.createBasics(start, [p])
+            lifragment.append(p)
+            let ol = this.createBasics(start, [lifragment])
             el.replaceWith(ol)
             global.setCursorPosition(p)
             return true

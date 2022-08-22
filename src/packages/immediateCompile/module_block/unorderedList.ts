@@ -24,6 +24,7 @@ export default <Module & Plugin>{
         return ul
     },
 
+    // todo 未做对 task 的判断
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^(-|\*|\+|\d+\.)\s/g.exec(data)
