@@ -18,7 +18,7 @@ export default <Module & Plugin>{
 
     upgradeInParagraph(el) {
         let data = el.firstChild?.textContent!
-        let mat = /^>\s.*$/g.test(data)
+        let mat = /^>.*$/g.test(data)
         if (mat) {
             let _e = el.cloneNode(true)
 

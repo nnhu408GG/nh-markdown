@@ -4,15 +4,60 @@ import paragraph from './packages/immediateCompile/module_block/paragraph';
 import * as global from './packages/immediateCompile/global';
 import * as globalInline from './packages/immediateCompile/module_inline'
 
-/* ============= template ============= */
+import md from "./assets/test.md?raw" // vite 引入纯文本的方式
+
 const app = document.querySelector<HTMLDivElement>('#app')!;
+
+const dom = document.createElement("div")
+app.append(dom)
+
+let wys = new nhMrk.wys(dom)
+wys.source = md
+
+// wys.se
+
+
 const btn = document.createElement("button")
 btn.setAttribute("tempbtn", "")
 btn.innerText = "getSource"
 app.append(btn)
-const dom = document.createElement("div")
-app.append(dom)
-/* ==================================== */
+btn.onclick = () => {
+    console.log(wys.source);
+    // wys.initSourceData = "fxxxxx"
+    // wys.setViewMode = "Preview"
+}
+
+
+// let md = import.meta.glob("./assets/*.md")
+// for (let i in md) {
+//     md[i]().then(mod => {
+//         console.log(mod.default);
+//     })
+// }
+
+import buildStruct from './packages/buildStruct';
+buildStruct(md)
+
+// let str = "werwer"
+
+// console.log([1, 1, 1, 1].every(i=>i===1));
+
+// let ary = [1, 2, 3, 4, 5]
+// console.log(ary.slice(1, -1));
+
+
+// console.log(/^(?:(\|(?:(?!\|).)+)){2,}\|$/.exec("|a|w|"));
+
+
+// console.log(/^(\s*).*$/.exec(str));
+
+
+// let list = [{}]
+// console.log("list.length:", list.length);
+
+
+
+
 
 // let res = Array(10).fill(2)
 
@@ -22,8 +67,6 @@ app.append(dom)
 // console.log(thleng, maxleng);
 // console.log(Math.floor((maxleng - thleng) / 2));
 
-let str = "fsfdAAA"
-console.log(str.slice(0, str.length-1));
 
 
 // let temp_p1 = document.createElement("li")
@@ -47,7 +90,7 @@ console.log(str.slice(0, str.length-1));
 //     sel?.addRange(range)
 // }, 500);
 
-/* 
+/*
 element.compareDocumentPosition(otherElement)
 
 1: 两个元素不再同一个文档内
@@ -68,22 +111,36 @@ element.compareDocumentPosition(otherElement)
 
 
 
-let wys = new nhMrk.wys().bind(dom)
 
-btn.onclick = () => {
-    console.log(wys.getSource());
-    // wys.initSourceData = "fxxxxx"
-    // wys.setViewMode = "Preview"
-}
-
-/* let testElement = document.createElement("p")
-testElement.setAttribute("mdtype", "paragraph")
+// let testElement = document.createElement("p")
+// testElement.setAttribute("mdtype", "paragraph")
 // dom.append(testElement)
 
 // let textA = document.createTextNode("TEXTA***TE`XTA**TE`XT`A")
-let textA = document.createTextNode("T**E[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA有啥问题")
-testElement.append(textA)
+// let textA = document.createTextNode("T**E[xx`x`x[xx`x`xxx](T)xx](T)ATEXTATEXTA有啥问题")
+// dom.firstElementChild?.append(textA)
 
+
+// let range = new Range()
+// range.setStart(textA, textA.length - 2)
+// range.setEnd(textA, textA.length)
+// document.getSelection()?.removeAllRanges()
+// document.getSelection()?.addRange(range)
+
+
+// console.log(dom.firstChild?.hasChildNodes());
+// console.log(dom.hasPointerCapture(1));
+
+
+// let range = new Range()
+// range.setStart(fdm.childNodes.item(0), 0)
+// range.setEnd(fdm.childNodes.item(0), 1)
+// document.getSelection()?.removeAllRanges()
+// document.getSelection()?.addRange(range)
+
+
+
+/* 
 let linkA_label = document.createTextNode("点击此处")
 let linkA = globalInline.createLinkElement("https://www.baidu.com", linkA_label)
 testElement.append(linkA)

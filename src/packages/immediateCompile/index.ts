@@ -4,10 +4,11 @@ import onkeydown from "./event/onkeydown"
 import onkeyup from "./event/onkeyup"
 import oninput from "./event/oninput"
 import onclick from "./event/onclick"
-
-import module_paragraph from "./module_block/paragraph"
 import onpaste from "./event/onpaste"
+
 import paragraph from "./module_block/paragraph"
+
+import buildStruct from "../buildStruct"
 
 const CLASS_NAME = "nh-mrkEdit"
 // class 只负责管理对外暴露的接口，以及初始化处理
@@ -48,10 +49,16 @@ class immediateCompile {
         // }
     }
 
-    getSource() {
+    set source(data: string) {
+        console.log("immediateCompile.setSource");
+        let res = buildStruct(data)
+        console.log(res);
+    }
+
+    get source() {
         let source = global.prefixGetSource({
             fragment: global.state.BIND_ELEMENT.children,
-            blankLine:true
+            blankLine: true
         })
         // return "immediateCompile.prototype.getSource is undefined"
         return source
