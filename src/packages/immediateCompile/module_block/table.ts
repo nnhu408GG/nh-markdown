@@ -218,7 +218,7 @@ export default <Module & Plugin>{
             })
         })
 
-        console.log("mapMaxColLeng:", mapMaxColLeng);
+        // console.log("mapMaxColLeng:", mapMaxColLeng);
 
 
 
@@ -252,7 +252,7 @@ export default <Module & Plugin>{
 
         let source = [sourceTheadList, formatline, ...sourceTbodyList].reduce((res, row) => {
             let str = row.join("|")
-            console.log("STR:", str);
+            // console.log("STR:", str);
             res.push(`|${str}|`)
             return res
         }, [])

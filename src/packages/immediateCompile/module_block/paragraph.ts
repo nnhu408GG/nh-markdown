@@ -175,7 +175,6 @@ export default <Module & Plugin>{
     },
 
     getSource(el) {
-        let source = el.textContent!
-        return source
+        return el.textContent!
     }
 }

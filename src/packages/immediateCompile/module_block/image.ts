@@ -28,9 +28,7 @@ export default <Module & Plugin>{
         container.contentEditable = "false"
 
         let img = document.createElement("img")
-        // img.src = url
-        // img.src = "./src/assets/4d15253eaad892bbb9dd5e13779ad271d97fc786.jpg"
-        img.src = "./src/assets/99267638_p0.png"
+        img.src = url
         img.alt = label
         img.title = label
         container.append(img)
