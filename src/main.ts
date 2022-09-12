@@ -1,7 +1,7 @@
 import './style.less'
 import nhMrk from './packages'
 import md from "./assets/test.md?raw" // vite 引入纯文本的方式
-import Mdast from './mdast';
+import Mdast from './packages/mdast';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 

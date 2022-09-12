@@ -1,15 +1,15 @@
 import { Module } from "./types";
 import type { BeforeMatch, AfterHandle } from "./types"
 import * as globalInline from "./module_inline"
-import paragraph from "./module_block/paragraph";
-import hr from "./module_block/hr";
-import precode from "./module_block/precode";
-import image from "./module_block/image";
-import table from "./module_block/table";
-import blockquote from "./module_block/blockquote";
-import title from "./module_block/title";
-import unorderedList from "./module_block/unorderedList";
-import orderedList from "./module_block/orderedList";
+import paragraph from "./components/paragraph";
+import hr from "./components/hr";
+import precode from "./components/precode";
+import image from "./components/image";
+import table from "./components/table";
+import blockquote from "./components/blockquote";
+import title from "./components/title";
+import unorderedList from "./components/unorderedList";
+import orderedList from "./components/orderedList";
 
 /* =============== 全局参数 ========================================================================= */
 

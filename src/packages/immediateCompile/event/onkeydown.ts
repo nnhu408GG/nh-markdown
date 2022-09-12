@@ -1,11 +1,11 @@
 import immediateCompile from "..";
 import * as global from "../global"
 
-import hr from "../module_block/hr";
-import image from "../module_block/image";
-import paragraph from "../module_block/paragraph";
-import precode from "../module_block/precode";
-import table from "../module_block/table";
+import hr from "../components/hr";
+import image from "../components/image";
+import paragraph from "../components/paragraph";
+import precode from "../components/precode";
+import table from "../components/table";
 
 
 // todo 快捷键配置

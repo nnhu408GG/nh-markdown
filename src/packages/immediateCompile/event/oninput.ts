@@ -2,10 +2,10 @@ import immediateCompile from "..";
 import * as global from "../global";
 import * as globalInline from "../module_inline";
 
-import module_paragraph from "../module_block/paragraph";
-import table from "../module_block/table";
-import paragraph from "../module_block/paragraph";
-import title from "../module_block/title";
+import module_paragraph from "../components/paragraph";
+import table from "../components/table";
+import paragraph from "../components/paragraph";
+import title from "../components/title";
 export default function (this: immediateCompile, e: Event) {
     // console.log("INPUT_EVENT");
 

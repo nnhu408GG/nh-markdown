@@ -1,5 +1,5 @@
 import * as global from "./global"
-import table from "./module_block/table";
+import table from "./components/table";
 
 type InlineOptionItem = {
     sign: string

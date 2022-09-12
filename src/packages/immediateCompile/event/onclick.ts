@@ -1,6 +1,6 @@
 import immediateCompile from "..";
 import * as global from "../global";
-import image from "../module_block/image";
+import image from "../components/image";
 
 export default function (this: immediateCompile, e: Event) {
     let moduleELement = global.getModuleELement(e.target as Node)

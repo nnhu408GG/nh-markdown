@@ -58,12 +58,10 @@ class Parser implements ParserInterface {
             state.type = type
             state.mat = mat
 
-            let isBuild = false
             for (let mod of this.block) {
                 if (mod.type === type) {
                     let sub = mod.build(state)
                     sub && tempRes.push(sub)
-                    isBuild = true
                     break
                 }
             }
@@ -75,19 +73,10 @@ class Parser implements ParserInterface {
             state.index++
         }
 
-        // let res = <FlowContent[]>[]
         paragraph.build(tempRes)
-        // console.log(res);
 
-        // while (state.index < list.length) {
-
-        // return res
         return tempRes as FlowContent[]
     }
-
-    // public processInline(data: string) {
-    //     _processInline(data)
-    // }
 
 }
 

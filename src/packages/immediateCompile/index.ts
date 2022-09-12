@@ -6,7 +6,7 @@ import oninput from "./event/oninput"
 import onclick from "./event/onclick"
 import onpaste from "./event/onpaste"
 
-import paragraph from "./module_block/paragraph"
+import paragraph from "./components/paragraph"
 
 import buildStruct from "../buildStruct"
 
