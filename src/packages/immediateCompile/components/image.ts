@@ -50,7 +50,7 @@ export default <Module & Plugin>{
         document.getSelection()?.addRange(range)
     },
 
-    changeFocusAtParagraph(el) {
+    changeAtParagraph(el) {
         let data = el.firstChild?.textContent!
         let mat = /^!\[(.*)\]\((.+)\)$/g.exec(data)
         if (mat && el.childNodes.length === 1) {

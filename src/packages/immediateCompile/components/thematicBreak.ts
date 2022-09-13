@@ -1,29 +1,38 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
+import { FlowContent, ThematicBreak } from "../../mdast/types"
 
 interface Plugin {
-    createBasics(): HTMLDivElement
+    createBasics(): HTMLHRElement
+    /** 根据 AST 结构生成 dom 节点 */
+    createByAST(ast: ThematicBreak): HTMLHRElement
 }
 
 export default <Module & Plugin>{
-    mdtype: "hr",
+    mdtype: "thematicBreak",
 
     createBasics() {
-        let dom = document.createElement("div")
-        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        // let dom = document.createElement("div")
+        // dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
         let hr = document.createElement("hr")
-        dom.append(hr)
-        return dom
+        hr.contentEditable = "false"
+        // dom.append(hr)
+        // return dom
+        return hr
     },
 
-    changeFocusAtParagraph(el) {
+    createByAST(ast) {
+        // ast.sign
+
+    },
+
+    changeAtParagraph(el) {
         if (el.childNodes.length === 1 && el.firstChild?.textContent === "---") {
             let dom = this.createBasics()
             el.replaceWith(dom)
             return true
         }
-        return false
     },
 
     keydownEventUnlimited(el, event) {

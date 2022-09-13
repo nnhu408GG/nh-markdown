@@ -1,21 +1,47 @@
-import type { Break, Delete, Emphasis, InlineCode, MaybeSign, PhrasingContent, Strong, Text } from "./types"
+import type { Break, Delete, Emphasis, InlineCode, Link, MaybeSign, PhrasingContent, Strong, Text } from "./types"
 
 export default function _processInline(data: string): PhrasingContent[] {
     let stack = <(MaybeSign | PhrasingContent)[]>[]
-    // if (opt.hasCheckbox) {
-    //     if (data.startsWith("[x] ")) {
-    //         data = data.slice(4)
-    //         stack.push(<Checkbox>{ type: "checkbox", checkout: true })
-    //     } else if (data.startsWith("[ ] ")) {
-    //         data = data.slice(4)
-    //         stack.push(<Checkbox>{ type: "checkbox", checkout: false })
-    //     }
-    // }
-
     let index = 0
 
     while (data[index]) {
-        if (["*", "~", "_", "`"].includes(data[index])) {
+        if (data[index] === "[") {
+            let _indexLabel = index
+            let type = ""
+            while (data[_indexLabel]) {
+                if (data[_indexLabel] === "]") {
+                    type = "bracket"
+                    break
+                }
+                _indexLabel++
+            }
+
+            let _indexUrl = _indexLabel
+            if (type === "bracket" && data[_indexUrl + 1] && data[_indexUrl + 1] === "(") {
+                _indexUrl++
+                while (data[_indexUrl]) {
+                    if (data[_indexUrl] === ")") {
+                        type = "link"
+                        break
+                    }
+                    _indexUrl++
+                }
+            }
+
+            if (type === "link") {
+                data.slice(0, index) && stack.push(<Text>{ type: "text", value: data.slice(0, index) })
+                stack.push(<Link>{
+                    type: "link",
+                    url: data.slice(_indexLabel + 2, _indexUrl),
+                    label: data.slice(index + 1, _indexLabel)
+                })
+                data = data.slice(_indexUrl + 1)
+                index = 0
+                continue
+            }
+        }
+
+        else if (["*", "~", "_", "`"].includes(data[index])) {
             let sign = data[index]
             let _index = index
             let len = 0
@@ -60,16 +86,10 @@ export default function _processInline(data: string): PhrasingContent[] {
 
     data && stack.push(<Text>{ type: "text", value: data })
 
-    // todo 将所有 MaybeSign 转为 type:text ，然后再将相邻的 type:text 合并
     stack = formatList(stack)
 
-    // stack.forEach(item => console.log(item))
     return stack as PhrasingContent[]
 }
-
-
-
-
 
 function formatList(list: (MaybeSign | PhrasingContent)[]): PhrasingContent[] {
     let index = 0

@@ -77,7 +77,7 @@ export default <Module & Plugin>{
 
     // todo paragraph 末尾回车才触发
     // todo 图片的嵌入
-    // changeFocusAtParagraph(el) {
+    // changeAtParagraph(el) {
     enterEventAtLastParagraph(el, event) {
         let data = el.firstChild?.textContent
         if (!data) return

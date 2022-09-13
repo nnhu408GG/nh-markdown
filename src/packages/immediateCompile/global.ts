@@ -2,7 +2,7 @@ import { Module } from "./types";
 import type { BeforeMatch, AfterHandle } from "./types"
 import * as globalInline from "./module_inline"
 import paragraph from "./components/paragraph";
-import hr from "./components/hr";
+import hr from "./components/thematicBreak";
 import precode from "./components/precode";
 import image from "./components/image";
 import table from "./components/table";
@@ -165,9 +165,9 @@ export function classNameAddFocus(el: HTMLElement, opt?: string) {
              * url
              */
 
-            if (hr.changeFocusAtParagraph(tempLatelyFirstElement)
-                || precode.changeFocusAtParagraph(tempLatelyFirstElement)
-                || image.changeFocusAtParagraph(tempLatelyFirstElement)
+            if (hr.changeAtParagraph(tempLatelyFirstElement)
+                || precode.changeAtParagraph(tempLatelyFirstElement)
+                || image.changeAtParagraph(tempLatelyFirstElement)
             ) {
                 return
             }
@@ -300,8 +300,9 @@ export function createByStruct(datalist: ItemStruct[]) {
 
     for (let i = 0; i < datalist.length; i++) {
         let item = datalist[i]
-        // hr
-        if (item.type === "hr") {
+
+        // thematicBreak
+        if (item.type === "thematicBreak") {
             let dom = hr.createBasics()
             fragment.append(dom)
         }

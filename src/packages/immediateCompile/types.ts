@@ -33,7 +33,7 @@ export interface AfterHandle {
     focusEvent(el: HTMLElement, from?: "ArrowUp" | "ArrowDown"): void
 
     /** 【独立配置】paragraph的焦点转移时执行 */
-    changeFocusAtParagraph(el: HTMLElement): boolean
+    changeAtParagraph(el: HTMLElement): boolean
 
     /** moduleELement -> source */
     getSource(el: HTMLElement): string

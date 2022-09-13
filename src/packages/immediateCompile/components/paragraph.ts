@@ -5,7 +5,7 @@ import blockquote from "./blockquote"
 import unorderedList from "./unorderedList"
 import orderedList from "./orderedList"
 import precode from "./precode"
-import hr from "./hr"
+import hr from "./thematicBreak"
 import image from "./image"
 import table from "./table"
 

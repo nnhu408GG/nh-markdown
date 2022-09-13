@@ -36,7 +36,7 @@ export default <Module & Plugin>{
         document.getSelection()?.addRange(range)
     },
 
-    changeFocusAtParagraph(el) {
+    changeAtParagraph(el) {
         let mat = /^```(.*)$/g.exec(el.firstChild?.textContent!)!
         if (mat && el.childNodes.length === 1) {
             let fragment = document.createDocumentFragment()

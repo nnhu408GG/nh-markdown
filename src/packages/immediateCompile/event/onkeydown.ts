@@ -1,7 +1,7 @@
 import immediateCompile from "..";
 import * as global from "../global"
 
-import hr from "../components/hr";
+import hr from "../components/thematicBreak";
 import image from "../components/image";
 import paragraph from "../components/paragraph";
 import precode from "../components/precode";
