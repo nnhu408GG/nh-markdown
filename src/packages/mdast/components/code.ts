@@ -1,4 +1,4 @@
-import type { Code, ModuleBlock } from "../types"
+import type { Code, ModuleBlock } from "../../types/mdast"
 export default <ModuleBlock>{
     type: "code",
     regexp: /^```(.*)/,

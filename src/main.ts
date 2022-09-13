@@ -1,7 +1,12 @@
 import './style.less'
-import nhMrk from './packages'
+import "highlight.js/styles/atom-one-dark.css"
+
+// import nhMrk from './packages'
 import md from "./assets/test.md?raw" // vite 引入纯文本的方式
+// import md from "../开发需求.md?raw" // vite 引入纯文本的方式
+// import md from "../mdast.md?raw" // vite 引入纯文本的方式
 import Mdast from './packages/mdast';
+import MainPanel from './packages/mainPanel';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
@@ -10,11 +15,19 @@ app.append(dom)
 
 
 
-let wys = new nhMrk.wys(dom)
+// let wys = new nhMrk.wys(dom)
+
+
 
 console.time()
-let parser = Mdast.getParser(md)
+let ast = Mdast.Parser(md)
 console.timeEnd()
+
+ast.forEach(item => console.log(item))
+
+let panel = new MainPanel(dom)
+panel.generator(ast)
+
 
 // let data = `嗯~~\`嗯~~**嗯嗯\n嗯嗯****\`**`
 // let data = "EEE\n~~AAAEE"
@@ -41,7 +54,6 @@ console.timeEnd()
 
 // console.log(list.slice(index, _index));
 
-parser.forEach(item => console.log(item))
 
 // let data = [{ l: 2 }, { f: "z" }, 1, "erwer"]
 // console.log(Array.isArray(data));
@@ -53,12 +65,12 @@ parser.forEach(item => console.log(item))
 //     console.log(wys.source);
 // }, 1000);
 
-const btn = document.createElement("button")
-btn.setAttribute("tempbtn", "")
-btn.innerText = "getSource"
-app.append(btn)
-btn.onclick = () => {
-    console.log(wys.source);
-    // wys.initSourceData = "fxxxxx"
-    // wys.setViewMode = "Preview"
-}
+// const btn = document.createElement("button")
+// btn.setAttribute("tempbtn", "")
+// btn.innerText = "getSource"
+// app.append(btn)
+// btn.onclick = () => {
+//     console.log(wys.source);
+//     // wys.initSourceData = "fxxxxx"
+//     // wys.setViewMode = "Preview"
+// }

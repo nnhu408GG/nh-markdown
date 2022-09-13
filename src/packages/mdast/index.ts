@@ -1,4 +1,4 @@
-import type { FlowContent, ModuleBlock, ParserInterface, ParserState } from "./types"
+import type { FlowContent, ModuleBlock, ParserInterface, ParserState } from "../types/mdast"
 import _processInline from "./processInline"
 
 import image from "./components/image"
@@ -14,7 +14,7 @@ import paragraph from "./components/paragraph"
 export default class Mdast {
     private constructor() { }
     private static parser: Parser
-    public static getParser(data: string) {
+    public static Parser(data: string) {
         if (!this.parser) {
             this.parser = new Parser()
         }

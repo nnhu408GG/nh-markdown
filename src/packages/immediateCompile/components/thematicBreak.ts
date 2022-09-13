@@ -1,7 +1,7 @@
 import type { Module } from "../types"
 import * as global from "../global"
 import paragraph from "./paragraph"
-import { FlowContent, ThematicBreak } from "../../mdast/types"
+import { FlowContent, ThematicBreak } from "../../types/mdast"
 
 interface Plugin {
     createBasics(): HTMLHRElement
@@ -12,27 +12,29 @@ interface Plugin {
 export default <Module & Plugin>{
     mdtype: "thematicBreak",
 
-    createBasics() {
-        // let dom = document.createElement("div")
-        // dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
-        let hr = document.createElement("hr")
-        hr.contentEditable = "false"
-        // dom.append(hr)
-        // return dom
-        return hr
+    createBasics(sign: string) {
+        let dom = document.createElement("hr")
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        dom.setAttribute("sign", sign)
+        dom.contentEditable = "false"
+        return dom
     },
 
     createByAST(ast) {
         // ast.sign
-
+        let dom = document.createElement("hr")
+        dom.setAttribute("sign", "")
+        dom.setAttribute(global.SIGN.MODULE_ATTRIBUTE, this.mdtype)
+        return dom
     },
 
     changeAtParagraph(el) {
         if (el.childNodes.length === 1 && el.firstChild?.textContent === "---") {
-            let dom = this.createBasics()
+            let dom = this.createBasics(el.firstChild.textContent)
             el.replaceWith(dom)
             return true
         }
+        return false
     },
 
     keydownEventUnlimited(el, event) {

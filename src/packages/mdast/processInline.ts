@@ -1,4 +1,11 @@
-import type { Break, Delete, Emphasis, InlineCode, Link, MaybeSign, PhrasingContent, Strong, Text } from "./types"
+import type { MaybeSign, PhrasingContent, Text } from "../types/mdast"
+import _break from "./components/break"
+import _delete from "./components/delete"
+import emphasis from "./components/emphasis"
+import inlineCode from "./components/inlineCode"
+import link from "./components/link"
+import strong from "./components/strong"
+import text from "./components/text"
 
 export default function _processInline(data: string): PhrasingContent[] {
     let stack = <(MaybeSign | PhrasingContent)[]>[]
@@ -29,12 +36,11 @@ export default function _processInline(data: string): PhrasingContent[] {
             }
 
             if (type === "link") {
-                data.slice(0, index) && stack.push(<Text>{ type: "text", value: data.slice(0, index) })
-                stack.push(<Link>{
-                    type: "link",
+                data.slice(0, index) && stack.push(text.build({ value: data.slice(0, index) }))
+                stack.push(link.build({
+                    label: data.slice(index + 1, _indexLabel),
                     url: data.slice(_indexLabel + 2, _indexUrl),
-                    label: data.slice(index + 1, _indexLabel)
-                })
+                }))
                 data = data.slice(_indexUrl + 1)
                 index = 0
                 continue
@@ -56,7 +62,7 @@ export default function _processInline(data: string): PhrasingContent[] {
             }
             // string类型转Text类型
             let str = data.slice(0, index)
-            str && stack.push(<Text>{ type: "text", value: str })
+            str && stack.push(text.build({ value: str }))
             // 是否匹配到前缀字符
             let beforeSign = stack.find(item => (item.hasOwnProperty("len") && ((item as MaybeSign).sign === sign)))
             if (beforeSign) {
@@ -74,8 +80,8 @@ export default function _processInline(data: string): PhrasingContent[] {
 
         else if (data[index] === "\n") {
             let str = data.slice(0, index)
-            str && stack.push(<Text>{ type: "text", value: str })
-            stack.push(<Break>{ type: "break" })
+            str && stack.push(text.build({ value: str }))
+            stack.push(_break.build())
             data = data.slice(index + 1)
             index = 0
             continue
@@ -84,7 +90,7 @@ export default function _processInline(data: string): PhrasingContent[] {
         index++
     }
 
-    data && stack.push(<Text>{ type: "text", value: data })
+    data && stack.push(text.build({ value: data }))
 
     stack = formatList(stack)
 
@@ -96,7 +102,7 @@ function formatList(list: (MaybeSign | PhrasingContent)[]): PhrasingContent[] {
     while (list[index]) {
         if ((list[index] as MaybeSign).len) {
             let _item = list[index] as MaybeSign
-            list[index] = <Text>{ type: "text", value: _item.sign.repeat(_item.len) }
+            list[index] = text.build({ value: _item.sign.repeat(_item.len) })
         }
 
         let _item = list[index] as Text
@@ -120,43 +126,43 @@ function flat(list: any[]) {
     let before = list[0]
     let after = list[list.length - 1]
     let min = before.len <= after.len ? before : after
-    let res: Emphasis | Strong | Delete | InlineCode
+    let res: PhrasingContent
     if (min.sign === "*") {
         if (min.len === 1) {
             list = bothEndsOfList(list, 1)
             list = formatList(list)
-            res = <Emphasis>{ type: "emphasis", sign: "*", value: list }
+            res = emphasis.build({ sign: "*", value: list })
         } else if (min.len === 2) {
             list = bothEndsOfList(list, 2)
             list = formatList(list)
-            res = <Strong>{ type: "strong", sign: "**", value: list }
+            res = strong.build({ sign: "**", value: list })
         } else if (min.len >= 3) {
             list = bothEndsOfList(list, 3)
             list = formatList(list)
-            res = <Strong>{
-                type: "strong", sign: "**", value: [
-                    <Emphasis>{ type: "emphasis", sign: "*", value: list }
+            res = strong.build({
+                sign: "**", value: [
+                    emphasis.build({ sign: "*", value: list })
                 ]
-            }
+            })
         }
     } else if (min.sign === "_") {
         if (min.len === 1) {
             list = bothEndsOfList(list, 1)
             list = formatList(list)
-            res = <Emphasis>{ type: "emphasis", sign: "_", value: list }
+            res = emphasis.build({ sign: "_", value: list })
         } else if (min.len >= 2) {
             list = bothEndsOfList(list, 2)
             list = formatList(list)
-            res = <Strong>{ type: "strong", sign: "__", value: list }
+            res = strong.build({ sign: "__", value: list })
         }
     } else if (min.sign === "~") {
         list = bothEndsOfList(list, 2)
         list = formatList(list)
-        res = <Delete>{ type: "delete", value: list }
+        res = _delete.build({ value: list })
     } else if (min.sign === "`") {
         list = bothEndsOfList(list, 1)
         list = formatList(list)
-        res = <InlineCode>{ type: "inlineCode", value: list }
+        res = inlineCode.build({ value: list })
     }
     return res
 }
@@ -166,11 +172,11 @@ function bothEndsOfList(list: (MaybeSign | PhrasingContent)[], len: number) {
     let after = list.pop() as MaybeSign
 
     if ((before.len - len) !== 0) {
-        list.unshift(<PhrasingContent>{ type: "text", value: before.sign.repeat(before.len - len) })
+        list.unshift(text.build({ value: before.sign.repeat(before.len - len) }))
     }
 
     if ((after.len - len) !== 0) {
-        list.push(<PhrasingContent>{ type: "text", value: after.sign.repeat(after.len - len) })
+        list.push(text.build({ value: after.sign.repeat(after.len - len) }))
     }
     return list
 }

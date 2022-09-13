@@ -30,9 +30,9 @@ export default function (this: immediateCompile, e: Event) {
         }
     }
 
-    if ([table.mdtype, paragraph.mdtype, title.mdtype].includes(mdtype) || moduleELement.hasAttribute("inline")) {
-        globalInline.handleInline(moduleELement)
-    }
+    // if ([table.mdtype, paragraph.mdtype, title.mdtype].includes(mdtype) || moduleELement.hasAttribute("inline")) {
+    //     globalInline.handleInline(moduleELement)
+    // }
 
     // let event = e as InputEvent
     // console.log(event);

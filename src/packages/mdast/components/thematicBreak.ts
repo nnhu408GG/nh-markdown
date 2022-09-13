@@ -1,4 +1,4 @@
-import type { ThematicBreak, ModuleBlock } from "../types"
+import type { ThematicBreak, ModuleBlock } from "../../types/mdast"
 export default <ModuleBlock>{
     type: "thematicBreak",
     regexp: /^-{3,}$|^\*{3,}$/,

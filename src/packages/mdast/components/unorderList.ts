@@ -1,4 +1,4 @@
-import type { UnorderList, ModuleBlock, FlowContent, Checkbox } from "../types"
+import type { UnorderList, ModuleBlock, FlowContent, Checkbox } from "../../types/mdast"
 import paragraph from "./paragraph"
 export default <ModuleBlock>{
     type: "unorderList",

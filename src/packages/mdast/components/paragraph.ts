@@ -1,5 +1,5 @@
 import _processInline from "../processInline"
-import type { Paragraph, FlowContent } from "../types"
+import type { Paragraph, FlowContent } from "../../types/mdast"
 // import _break from "./break"
 export default {
     type: "paragraph",

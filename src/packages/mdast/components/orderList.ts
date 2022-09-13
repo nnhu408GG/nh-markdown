@@ -1,4 +1,4 @@
-import type { OrderList, ModuleBlock, FlowContent } from "../types"
+import type { OrderList, ModuleBlock, FlowContent } from "../../types/mdast"
 import paragraph from "./paragraph"
 export default <ModuleBlock>{
     type: "orderList",

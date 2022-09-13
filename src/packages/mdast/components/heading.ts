@@ -1,5 +1,5 @@
 import _processInline from "../processInline"
-import type { Heading, ModuleBlock } from "../types"
+import type { Heading, ModuleBlock } from "../../types/mdast"
 export default <ModuleBlock>{
     type: "heading",
     regexp: /^(#{1,6})\s+(.*)/,

@@ -1,4 +1,4 @@
-import type { Table, ModuleBlock, PhrasingContent } from "../types"
+import type { Table, ModuleBlock, PhrasingContent } from "../../types/mdast"
 import _processInline from "../processInline"
 import paragraph from "./paragraph"
 export default <ModuleBlock>{
@@ -20,10 +20,10 @@ export default <ModuleBlock>{
                     let isSplitLine = true
                     for (let i = 0; i < splitLine.length; i++) {
                         let item = splitLine[i]
-                        if (/^-+$/.test(item) || /^:-+:$/.test(item)) {
-                            align.push("center")
-                        } else if (/^:-+$/.test(item)) {
+                        if (/^-+$/.test(item) || /^:-+$/.test(item)) {
                             align.push("left")
+                        } else if (/^:-+:$/.test(item)) {
+                            align.push("center")
                         } else if (/^-+:$/.test(item)) {
                             align.push("right")
                         } else {
@@ -42,7 +42,6 @@ export default <ModuleBlock>{
             return
         }
 
-        index++
         while (index < list.length) {
             if (list[index] === "") break
             let { type } = state.parser.getModuleType(list[index])
@@ -53,6 +52,8 @@ export default <ModuleBlock>{
         }
 
         state.index = index - 1
+
+        tempChildren.splice(1, 1) // 去除分割行
 
         return {
             type: this.type,

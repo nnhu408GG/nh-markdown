@@ -1,15 +1,14 @@
-import type { Image, ModuleBlock } from "../types"
+import type { Image, ModuleBlock } from "../../types/mdast"
 export default <ModuleBlock>{
   type: "image",
   // regexp: /^\!\[(.+)\]\((.+)\)$/,
-  regexp: /^\!\[(.+)\]\((.+)\)(\s"(.*)")?$/,
+  regexp: /^\!\[(.+)\]\((.+)\)$/,
   build(state): Image {
     let res = <Image>{
       type: this.type,
-      alt: state.mat[1],
+      label: state.mat[1],
       url: state.mat[2],
     }
-    state.mat[4] && (res.title = state.mat[4])
     return res
   }
 }

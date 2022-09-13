@@ -1,4 +1,4 @@
-import type { Blockquote, ModuleBlock, ParserState } from "../types"
+import type { Blockquote, ModuleBlock, ParserState } from "../../types/mdast"
 import paragraph from "./paragraph"
 export default <ModuleBlock>{
     type: "blockquote",

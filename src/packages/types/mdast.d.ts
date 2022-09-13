@@ -15,8 +15,12 @@ export interface ParserState {
     type: string
 }
 
-export type ModuleBlock = {
+export type Module = {
     type: string
+    build(opt?: any): PhrasingContent
+}
+
+export interface ModuleBlock extends Module {
     regexp: RegExp
     build(state: ParserState): FlowContent
 }
@@ -34,7 +38,7 @@ export type MaybeSign = {
 export type FlowContent = Heading | ThematicBreak | Image | Paragraph | Blockquote | Code | OrderList | UnorderList | Checkbox | Table
 
 /** 行内元素 inline-block */
-export type PhrasingContent =  Link | Emphasis | InlineCode | Strong | Text | Delete | Break
+export type PhrasingContent = Link | Emphasis | InlineCode | Strong | Text | Delete | Break
 
 
 /** 文本段落 */
@@ -98,9 +102,8 @@ export interface Code {
 // ![alpha](https://example.com/favicon.ico "bravo")
 export interface Image {
     type: string
+    label: string
     url: string
-    alt: string
-    title: string // title属性
 }
 
 /** 表格 */

@@ -59,14 +59,19 @@
 # 7.image
 
 ```html
-<!-- <div mdtype="image" contenteditable="false">
-  <p contenteditable="true">![img_name](img_url)</p>
-  <img src="img_url" alt="img_name" title="img_name" />
-</div> -->
-<div mdtype="image">
-  <p>![img_name](img_url)</p>
-  <div contenteditable="false">
-    <img src="img_url" alt="img_name" title="img_name" />
+<div class="image">
+  <img src="/src/mi0s9AY0zj_w1920_h1080.jpg" alt="" />
+  <div class="params">
+    <div class="container">
+      <div class="label">label</div>
+      <div class="value " contenteditable="true" spellcheck="false">
+        xxxx
+      </div>
+      <div class="label">url</div>
+      <div class="value focus" contenteditable="true" spellcheck="false">
+        eeee
+      </div>
+    </div>
   </div>
 </div>
 ```

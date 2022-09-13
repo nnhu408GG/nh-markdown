@@ -164,7 +164,7 @@ export default <Module & Plugin>{
 
     // belong inputEvent
     upgradeInParagraph(el) {
-        globalInline.handleInline(el)
+        // globalInline.handleInline(el)
 
         /* 兼容 unorderedList 的嵌套 */
         if (el.parentElement?.parentElement?.getAttribute(global.SIGN.MODULE_ATTRIBUTE) === unorderedList.mdtype) {
