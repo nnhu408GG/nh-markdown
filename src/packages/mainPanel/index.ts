@@ -7,8 +7,9 @@ import unorderList from "./components/unorderList"
 import code from "./components/code"
 import table from "./components/table"
 import image from "./components/image"
+import checkbox from "./components/checkbox"
 
-import * as global from "./globale"
+import * as global from "./generator"
 
 import { Component } from "../types/mainPanel"
 import { FlowContent } from "../types/mdast"
@@ -20,6 +21,9 @@ export default class MainPanel {
     static BLOCK_ATTRIBUTE = "mdtype"
     /** block区块支持inline的标志 */
     static INLINE_SUPPORT = "inline-support"
+    /** inline的标志 */
+    static INLINE_ATTRIBUTE = "inline"
+
     /** sign标记，因兼容多种语法生成同种ast，需要加以区分 */
     static SIGN = "sign"
     /** 聚焦block类型的标记 */
@@ -37,6 +41,7 @@ export default class MainPanel {
         code,
         table,
         image,
+        checkbox,
     ]
     /** PhrasingContent模块 */
     static COMPONENTS_PHRASINGCONTENT: Component[

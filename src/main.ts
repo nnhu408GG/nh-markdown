@@ -1,5 +1,6 @@
 import './style.less'
-import "highlight.js/styles/atom-one-dark.css"
+// import "./agate.css"
+import "./xcode.css"
 
 // import nhMrk from './packages'
 import md from "./assets/test.md?raw" // vite 引入纯文本的方式

@@ -1,7 +1,7 @@
 import MainPanel from "..";
 import { Component } from "../../types/mainPanel";
 import { UnorderList } from "../../types/mdast";
-import { generatorFlowContent } from "../globale";
+import { generatorFlowContent } from "../generator";
 
 export default <Component>{
     type: "unorderList",

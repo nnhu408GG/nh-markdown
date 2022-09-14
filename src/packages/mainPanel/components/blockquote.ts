@@ -3,7 +3,7 @@ import blockquote from "../../mdast/components/blockquote";
 import { Component } from "../../types/mainPanel";
 import { Blockquote } from "../../types/mdast";
 
-import * as global from "../globale"
+import * as global from "../generator"
 
 export default <Component>{
     type: blockquote.type,

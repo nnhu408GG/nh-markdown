@@ -1,7 +1,7 @@
 import MainPanel from "..";
 import { Component } from "../../types/mainPanel";
 import { Paragraph } from "../../types/mdast";
-import { generatorPhrasingContent } from "../globale";
+import { generatorPhrasingContent } from "../generator";
 
 export default <Component>{
     type: "paragraph",

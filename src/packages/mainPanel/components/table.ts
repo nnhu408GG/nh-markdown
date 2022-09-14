@@ -2,7 +2,7 @@ import MainPanel from "..";
 import table from "../../mdast/components/table";
 import { Component } from "../../types/mainPanel";
 import { Table } from "../../types/mdast";
-import { generatorPhrasingContent } from "../globale";
+import { generatorPhrasingContent } from "../generator";
 
 // todo center left right 的初始化调整
 // todo inline support的标记
