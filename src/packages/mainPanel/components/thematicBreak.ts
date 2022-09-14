@@ -13,7 +13,11 @@ export default <Component>{
         let hr = document.createElement("hr")
         dom.append(hr)
         return dom
-    }
+    },
+    complier(el: HTMLHRElement) {
+        let sign = el.getAttribute(MainPanel.SIGN)
+        return <ThematicBreak>{ type: this.type, sign }
+    },
 }
 
 // generator(ast: ThematicBreak): HTMLHRElement {

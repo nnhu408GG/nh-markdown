@@ -1,7 +1,8 @@
 import MainPanel from "..";
 import table from "../../mdast/components/table";
 import { Component } from "../../types/mainPanel";
-import { Table } from "../../types/mdast";
+import { PhrasingContent, Table } from "../../types/mdast";
+import { complierInline } from "../compiler";
 import { generatorPhrasingContent } from "../generator";
 
 // todo center left right 的初始化调整
@@ -58,21 +59,23 @@ export default <Component>{
         let TRhead = document.createElement("tr")
         thead.append(TRhead)
 
-        let header = ast.children.shift()
-        console.log(header);
+        // let header = ast.children.shift()
+        let header = ast.children[0]
         for (let i = 0; i < ast.align.length; i++) {
             let item = header[i]
             let th = document.createElement('th')
+            th.setAttribute(MainPanel.INLINE_SUPPORT, "")
             th.style.textAlign = ast.align[i]
             generatorPhrasingContent(th, item)
             TRhead.append(th)
         }
 
-        ast.children.forEach(item => {
+        ast.children.slice(1).forEach(item => {
             let tr = document.createElement("tr")
             for (let i = 0; i < ast.align.length; i++) {
                 let sub = item[i]
                 let th = document.createElement('th')
+                th.setAttribute(MainPanel.INLINE_SUPPORT, "")
                 th.style.textAlign = ast.align[i]
                 if (sub) {
                     generatorPhrasingContent(th, sub)
@@ -83,5 +86,32 @@ export default <Component>{
         })
 
         return figure
+    },
+    complier(el) {
+        let children = <PhrasingContent[][][]>[]
+
+        let theadTr = el.lastElementChild.firstElementChild.firstElementChild!
+        let align = []
+        let theadAst = <PhrasingContent[][]>[]
+        for (let i = 0; i < theadTr.children.length; i++) {
+            let th = theadTr.children[i] as HTMLTableCellElement
+            align.push(th.style.textAlign);
+            theadAst.push(complierInline(th))
+        }
+        children.push(theadAst)
+
+        let tbody = el.lastElementChild.lastElementChild as HTMLTableSectionElement
+        for (let i = 0; i < tbody.children.length; i++) {
+            let tr = tbody.children.item(i)
+            let tbodyAst = <PhrasingContent[][]>[]
+            for (let j = 0; j < tr.children.length; j++) {
+                let th = tr.children.item(j)
+                tbodyAst.push(complierInline(th))
+            }
+            children.push(tbodyAst)
+        }
+
+
+        return <Table>{ type: this.type, align, children }
     },
 }

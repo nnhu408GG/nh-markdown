@@ -1,6 +1,7 @@
 import MainPanel from "..";
 import { Component } from "../../types/mainPanel";
-import { OrderList } from "../../types/mdast";
+import { FlowContent, OrderList } from "../../types/mdast";
+import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
 export default <Component>{
@@ -15,5 +16,14 @@ export default <Component>{
             dom.append(li)
         })
         return dom
+    },
+    complier(el: HTMLOListElement) {
+        let start = el.start
+        let children = <FlowContent[][]>[]
+        for (let i = 0; i < el.children.length; i++) {
+            let li = el.children[i]
+            children.push(complier(li))
+        }
+        return <OrderList>{ type: this.type, start, children }
     },
 }

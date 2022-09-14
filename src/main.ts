@@ -23,11 +23,16 @@ app.append(dom)
 console.time()
 let ast = Mdast.Parser(md)
 console.timeEnd()
-
 ast.forEach(item => console.log(item))
+console.log("");
+
 
 let panel = new MainPanel(dom)
 panel.generator(ast)
+let ast2 = panel.compiler()
+ast2.forEach(item => console.log(item))
+
+console.log(JSON.stringify(ast) === JSON.stringify(ast2));
 
 
 // let data = `嗯~~\`嗯~~**嗯嗯\n嗯嗯****\`**`

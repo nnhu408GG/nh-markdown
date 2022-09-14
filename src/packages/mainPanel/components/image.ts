@@ -47,4 +47,10 @@ export default <Component>{
 
         return dom
     },
+    complier(el) {
+        let img = el.firstElementChild as HTMLImageElement
+        let label = img.alt
+        let url = img.src
+        return <Image>{ type: this.type, label, url }
+    },
 }

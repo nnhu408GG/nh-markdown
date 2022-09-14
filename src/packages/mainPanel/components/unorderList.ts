@@ -1,6 +1,7 @@
 import MainPanel from "..";
 import { Component } from "../../types/mainPanel";
-import { UnorderList } from "../../types/mdast";
+import { FlowContent, UnorderList } from "../../types/mdast";
+import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
 export default <Component>{
@@ -15,5 +16,14 @@ export default <Component>{
             dom.append(li)
         })
         return dom
+    },
+    complier(el: HTMLUListElement) {
+        let sign = el.getAttribute(MainPanel.SIGN)
+        let children = <FlowContent[][]>[]
+        for (let i = 0; i < el.children.length; i++) {
+            let li = el.children[i]
+            children.push(complier(li))
+        }
+        return <UnorderList>{ type: this.type, sign, children }
     },
 }

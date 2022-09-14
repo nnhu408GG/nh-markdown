@@ -24,18 +24,6 @@ export default <Component>{
         textarea.value = ast.value
         container.append(textarea)
 
-        // console.log(highlight.highlight(ast.value, { language: "js" }).value);
-
-        // code.innerHTML = highlightFunc(textarea.value)
-        // textarea.addEventListener("input", (e) => {
-        //     let dom = e.target as HTMLTextAreaElement
-        //     let html = highlightFunc(dom.value!)
-        //     code.innerHTML = html + "<br>"
-        // })
-        // function highlightFunc(str: string) {
-        //     return highlight.highlight(str, { language: "js" }).value
-        // }
-
         let lang = document.createElement("div")
         lang.className = "language"
         let input = document.createElement("span")
@@ -44,5 +32,10 @@ export default <Component>{
         input.innerText = ast.lang
         dom.append(lang)
         return dom
+    },
+    complier(el) {
+        let lang = el.lastElementChild.textContent
+        let value = el.firstElementChild.textContent
+        return <Code>{ type: this.type, lang, value }
     },
 }

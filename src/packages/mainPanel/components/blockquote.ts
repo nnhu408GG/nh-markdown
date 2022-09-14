@@ -2,6 +2,7 @@ import MainPanel from "..";
 import blockquote from "../../mdast/components/blockquote";
 import { Component } from "../../types/mainPanel";
 import { Blockquote } from "../../types/mdast";
+import { complier } from "../compiler";
 
 import * as global from "../generator"
 
@@ -12,5 +13,9 @@ export default <Component>{
         dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
         global.generatorFlowContent(dom, ast.children)
         return dom
+    },
+    complier(el) {
+        let children = complier(el)
+        return <Blockquote>{ type: this.type, children }
     },
 }

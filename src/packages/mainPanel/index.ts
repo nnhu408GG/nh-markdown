@@ -13,6 +13,7 @@ import * as global from "./generator"
 
 import { Component } from "../types/mainPanel"
 import { FlowContent } from "../types/mdast"
+import { complier } from "./compiler"
 
 export default class MainPanel {
     /** 主要面板的className */
@@ -99,7 +100,9 @@ export default class MainPanel {
     }
 
     /** 将dom文档树编译成生成ast */
-    public compiler() { }
+    public compiler() {
+        return complier(this.bindElement)
+    }
 
     /** 根据ast生成dom文档树 */
     public generator(ast: FlowContent[]) {
