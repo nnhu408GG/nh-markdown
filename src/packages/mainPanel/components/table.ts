@@ -11,13 +11,14 @@ import { generatorPhrasingContent } from "../generator";
 export default <Component>{
     type: table.type,
     generator(ast: Table) {
-        let figure = document.createElement("figure")
-        figure.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
-        figure.contentEditable = "false"
+        let dom = document.createElement("figure")
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
+        dom.contentEditable = "false"
 
         let tableTool = document.createElement("div")
         tableTool.classList.add("toolContainer")
-        figure.append(tableTool)
+        dom.append(tableTool)
 
         let toolSpanA = document.createElement("span")
         let toolSpanB = document.createElement("span")
@@ -48,7 +49,7 @@ export default <Component>{
         toolButton5.innerText = "删除表格"
 
         let table = document.createElement("table")
-        figure.append(table)
+        dom.append(table)
         let thead = document.createElement("thead")
         let tbody = document.createElement("tbody")
         thead.contentEditable = "true"
@@ -85,7 +86,7 @@ export default <Component>{
             tbody.append(tr)
         })
 
-        return figure
+        return dom
     },
     complier(el) {
         let children = <PhrasingContent[][][]>[]

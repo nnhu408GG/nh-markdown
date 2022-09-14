@@ -10,7 +10,7 @@ export default <Component>{
     type: blockquote.type,
     generator(ast: Blockquote): HTMLQuoteElement {
         let dom = document.createElement("blockquote")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
         global.generatorFlowContent(dom, ast.children)
         return dom
     },

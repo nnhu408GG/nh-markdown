@@ -8,7 +8,8 @@ export default <Component>{
     type: "code",
     generator(ast: Code) {
         let dom = document.createElement("pre")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
         dom.contentEditable = "false"
 
         let container = document.createElement("div")

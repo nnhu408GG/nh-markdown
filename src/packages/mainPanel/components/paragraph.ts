@@ -8,7 +8,8 @@ export default <Component>{
     type: "paragraph",
     generator(ast: Paragraph) {
         let dom = document.createElement("p")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
         dom.setAttribute(MainPanel.INLINE_SUPPORT, "")
         ast.children && generatorPhrasingContent(dom, ast.children)
         return dom

@@ -6,7 +6,8 @@ export default <Component>{
     type: "image",
     generator(ast: Image) {
         let dom = document.createElement("div")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
         dom.contentEditable = "false"
 
         let img = document.createElement("img")

@@ -6,7 +6,7 @@ export default <Component>{
     type: "checkbox",
     generator(ast: Checkbox) {
         let dom = document.createElement("input")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
         dom.contentEditable = "false"
         dom.classList.add("checkbox")
         dom.type = "checkbox"

@@ -7,8 +7,9 @@ export default <Component>{
     type: thematicBreak.type,
     generator(ast: ThematicBreak): HTMLElement {
         let dom = document.createElement("div")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
         dom.setAttribute(MainPanel.SIGN, ast.sign)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
         dom.contentEditable = "false"
         let hr = document.createElement("hr")
         dom.append(hr)
@@ -22,6 +23,6 @@ export default <Component>{
 
 // generator(ast: ThematicBreak): HTMLHRElement {
 // let dom = document.createElement("hr")
-// dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+// dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
 // dom.setAttribute(MainPanel.SIGN, ast.sign)
 // dom.contentEditable = "false"

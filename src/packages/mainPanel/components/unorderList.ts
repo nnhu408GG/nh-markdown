@@ -8,7 +8,7 @@ export default <Component>{
     type: "unorderList",
     generator(ast: UnorderList) {
         let dom = document.createElement("ul")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
         dom.setAttribute(MainPanel.SIGN, ast.sign)
         ast.children.forEach(item => {
             let li = document.createElement("li")

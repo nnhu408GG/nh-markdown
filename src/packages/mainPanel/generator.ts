@@ -63,7 +63,7 @@ function createInlineElement(sign: string, value: PhrasingContent[]) {
     let target = MapPairInline.find(item => item.sign === sign)
 
     let dom = document.createElement("span")
-    dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, target.type)
+    dom.setAttribute(MainPanel.COMPONENT_TYPE, target.type)
     dom.setAttribute(MainPanel.INLINE_ATTRIBUTE, "")
 
     let pairBefore = document.createElement("span")
@@ -84,7 +84,7 @@ function createInlineElement(sign: string, value: PhrasingContent[]) {
 
 function createInlineELementLink(ast: Link) {
     let dom = document.createElement("span")
-    dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+    dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
     dom.setAttribute(MainPanel.INLINE_ATTRIBUTE, "")
 
     let pairA = document.createElement("span")

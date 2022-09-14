@@ -8,7 +8,7 @@ export default <Component>{
     type: "orderList",
     generator(ast: OrderList) {
         let dom = document.createElement("ol")
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
         dom.start = ast.start
         ast.children.forEach(item => {
             let li = document.createElement("li")

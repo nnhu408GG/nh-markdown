@@ -10,7 +10,8 @@ export default <Component>{
     type: heading.type,
     generator(ast: Heading): HTMLHeadingElement {
         let dom = document.createElement(`h${ast.depth}`) as HTMLHeadingElement
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, ast.type)
+        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
+        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
         dom.setAttribute(MainPanel.INLINE_SUPPORT, "")
         global.generatorPhrasingContent(dom, ast.children)
         return dom
