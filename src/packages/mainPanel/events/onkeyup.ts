@@ -34,7 +34,7 @@ export default function (this: MainPanel, e: KeyboardEvent) {
         if (inline !== this.focusInline && sel.anchorOffset === inline.innerText.length) {
             focusToEnd = true
         }
-        global.setFocusInline.bind(this, inline)()
+        global.setFocusInline(this, inline)
         if (focusToEnd) {
             let range = new Range()
             range.setStart(inline.lastChild.firstChild, inline.lastChild.textContent.length)
@@ -49,8 +49,8 @@ export default function (this: MainPanel, e: KeyboardEvent) {
         && sel.anchorNode.nextSibling instanceof HTMLElement
         && sel.anchorNode.nextSibling.hasAttribute(MainPanel.INLINE_ATTRIBUTE)
     ) {
-        global.setFocusInline.bind(this, sel.anchorNode.nextSibling)()
+        global.setFocusInline(this, sel.anchorNode.nextSibling)
     } else {
-        global.removeFocusInline.bind(this)()
+        global.removeFocusInline(this)
     }
 }

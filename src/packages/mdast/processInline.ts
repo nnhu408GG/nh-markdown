@@ -7,6 +7,7 @@ import link from "./components/link"
 import strong from "./components/strong"
 import text from "./components/text"
 
+/** string转为ast */
 export default function _processInline(data: string): PhrasingContent[] {
     let stack = <(MaybeSign | PhrasingContent)[]>[]
     let index = 0

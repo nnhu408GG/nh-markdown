@@ -1,10 +1,10 @@
 import hl from "highlight.js"
 
 import MainPanel from "..";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { Code } from "../../types/mdast";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: "code",
     generator(ast: Code) {
         let dom = document.createElement("pre")
@@ -38,5 +38,8 @@ export default <Component>{
         let lang = el.lastElementChild.textContent
         let value = el.firstElementChild.textContent
         return <Code>{ type: this.type, lang, value }
+    },
+    backspace(el) {
+        
     },
 }

@@ -2,6 +2,8 @@ import MainPanel from "."
 import _processInline from "../mdast/processInline"
 import { FlowContent, PhrasingContent } from "../types/mdast"
 
+
+/** 将block文档树编译成生成ast */
 export function complier(el: HTMLElement | Element) {
     let res = <FlowContent[]>[]
     for (let i = 0; i < el.children.length; i++) {
@@ -13,15 +15,8 @@ export function complier(el: HTMLElement | Element) {
     return res
 }
 
-export function complierInline(el: Element): PhrasingContent[] {
-    let str = ""
-    el.childNodes.forEach(item => {
-        if (item instanceof HTMLElement && item.tagName === "BR") {
-            str += "\n"
-        } else {
-            str += item.textContent
-        }
-    })
-
-    return _processInline(str)
+/** 将inline文档树编译成生成ast */
+export function complierInline(el: Element | DocumentFragment): PhrasingContent[] {
+    el.querySelectorAll("br").forEach(br => br.replaceWith("\n"))
+    return _processInline(el.textContent)
 }

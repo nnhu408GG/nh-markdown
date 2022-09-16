@@ -1,9 +1,9 @@
 import MainPanel from "..";
 import thematicBreak from "../../mdast/components/thematicBreak";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { ThematicBreak } from "../../types/mdast";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: thematicBreak.type,
     generator(ast: ThematicBreak): HTMLElement {
         let dom = document.createElement("div")
@@ -18,6 +18,9 @@ export default <Component>{
     complier(el: HTMLHRElement) {
         let sign = el.getAttribute(MainPanel.SIGN)
         return <ThematicBreak>{ type: this.type, sign }
+    },
+    backspace(el) {
+        
     },
 }
 

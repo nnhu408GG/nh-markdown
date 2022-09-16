@@ -1,10 +1,10 @@
 import MainPanel from "..";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { FlowContent, UnorderList } from "../../types/mdast";
 import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: "unorderList",
     generator(ast: UnorderList) {
         let dom = document.createElement("ul")
@@ -25,5 +25,8 @@ export default <Component>{
             children.push(complier(li))
         }
         return <UnorderList>{ type: this.type, sign, children }
+    },
+    backspace(el) {
+        
     },
 }

@@ -1,8 +1,8 @@
 import MainPanel from "..";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { Image } from "../../types/mdast";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: "image",
     generator(ast: Image) {
         let dom = document.createElement("div")
@@ -53,5 +53,8 @@ export default <Component>{
         let label = img.alt
         let url = img.src
         return <Image>{ type: this.type, label, url }
+    },
+    backspace(el) {
+        
     },
 }

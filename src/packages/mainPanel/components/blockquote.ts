@@ -1,12 +1,12 @@
 import MainPanel from "..";
 import blockquote from "../../mdast/components/blockquote";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { Blockquote } from "../../types/mdast";
 import { complier } from "../compiler";
 
 import * as global from "../generator"
 
-export default <Component>{
+export default <ComponentBlock>{
     type: blockquote.type,
     generator(ast: Blockquote): HTMLQuoteElement {
         let dom = document.createElement("blockquote")
@@ -18,4 +18,5 @@ export default <Component>{
         let children = complier(el)
         return <Blockquote>{ type: this.type, children }
     },
+    backspace(el) { },
 }

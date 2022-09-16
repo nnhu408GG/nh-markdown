@@ -1,6 +1,6 @@
 import MainPanel from "..";
 import table from "../../mdast/components/table";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { PhrasingContent, Table } from "../../types/mdast";
 import { complierInline } from "../compiler";
 import { generatorPhrasingContent } from "../generator";
@@ -8,7 +8,7 @@ import { generatorPhrasingContent } from "../generator";
 // todo center left right 的初始化调整
 // todo inline support的标记
 
-export default <Component>{
+export default <ComponentBlock>{
     type: table.type,
     generator(ast: Table) {
         let dom = document.createElement("figure")
@@ -114,5 +114,8 @@ export default <Component>{
 
 
         return <Table>{ type: this.type, align, children }
+    },
+    backspace(el) {
+        
     },
 }

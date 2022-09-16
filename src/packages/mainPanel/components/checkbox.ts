@@ -1,8 +1,8 @@
 import MainPanel from "..";
-import { Component } from "../../types/mainPanel";
+import { Component, ComponentBlock } from "../../types/mainPanel";
 import { Checkbox } from "../../types/mdast";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: "checkbox",
     generator(ast: Checkbox) {
         let dom = document.createElement("input")
@@ -17,4 +17,5 @@ export default <Component>{
         let checkout = el.checked
         return <Checkbox>{ type: this.type, checkout }
     },
+    backspace() { },
 }

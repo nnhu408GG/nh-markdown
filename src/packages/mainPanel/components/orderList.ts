@@ -1,10 +1,10 @@
 import MainPanel from "..";
-import { Component } from "../../types/mainPanel";
+import { ComponentBlock } from "../../types/mainPanel";
 import { FlowContent, OrderList } from "../../types/mdast";
 import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
-export default <Component>{
+export default <ComponentBlock>{
     type: "orderList",
     generator(ast: OrderList) {
         let dom = document.createElement("ol")
@@ -25,5 +25,8 @@ export default <Component>{
             children.push(complier(li))
         }
         return <OrderList>{ type: this.type, start, children }
+    },
+    backspace(el) {
+        
     },
 }

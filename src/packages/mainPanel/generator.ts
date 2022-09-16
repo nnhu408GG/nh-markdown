@@ -8,6 +8,7 @@ import strong from "../mdast/components/strong"
 import text from "../mdast/components/text"
 import { Delete, Emphasis, FlowContent, InlineCode, Link, PhrasingContent, Strong, Text } from "../types/mdast"
 
+/** 将 FlowContent 类型的 ast 生成 dom，并嵌入到指定的 dom 中 */
 export function generatorFlowContent(el: HTMLElement, ast: FlowContent[]) {
     ast.forEach(item => {
         let dom = MainPanel.COMPONENTS_FLOWCONTENT.find(comp => comp.type === item.type)?.generator(item)
@@ -17,7 +18,8 @@ export function generatorFlowContent(el: HTMLElement, ast: FlowContent[]) {
     })
 }
 
-export function generatorPhrasingContent(el: HTMLElement, ast: PhrasingContent[]) {
+/** 将 PhrasingContent 类型的 ast 生成 dom，并嵌入到指定的 dom 中 */
+export function generatorPhrasingContent(el: HTMLElement | DocumentFragment, ast: PhrasingContent[]) {
     ast.forEach(item => {
         let dom
         switch (item.type) {

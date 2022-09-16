@@ -1,11 +1,14 @@
 import MainPanel from "..";
 
-export default function (this: MainPanel, e: InputEvent) {
-    console.log("input", e);
+import * as global from "../global"
 
-    if (e.inputType === "insertText") {
-        
+export default function (this: MainPanel, e: InputEvent) {
+    // console.log(e, e.inputType);
+
+    let sel = document.getSelection()
+    let block = global.getParentAttribute(this, sel.anchorNode, MainPanel.BLOCK_ATTRIBUTE) as HTMLElement
+    if (e.inputType !== "insertCompositionText") {
+        global.resetInline(this, block)
     }
-    else if (e.inputType === "deleteContentBackward") {
-    }
+
 }
