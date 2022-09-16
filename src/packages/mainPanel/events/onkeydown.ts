@@ -37,7 +37,7 @@ export default function (this: MainPanel, e: KeyboardEvent) {
     /* 如果选中的是inline，则获取并设置 inline */
     let inline = global.getParentAttribute(this, sel.anchorNode, MainPanel.INLINE_ATTRIBUTE) as HTMLElement;
     if (inline) {
-        global.setFocusInline(this, inline)
+        global.addFocusInline(this, inline)
     }
     // console.log(block, inline);
 

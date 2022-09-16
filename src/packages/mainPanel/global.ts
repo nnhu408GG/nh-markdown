@@ -41,23 +41,26 @@ export function removeFocusBlock(state: MainPanel) {
     state.focusBlock = undefined
 }
 
+
 /** 设置聚焦的 inline 元素 */
-export function setFocusInline(state: MainPanel, el: HTMLElement) {
-    if (state.focusInline === el) return
-
-    if (state.focusInline) {
-        state.focusInline.classList.remove(MainPanel.INLINE_FOCUS)
-    }
-
-    state.focusInline = el
-    state.focusInline.classList.add(MainPanel.INLINE_FOCUS)
+export function addFocusInline(state: MainPanel, el: HTMLElement) {
+    if (state.focusInline.includes(el)) return
+    el.classList.add(MainPanel.INLINE_FOCUS)
+    state.focusInline.push(el)
 }
 
 /** 移除聚焦的 inline 元素 */
-export function removeFocusInline(state: MainPanel) {
-    if (!state.focusInline) return
-    state.focusInline.classList.remove(MainPanel.INLINE_FOCUS)
-    state.focusInline = undefined
+export function removeFocusInline(state: MainPanel, el: HTMLElement) {
+    if (!state.focusInline.includes(el)) return
+    el.classList.remove(MainPanel.INLINE_FOCUS)
+    let index = state.focusInline.indexOf(el)
+    state.focusInline.splice(index, 1)
+}
+
+export function removeAllFocusInline(state: MainPanel) {
+    if (state.focusInline.length === 0) return
+    state.focusInline.forEach(item => item.classList.remove(MainPanel.INLINE_FOCUS))
+    state.focusInline.length = 0
 }
 
 /** 获取该 block 对应的 component */
@@ -65,6 +68,20 @@ export function getComponent(el: HTMLElement): ComponentBlock {
     let type = el.getAttribute(MainPanel.COMPONENT_TYPE)
     return MainPanel.COMPONENTS_FLOWCONTENT.find(item => item.type === type)
 }
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /** 截取该元素从光标开始直到最后的内容，截取到的内容会做ast重置转换 */
@@ -89,6 +106,19 @@ export function getFragementRangeToEnd(el: HTMLElement): DocumentFragment | unde
     return undefined
 }
 
+/** 清空dom的所有子元素，返回裁剪的 fragment */
+export function extractChildNode(el: HTMLElement): DocumentFragment | void {
+    if (el.childNodes.length !== 0) {
+        let range = new Range()
+        range.setStartBefore(el.firstChild)
+        range.setEndAfter(el.lastChild)
+        let fragment = range.extractContents()
+        if (fragment.textContent.length !== 0) {
+            return fragment
+        }
+    }
+}
+
 export function insertBefore(el: Node, add: Node) {
     let range = new Range()
     range.setStartBefore(el)
@@ -101,17 +131,80 @@ export function insertAfter(el: Node, add: Node) {
     range.insertNode(add)
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** 自动设置 inlineFocus */
+export function autoSetInlineFocus(state: MainPanel) {
+    let sel = document.getSelection()
+    /* 如果选中的是inline，则获取并设置 inline */
+    let inline = getParentAttribute(state, sel.anchorNode, MainPanel.INLINE_ATTRIBUTE) as HTMLElement;
+    if (inline) {
+        if (!state.focusInline.includes(inline)) {
+            let innerTextLength = inline.innerText.length
+            removeAllFocusInline(state)
+            addFocusInline(state, inline)
+            if (sel.anchorOffset === innerTextLength) {
+                setInlineCursorPosition(state, inline, -1)
+            }
+        } else {
+            if (inline.previousSibling instanceof HTMLElement
+                && inline.previousSibling.hasAttribute(MainPanel.INLINE_ATTRIBUTE)
+                && state.focusInline.includes(inline.previousSibling)
+            ) {
+                removeFocusInline(state, inline.previousSibling)
+            }
+        }
+
+        if (inline?.nextSibling instanceof HTMLElement
+            && inline.nextSibling.hasAttribute(MainPanel.INLINE_ATTRIBUTE)
+        ) {
+            if (sel.anchorNode.parentElement === inline.lastChild
+                && sel.anchorOffset === inline.lastChild.textContent.length
+            ) {
+                addFocusInline(state, inline.nextSibling)
+            } else {
+                removeFocusInline(state, inline.nextSibling)
+            }
+        }
+    } else {
+        removeAllFocusInline(state)
+        if (sel.anchorOffset === sel.anchorNode.textContent.length
+            && sel.anchorNode.nextSibling instanceof HTMLElement
+            && sel.anchorNode.nextSibling.hasAttribute(MainPanel.INLINE_ATTRIBUTE)
+        ) {
+            addFocusInline(state, sel.anchorNode.nextSibling)
+        }
+    }
+}
+
 /** 重新设置 inline 的光标的位置 */
 export function setInlineCursorPosition(state: MainPanel, el: HTMLElement, indexPosition: number) {
+    if (indexPosition === -1) {
+        indexPosition = el.textContent.length
+    }
     let indexCount = 0
     for (let i = 0; i < el.childNodes.length; i++) {
         let subitem = el.childNodes[i]
         let aboutLen = subitem.textContent?.length! + indexCount
         if (aboutLen >= indexPosition) {
+            // todo 考虑 inline 并列的情况
             if (subitem instanceof Text) {
                 let inline = getParentAttribute(state, subitem, MainPanel.INLINE_ATTRIBUTE)
                 if (inline) {
-                    setFocusInline(state, inline)
+                    addFocusInline(state, inline)
                 }
                 let range = new Range()
                 range.setStart(subitem, indexPosition - indexCount)
@@ -123,19 +216,6 @@ export function setInlineCursorPosition(state: MainPanel, el: HTMLElement, index
             return
         } else {
             indexCount = aboutLen
-        }
-    }
-}
-
-/** 清空dom的所有子元素，返回裁剪的 fragment */
-export function extractChildNode(el: HTMLElement): DocumentFragment | void {
-    if (el.childNodes.length !== 0) {
-        let range = new Range()
-        range.setStartBefore(el.firstChild)
-        range.setEndAfter(el.lastChild)
-        let fragment = range.extractContents()
-        if (fragment.textContent.length !== 0) {
-            return fragment
         }
     }
 }

@@ -70,7 +70,7 @@ export default class MainPanel {
 
     /** 最近一次聚焦的block */
     focusBlock: HTMLElement
-    focusInline: HTMLElement // todo 改为列表
+    focusInline: HTMLElement[] = [] // todo 改为列表
 
     /** 特殊 moduleBlock 生成的临时空行 */
     tempParagraph: HTMLElement

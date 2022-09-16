@@ -26,19 +26,28 @@ export default <ComponentBlock>{
             return <Paragraph>{ type: this.type }
         }
     },
+
+
+
+
+    // todo 边缘移除时发生多删除的情况
+
     backspace(state, event, el) {
         let sel = document.getSelection()
-        if (!sel || !sel.anchorNode) return
+
+        // 1. 行开头
+        // 2. 若前方有inline则先展开再删除
+
 
         let range = new Range()
         range.setStartBefore(el.firstChild)
         range.setEnd(sel.anchorNode, sel.anchorOffset)
-        let position = range.cloneContents().textContent.length
 
-        if (position === 0) {
-            let strAfter = ""
+        let cursorPosition = range.cloneContents().textContent.length
+
+        if (cursorPosition === 0) {
             el.querySelectorAll("br").forEach(br => br.replaceWith("\n"))
-            el.childNodes.forEach(item => strAfter += item.textContent)
+            let strAfter = el.textContent
             el.innerText = ""
 
             setTimeout(() => {
@@ -62,6 +71,10 @@ export default <ComponentBlock>{
             }, 0);
         }
     },
+
+
+
+
 
     enter(state, event, el) {
         event.preventDefault()

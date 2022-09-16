@@ -9,93 +9,93 @@ import text from "./components/text"
 
 /** string转为ast */
 export default function _processInline(data: string): PhrasingContent[] {
-    let stack = <(MaybeSign | PhrasingContent)[]>[]
-    let index = 0
+    let res = <PhrasingContent[]>[]
+    let datalist = data.split("\n")
+    for (let i = 0; i < datalist.length; i++) {
+        let data = datalist[i]
+        let stack = <(MaybeSign | PhrasingContent)[]>[]
+        let index = 0
 
-    while (data[index]) {
-        if (data[index] === "[") {
-            let _indexLabel = index
-            let type = ""
-            while (data[_indexLabel]) {
-                if (data[_indexLabel] === "]") {
-                    type = "bracket"
-                    break
-                }
-                _indexLabel++
-            }
-
-            let _indexUrl = _indexLabel
-            if (type === "bracket" && data[_indexUrl + 1] && data[_indexUrl + 1] === "(") {
-                _indexUrl++
-                while (data[_indexUrl]) {
-                    if (data[_indexUrl] === ")") {
-                        type = "link"
+        while (data[index]) {
+            if (data[index] === "[") {
+                let _indexLabel = index
+                let type = ""
+                while (data[_indexLabel]) {
+                    if (data[_indexLabel] === "]") {
+                        type = "bracket"
                         break
                     }
+                    _indexLabel++
+                }
+
+                let _indexUrl = _indexLabel
+                if (type === "bracket" && data[_indexUrl + 1] && data[_indexUrl + 1] === "(") {
                     _indexUrl++
+                    while (data[_indexUrl]) {
+                        if (data[_indexUrl] === ")") {
+                            type = "link"
+                            break
+                        }
+                        _indexUrl++
+                    }
+                }
+
+                if (type === "link") {
+                    data.slice(0, index) && stack.push(text.build({ value: data.slice(0, index) }))
+                    stack.push(link.build({
+                        label: data.slice(index + 1, _indexLabel),
+                        url: data.slice(_indexLabel + 2, _indexUrl),
+                    }))
+                    data = data.slice(_indexUrl + 1)
+                    index = 0
+                    continue
                 }
             }
 
-            if (type === "link") {
-                data.slice(0, index) && stack.push(text.build({ value: data.slice(0, index) }))
-                stack.push(link.build({
-                    label: data.slice(index + 1, _indexLabel),
-                    url: data.slice(_indexLabel + 2, _indexUrl),
-                }))
-                data = data.slice(_indexUrl + 1)
+            else if (["*", "~", "_", "`"].includes(data[index])) {
+                let sign = data[index]
+                let _index = index
+                let len = 0
+                while (data[_index] && (data[_index] === sign)) {
+                    _index++
+                    len++
+                }
+                // 排除单个 ~ 符号
+                if (sign === "~" && len === 1) {
+                    index++
+                    continue
+                }
+                // string类型转Text类型
+                let str = data.slice(0, index)
+                str && stack.push(text.build({ value: str }))
+                // 是否匹配到前缀字符
+                let beforeSign = stack.find(item => (item.hasOwnProperty("len") && ((item as MaybeSign).sign === sign)))
+                if (beforeSign) {
+                    let _i = stack.indexOf(beforeSign)
+                    let _t = [...stack.slice(_i), <MaybeSign>{ sign: sign, len }]
+                    stack = stack.slice(0, _i)
+                    stack.push(flat(_t))
+                } else {
+                    stack.push(<MaybeSign>{ sign: sign, len })
+                }
+                data = data.slice(_index)
                 index = 0
                 continue
             }
+
+            index++
         }
 
-        else if (["*", "~", "_", "`"].includes(data[index])) {
-            let sign = data[index]
-            let _index = index
-            let len = 0
-            while (data[_index] && (data[_index] === sign)) {
-                _index++
-                len++
-            }
-            // 排除单个 ~ 符号
-            if (sign === "~" && len === 1) {
-                index++
-                continue
-            }
-            // string类型转Text类型
-            let str = data.slice(0, index)
-            str && stack.push(text.build({ value: str }))
-            // 是否匹配到前缀字符
-            let beforeSign = stack.find(item => (item.hasOwnProperty("len") && ((item as MaybeSign).sign === sign)))
-            if (beforeSign) {
-                let _i = stack.indexOf(beforeSign)
-                let _t = [...stack.slice(_i), <MaybeSign>{ sign: sign, len }]
-                stack = stack.slice(0, _i)
-                stack.push(flat(_t))
-            } else {
-                stack.push(<MaybeSign>{ sign: sign, len })
-            }
-            data = data.slice(_index)
-            index = 0
-            continue
-        }
+        data && stack.push(text.build({ value: data }))
 
-        else if (data[index] === "\n") {
-            let str = data.slice(0, index)
-            str && stack.push(text.build({ value: str }))
-            stack.push(_break.build())
-            data = data.slice(index + 1)
-            index = 0
-            continue
+        stack = formatList(stack)
+        res.push(...stack as PhrasingContent[])
+        if (i !== datalist.length - 1) {
+            res.push(_break.build())
         }
-
-        index++
     }
 
-    data && stack.push(text.build({ value: data }))
-
-    stack = formatList(stack)
-
-    return stack as PhrasingContent[]
+    return res
 }
 
 function formatList(list: (MaybeSign | PhrasingContent)[]): PhrasingContent[] {

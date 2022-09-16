@@ -2,8 +2,6 @@ import MainPanel from "..";
 import _processInline from "../../mdast/processInline";
 
 import * as global from "../global"
-import * as generator from "../generator"
-import { complierInline } from "../compiler";
 
 export default function (this: MainPanel, e: KeyboardEvent) {
     // console.log(e.key);
@@ -27,30 +25,5 @@ export default function (this: MainPanel, e: KeyboardEvent) {
     let sel = document.getSelection()
     if (!sel) return
 
-    /* 如果选中的是inline，则获取并设置 inline */
-    let inline = global.getParentAttribute(this, sel.anchorNode, MainPanel.INLINE_ATTRIBUTE) as HTMLElement;
-    if (inline) {
-        let focusToEnd = false
-        if (inline !== this.focusInline && sel.anchorOffset === inline.innerText.length) {
-            focusToEnd = true
-        }
-        global.setFocusInline(this, inline)
-        if (focusToEnd) {
-            let range = new Range()
-            range.setStart(inline.lastChild.firstChild, inline.lastChild.textContent.length)
-            sel.removeAllRanges()
-            sel.addRange(range)
-        }
-    } else if (
-        // 相邻显示处理
-        // todo inline相邻时候会出现多个inline-focus
-        sel.anchorNode instanceof Text
-        && sel.anchorOffset === sel.anchorNode.textContent.length
-        && sel.anchorNode.nextSibling instanceof HTMLElement
-        && sel.anchorNode.nextSibling.hasAttribute(MainPanel.INLINE_ATTRIBUTE)
-    ) {
-        global.setFocusInline(this, sel.anchorNode.nextSibling)
-    } else {
-        global.removeFocusInline(this)
-    }
+    global.autoSetInlineFocus(this)
 }
