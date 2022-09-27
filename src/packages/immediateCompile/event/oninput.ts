@@ -7,7 +7,6 @@ import table from "../components/table";
 import paragraph from "../components/paragraph";
 import title from "../components/title";
 export default function (this: immediateCompile, e: Event) {
-    // console.log("INPUT_EVENT");
 
     let moduleELement = global.getModuleELement()
     if (!moduleELement) return
@@ -25,6 +24,7 @@ export default function (this: immediateCompile, e: Event) {
         if (mdtype === module_paragraph.mdtype) {
             if (mod.upgradeInParagraph?.(moduleELement)) return
         } else if (mdtype === mod.mdtype) {
+
             global.iteratorModule(basics, "inputEventUnlimited")
             break
         }

@@ -15,8 +15,15 @@ export function complier(el: HTMLElement | Element) {
     return res
 }
 
+/** 将dom编译成soucre */
+export function complierInlineSource(el: Element | DocumentFragment): string {
+    let cloneNode = el.cloneNode(true) as HTMLElement
+    cloneNode.querySelectorAll("br").forEach(br => br.replaceWith("\n"))
+    return cloneNode.textContent
+}
+
 /** 将inline文档树编译成生成ast */
 export function complierInline(el: Element | DocumentFragment): PhrasingContent[] {
-    el.querySelectorAll("br").forEach(br => br.replaceWith("\n"))
-    return _processInline(el.textContent)
+    let source = complierInlineSource(el)
+    return _processInline(source)
 }

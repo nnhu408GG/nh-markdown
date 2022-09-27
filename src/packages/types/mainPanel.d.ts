@@ -1,10 +1,13 @@
 import MainPanel from "../mainPanel";
 import { FlowContent } from "./mdast";
+import { VNode } from "./render";
 
 export interface Component {
     type: string
+    /** 是否支持 INLINE_SUPPORT */
+    isInlineSupport?: boolean
     /** 根据ast生成dom文档树 */
-    generator(ast: FlowContent): HTMLElement
+    generator(ast: FlowContent): VNode
     /** 将dom文档树编译成ast */
     complier?(el: Element): FlowContent
 }

@@ -3,7 +3,7 @@ import { ComponentBlock } from "../../types/mainPanel";
 import * as global from "../global"
 
 export default function (this: MainPanel, e: KeyboardEvent) {
-    console.log(e.key);
+    // console.log(e.key);
 
     /* 持续按压的键 */
     if (e.key === "Meta") {
@@ -20,12 +20,12 @@ export default function (this: MainPanel, e: KeyboardEvent) {
     }
 
 
-    if (this.activeShift) {
-        if (e.key === "Enter") {
-            // if()
-            return
-        }
-    }
+    // if (this.activeShift) {
+    //     if (e.key === "Enter") {
+    //         // if()
+    //         return
+    //     }
+    // }
 
 
     let sel = document.getSelection()!
@@ -33,15 +33,6 @@ export default function (this: MainPanel, e: KeyboardEvent) {
     /* 获取并设置 block */
     let block = global.getParentAttribute(this, sel.anchorNode, MainPanel.BLOCK_ATTRIBUTE) as HTMLElement
     global.setFocusBlock(this, block)
-
-    /* 如果选中的是inline，则获取并设置 inline */
-    let inline = global.getParentAttribute(this, sel.anchorNode, MainPanel.INLINE_ATTRIBUTE) as HTMLElement;
-    if (inline) {
-        global.addFocusInline(this, inline)
-    }
-    // console.log(block, inline);
-
-
 
 
 

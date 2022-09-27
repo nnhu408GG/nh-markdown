@@ -1,22 +1,23 @@
 import MainPanel from "..";
 import { ComponentBlock } from "../../types/mainPanel";
 import { FlowContent, UnorderList } from "../../types/mdast";
+import { VNode } from "../../types/render";
 import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
 export default <ComponentBlock>{
     type: "unorderList",
     generator(ast: UnorderList) {
-        let dom = document.createElement("ul")
-        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
-        dom.setAttribute(MainPanel.SIGN, ast.sign)
-        ast.children.forEach(item => {
-            let li = document.createElement("li")
-            generatorFlowContent(li, item)
-            dom.append(li)
-        })
-        return dom
+        return {
+            type: "ul",
+            prop: {
+                [MainPanel.COMPONENT_TYPE]: ast.type,
+                [MainPanel.SIGN]: ast.sign
+            },
+            children: ast.children.map(item => <VNode>{ type: "li", children: generatorFlowContent(item) })
+        }
     },
+
     complier(el: HTMLUListElement) {
         let sign = el.getAttribute(MainPanel.SIGN)
         let children = <FlowContent[][]>[]
@@ -26,7 +27,8 @@ export default <ComponentBlock>{
         }
         return <UnorderList>{ type: this.type, sign, children }
     },
-    backspace(el) {
-        
-    },
+
+    backspace(el) { },
+
+    enter() { }
 }

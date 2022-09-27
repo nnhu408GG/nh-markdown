@@ -3,36 +3,54 @@ import hl from "highlight.js"
 import MainPanel from "..";
 import { ComponentBlock } from "../../types/mainPanel";
 import { Code } from "../../types/mdast";
+import { VNode } from "../../types/render";
 
 export default <ComponentBlock>{
     type: "code",
     generator(ast: Code) {
-        let dom = document.createElement("pre")
-        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
-        dom.contentEditable = "false"
 
-        let container = document.createElement("div")
-        container.classList.add("prism-editor__container")
-        dom.append(container)
+        const CODE = <VNode>{
+            type: "code",
+            innerHTML: hl.highlight(ast.value, { language: ast.lang }).value + "<br>"
+        }
 
-        let code = document.createElement("code")
-        container.append(code)
-        code.innerHTML = hl.highlight(ast.value, { language: "js" }).value + "<br>"
+        const TEXTAREA = <VNode>{
+            type: "textarea",
+            prop: { spellcheck: false, value: ast.value },
+            on: {
+                oninput() {
+                    CODE.dom.innerHTML = hl.highlight(
+                        (TEXTAREA.dom as HTMLTextAreaElement).value,
+                        { language: ast.lang }
+                    ).value + "<br>"
+                },
+            },
+        }
 
-        let textarea = document.createElement("textarea")
-        textarea.spellcheck = false
-        textarea.value = ast.value
-        container.append(textarea)
+        const CONTAINER = <VNode>{
+            type: "div",
+            prop: { class: "prism-editor__container" },
+            children: [CODE, TEXTAREA]
+        }
 
-        let lang = document.createElement("div")
-        lang.className = "language"
-        let input = document.createElement("span")
-        input.contentEditable = "true"
-        lang.append(input)
-        input.innerText = ast.lang
-        dom.append(lang)
-        return dom
+
+        const LANGUAGE = <VNode>{
+            type: "div",
+            prop: { class: "language" },
+            children: [
+                { type: "span", prop: { contenteditable: true }, children: ast.lang }
+            ]
+        }
+
+        return {
+            type: "pre",
+            prop: {
+                [MainPanel.COMPONENT_TYPE]: ast.type,
+                [MainPanel.BLOCK_ATTRIBUTE]: "",
+                contenteditable: false
+            },
+            children: [CONTAINER, LANGUAGE]
+        }
     },
     complier(el) {
         let lang = el.lastElementChild.textContent
@@ -40,6 +58,9 @@ export default <ComponentBlock>{
         return <Code>{ type: this.type, lang, value }
     },
     backspace(el) {
-        
+
+    },
+    enter(state, event, el) {
+
     },
 }

@@ -10,6 +10,7 @@ import text from "./components/text"
 /** string转为ast */
 export default function _processInline(data: string): PhrasingContent[] {
     let res = <PhrasingContent[]>[]
+    data = data.replaceAll(" ","\u00A0")
     let datalist = data.split("\n")
     for (let i = 0; i < datalist.length; i++) {
         let data = datalist[i]

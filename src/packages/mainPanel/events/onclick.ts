@@ -23,10 +23,5 @@ export default function (this: MainPanel, e: MouseEvent) {
         }
     }
 
-    if (!sel.anchorNode) {
-        this.focusInline.length !== 0 && global.removeAllFocusInline(this)
-        return
-    }
-
     global.autoSetInlineFocus(this)
 }

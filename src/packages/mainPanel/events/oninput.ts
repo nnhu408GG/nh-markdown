@@ -3,12 +3,16 @@ import MainPanel from "..";
 import * as global from "../global"
 
 export default function (this: MainPanel, e: InputEvent) {
-    // console.log(e, e.inputType);
+    console.log("inputType:", e.inputType);
 
     let sel = document.getSelection()
-    let block = global.getParentAttribute(this, sel.anchorNode, MainPanel.BLOCK_ATTRIBUTE) as HTMLElement
-    if (e.inputType !== "insertCompositionText") {
-        global.resetInline(this, block)
+
+    let inlineSupport = global.getParentAttribute(this, sel.anchorNode, MainPanel.INLINE_SUPPORT) as HTMLElement
+
+    /** 是否需要重置inline的结构 */
+    let isNeedReSetInline = inlineSupport
+    if (isNeedReSetInline) {
+        global.resetInline(this, inlineSupport)
     }
 
 }

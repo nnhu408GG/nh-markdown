@@ -1,21 +1,22 @@
 import MainPanel from "..";
+import { generatorPhrasingContentVnode, render } from "../../render";
 import { ComponentBlock } from "../../types/mainPanel";
 import { FlowContent, OrderList } from "../../types/mdast";
+import { VNode } from "../../types/render";
 import { complier } from "../compiler";
 import { generatorFlowContent } from "../generator";
 
 export default <ComponentBlock>{
     type: "orderList",
     generator(ast: OrderList) {
-        let dom = document.createElement("ol")
-        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
-        dom.start = ast.start
-        ast.children.forEach(item => {
-            let li = document.createElement("li")
-            generatorFlowContent(li, item)
-            dom.append(li)
-        })
-        return dom
+        return {
+            type: "ol",
+            prop: {
+                [MainPanel.COMPONENT_TYPE]: ast.type,
+                start: ast.start
+            },
+            children: ast.children.map(item => <VNode>{ type: "li", children: generatorFlowContent(item) })
+        }
     },
     complier(el: HTMLOListElement) {
         let start = el.start
@@ -27,6 +28,9 @@ export default <ComponentBlock>{
         return <OrderList>{ type: this.type, start, children }
     },
     backspace(el) {
-        
+
+    },
+    enter(state, event, el) {
+
     },
 }

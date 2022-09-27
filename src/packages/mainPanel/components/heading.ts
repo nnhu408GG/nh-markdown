@@ -1,6 +1,7 @@
 import MainPanel from "..";
 import heading from "../../mdast/components/heading";
 import _processInline from "../../mdast/processInline";
+import { generatorPhrasingContentVnode, render } from "../../render";
 import { ComponentBlock } from "../../types/mainPanel";
 import { Heading } from "../../types/mdast";
 import { complierInline } from "../compiler";
@@ -12,14 +13,18 @@ import paragraph from "./paragraph";
 
 export default <ComponentBlock>{
     type: heading.type,
-    generator(ast: Heading): HTMLHeadingElement {
-        let dom = document.createElement(`h${ast.depth}`) as HTMLHeadingElement
-        dom.setAttribute(MainPanel.COMPONENT_TYPE, ast.type)
-        dom.setAttribute(MainPanel.BLOCK_ATTRIBUTE, "")
-        dom.setAttribute(MainPanel.INLINE_SUPPORT, "")
-        generator.generatorPhrasingContent(dom, ast.children)
-        return dom
+    generator(ast: Heading) {
+        return {
+            type: `h${ast.depth}` as "h1",
+            prop: {
+                [MainPanel.COMPONENT_TYPE]: ast.type,
+                [MainPanel.BLOCK_ATTRIBUTE]: "",
+                [MainPanel.INLINE_SUPPORT]: ""
+            },
+            children: ast.children ? generatorPhrasingContentVnode(ast.children) : undefined
+        }
     },
+
     complier(el) {
         let depth = parseInt(el.tagName.slice(1))
         let children = complierInline(el)
@@ -33,7 +38,7 @@ export default <ComponentBlock>{
         if (sel.anchorOffset === 0) {
             event.preventDefault()
             let fragment = global.getFragementRangeToEnd(el)
-            let dom = paragraph.generator({ type: paragraph.type })
+            let dom = render(paragraph.generator({ type: paragraph.type })) as HTMLElement
             if (fragment) {
                 dom.append(fragment)
             }
@@ -47,12 +52,12 @@ export default <ComponentBlock>{
         if (!sel || !sel.anchorNode) return
         if (sel.anchorOffset === 0) {
             event.preventDefault()
-            let dom = paragraph.generator({ type: paragraph.type })
+            let dom = render(paragraph.generator({ type: paragraph.type }))
             global.insertBefore(el, dom)
         } else {
             event.preventDefault()
 
-            let dom = paragraph.generator({ type: paragraph.type })
+            let dom = render(paragraph.generator({ type: paragraph.type })) as HTMLElement
             let fragment = global.getFragementRangeToEnd(el)
             // 是否在中间
             if (fragment) {
@@ -68,7 +73,8 @@ export default <ComponentBlock>{
                 range.setEndAfter(el.lastChild)
                 let textContent = range.extractContents().textContent
                 let ast = _processInline(textContent)
-                generator.generatorPhrasingContent(el, ast)
+                let elChildren = render({ children: generatorPhrasingContentVnode(ast) })
+                el.replaceChildren(elChildren)
             }
 
 

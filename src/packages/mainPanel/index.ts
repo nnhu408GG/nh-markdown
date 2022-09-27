@@ -20,6 +20,7 @@ import { complier } from "./compiler"
 import onkeydown from "./events/onkeydown"
 import onclick from "./events/onclick"
 import onkeyup from "./events/onkeyup"
+import { render } from "../render"
 
 export default class MainPanel {
     /** 主要面板的className */
@@ -82,7 +83,7 @@ export default class MainPanel {
         el.spellcheck = false
         this.bindElement = el
 
-        let p = paragraph.generator(<Paragraph>{ type: "paragraph" })
+        let p = render(paragraph.generator(<Paragraph>{ type: "paragraph" }))
         el.append(p)
 
         // /** @todo
@@ -114,7 +115,9 @@ export default class MainPanel {
 
     /** 根据ast生成dom文档树 */
     public generator(ast: FlowContent[]) {
-        this.bindElement.innerHTML = ""
-        generator.generatorFlowContent(this.bindElement, ast)
+        let fragment = document.createDocumentFragment()
+        let flowVnode = generator.generatorFlowContent(ast)
+        flowVnode.forEach(vnode => fragment.append(render(vnode)))
+        this.bindElement.replaceChildren(fragment)
     }
 }
